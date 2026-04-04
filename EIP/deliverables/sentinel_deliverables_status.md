@@ -4,15 +4,15 @@
 
 | Document | PDF Source | Statut | Notes |
 |----------|------------|--------|-------|
-| `beta_test_plan.md` | G-EIP-600_beta_test_plan.pdf | ✅ Conforme | 16 fonctionnalites, 2 roles, criteres de succes |
-| `innovation_track_action_plan.md` | PDF Innovation Track | ✅ Conforme | Contexte, specs techniques, specs non techniques |
-| `solution_track_road_to_pge4.md` | PDF.solution.pdf | ✅ Conforme | Framework Solution Track complet |
+| `EIP/deliverables/sentinel_beta_test_plan.md` | `EIP/workshops/pdfs/reference_beta_test_plan_requirements.pdf` | ✅ Conforme | 16 fonctionnalites, 2 roles, criteres de succes |
+| `EIP/deliverables/sentinel_solution_track_action_plan.md` | Ateliers Innovation Track (context/architecture/cost/impact) | ✅ Conforme | Contexte, specs techniques, specs non techniques |
+| `EIP/deliverables/sentinel_solution_track_framework.md` | `EIP/workshops/pdfs/reference_solution_track_road_to_pge4.pdf` | ✅ Conforme | Framework Solution Track complet |
 
 ---
 
 ## Apercu des Fichiers
 
-### 1. beta_test_plan.md
+### 1. EIP/deliverables/sentinel_beta_test_plan.md
 **Objectif** : Plan de test beta pour la presentation beta de Sentinel
 
 | Section | Contenu |
@@ -24,7 +24,7 @@
 
 ---
 
-### 2. innovation_track_action_plan.md
+### 2. EIP/deliverables/sentinel_solution_track_action_plan.md
 **Objectif** : Plan d'action Tech4 pour le cycle de vie du projet
 
 | Section | Contenu |
@@ -35,7 +35,7 @@
 
 ---
 
-### 3. solution_track_road_to_pge4.md
+### 3. EIP/deliverables/sentinel_solution_track_framework.md
 **Objectif** : Framework Solution Track complet avec exigences detaillees
 
 | Section | Contenu |
@@ -63,8 +63,7 @@ Sentinel suit le **Track Solution** qui se concentre sur :
 
 | PDF | Raison |
 |-----|--------|
-| `G-EIP-600_track_solution_video_game.pdf` | Track jeux video - non applicable a Sentinel (systeme IA financier) |
-| `PDF-plan.pdf` | Document exemple (Microsoft Teams) - utilise comme reference uniquement |
+| `EIP/workshops/pdfs/reference_beta_test_plan_example_microsoft_teams.pdf` | Document exemple (Microsoft Teams) - utilise comme reference uniquement |
 
 ---
 
