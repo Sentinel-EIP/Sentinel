@@ -1,13 +1,25 @@
-    # Sentinel
+# Sentinel
 
-    **Terminal de Trading Augmenté par l'IA Géopolitique**
+**Plateforme d'aide a la decision d'investissement, locale-first et orientee risque**
 
-    Sentinel est un tableau de bord d'aide à la décision (Advisory) conçu pour les traders particuliers. Il croise l'analyse technique classique avec l'analyse fondamentale géopolitique en temps réel pour prévenir les risques liés à l'infobésité et aux crises macro-économiques.
+Sentinel est un projet EIP centre sur la robustesse, la transparence et le controle utilisateur.
+Le projet combine :
+- analyse de marche (indicateurs techniques + modeles IA),
+- synthese de signaux comprehensibles,
+- gouvernance stricte du risque (drawdown, exposition, mode cash),
+- execution progressive (analyse seule -> paper trading -> execution reelle encadree).
 
-    ## Fonctionnalités Clés
+## Fonctionnalites cles
 
-    * **Graphiques Intuitifs & Inclusifs** : Interface inspirée de TradingView, avec un mode sombre natif et une signalétique pensée pour l'accessibilité (optimisée pour le daltonisme).
-    * **Radar Géopolitique IA** : Veille automatisée de l'actualité financière mondiale. Un modèle NLP lit, vulgarise et convertit chaque news en un "Score de Risque" de 1 à 10.
-    * **100% Non-Custodial** : Sécurité maximale par design. Sentinel fonctionne en lecture seule (via API chiffrées en AES-256) et n'a aucun accès aux fonds des utilisateurs.
-    * **Mode Dégradé (Résilience)** : Architecture microservices garantissant la continuité du service technique même en cas d'interruption du moteur IA.
+- **Architecture modulaire** : ingestion donnees, analyse IA, synthese, risk governor, execution, interface.
+- **Approche local-first** : limitation de la dependance cloud et meilleure maitrise des donnees.
+- **IA explicable** : recommandations traceables et auditables.
+- **Resilience** : mode degrade et continuite de service en cas de panne d'un module.
 
+## Structure du repository
+
+La documentation est centralisee dans `EIP/` :
+- `EIP/deliverables/` : livrables rediges du projet
+- `EIP/workshops/guides/` : supports atelier en markdown
+- `EIP/workshops/pdfs/` : PDFs de reference et supports officiels
+- `EIP/context/` : contexte projet
