@@ -18,8 +18,8 @@ Le projet combine :
 
 ## Structure du repository
 
-La documentation est centralisee dans `EIP/` :
-- `EIP/deliverables/` : livrables rediges du projet
-- `EIP/workshops/guides/` : supports atelier en markdown
-- `EIP/workshops/pdfs/` : PDFs de reference et supports officiels
-- `EIP/context/` : contexte projet
+La documentation est centralisee dans `EIP-documentation/` :
+- `EIP-documentation/deliverables/` : livrables rediges du projet
+- `EIP-documentation/workshops/guides/` : supports atelier en markdown
+- `EIP-documentation/workshops/pdfs/` : PDFs de reference et supports officiels
+- `EIP-documentation/context/` : contexte projet

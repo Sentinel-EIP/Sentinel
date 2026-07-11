@@ -4,15 +4,15 @@
 
 | Document | PDF Source | Statut | Notes |
 |----------|------------|--------|-------|
-| `EIP/deliverables/sentinel_beta_test_plan.md` | `EIP/workshops/pdfs/reference_beta_test_plan_requirements.pdf` | ✅ Conforme | 16 fonctionnalites, 2 roles, criteres de succes |
-| `EIP/deliverables/sentinel_solution_track_action_plan.md` | Ateliers Innovation Track (context/architecture/cost/impact) | ✅ Conforme | Contexte, specs techniques, specs non techniques |
-| `EIP/deliverables/sentinel_solution_track_framework.md` | `EIP/workshops/pdfs/reference_solution_track_road_to_pge4.pdf` | ✅ Conforme | Framework Solution Track complet |
+| `EIP-documentation/deliverables/sentinel_beta_test_plan.md` | `EIP-documentation/workshops/pdfs/reference_beta_test_plan_requirements.pdf` | ✅ Conforme | 16 fonctionnalites, 2 roles, criteres de succes |
+| `EIP-documentation/deliverables/sentinel_solution_track_action_plan.md` | Ateliers Innovation Track (context/architecture/cost/impact) | ✅ Conforme | Contexte, specs techniques, specs non techniques |
+| `EIP-documentation/deliverables/sentinel_solution_track_framework.md` | `EIP-documentation/workshops/pdfs/reference_solution_track_road_to_pge4.pdf` | ✅ Conforme | Framework Solution Track complet |
 
 ---
 
 ## Apercu des Fichiers
 
-### 1. EIP/deliverables/sentinel_beta_test_plan.md
+### 1. EIP-documentation/deliverables/sentinel_beta_test_plan.md
 **Objectif** : Plan de test beta pour la presentation beta de Sentinel
 
 | Section | Contenu |
@@ -24,7 +24,7 @@
 
 ---
 
-### 2. EIP/deliverables/sentinel_solution_track_action_plan.md
+### 2. EIP-documentation/deliverables/sentinel_solution_track_action_plan.md
 **Objectif** : Plan d'action Tech4 pour le cycle de vie du projet
 
 | Section | Contenu |
@@ -35,7 +35,7 @@
 
 ---
 
-### 3. EIP/deliverables/sentinel_solution_track_framework.md
+### 3. EIP-documentation/deliverables/sentinel_solution_track_framework.md
 **Objectif** : Framework Solution Track complet avec exigences detaillees
 
 | Section | Contenu |
@@ -63,7 +63,7 @@ Sentinel suit le **Track Solution** qui se concentre sur :
 
 | PDF | Raison |
 |-----|--------|
-| `EIP/workshops/pdfs/reference_beta_test_plan_example_microsoft_teams.pdf` | Document exemple (Microsoft Teams) - utilise comme reference uniquement |
+| `EIP-documentation/workshops/pdfs/reference_beta_test_plan_example_microsoft_teams.pdf` | Document exemple (Microsoft Teams) - utilise comme reference uniquement |
 
 ---
 
@@ -132,4 +132,4 @@ Sentinel suit le **Track Solution** qui se concentre sur :
 - **Check-ins Coordinateur** : Alignement mensuel
 - **Retrospectives Equipe** : Sync interne hebdomadaire
 
-Tous les documents sont stockes dans le repertoire `/EIP/` et doivent etre mis a jour au fur et a mesure de la progression du projet.
+Tous les documents sont stockes dans le repertoire `/EIP-documentation/` et doivent etre mis a jour au fur et a mesure de la progression du projet.
