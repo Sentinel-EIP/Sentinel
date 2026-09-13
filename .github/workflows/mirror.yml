@@ -1,0 +1,22 @@
+name: Mirror private repository to school organization
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  mirror:
+    if: github.repository == 'Sentinel-EIP/Sentinel'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror repository
+        run: |
+          git clone --mirror https://${{ secrets.TOKEN }}@github.com/Sentinel-EIP/Sentinel.git
+          cd Sentinel.git
+          if git push --mirror https://${{ secrets.TOKEN }}@github.com/EpitechPGE3-2025/G-EIP-601-ALL-6-1-eip-91.git; then
+            echo "Mirror completed"
+          else
+            echo "Mirror failed" >&2
+            exit 1
+          fi
