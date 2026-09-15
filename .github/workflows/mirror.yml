@@ -1,4 +1,4 @@
-name: Mirror private repository to school organization
+name: Mirror private repository to school organization and commit convention check
 
 on:
   push:
@@ -6,17 +6,25 @@ on:
       - "main"
 
 jobs:
+  check-commit-convention:
+    if: github.repository == 'Sentinel-EIP/Sentinel'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lint commit message
+        uses: wagoid/commitlint-github-action@v6
+
   mirror:
     if: github.repository == 'Sentinel-EIP/Sentinel'
     runs-on: ubuntu-latest
+    needs: check-commit-convention
     steps:
       - name: Mirror repository
         run: |
           git clone --mirror https://${{ secrets.TOKEN }}@github.com/Sentinel-EIP/Sentinel.git
           cd Sentinel.git
-          if git push --mirror https://${{ secrets.TOKEN }}@github.com/EpitechPGE3-2025/G-EIP-601-ALL-6-1-eip-91.git; then
-            echo "Mirror completed"
-          else
-            echo "Mirror failed" >&2
-            exit 1
-          fi
+          git push --mirror https://${{ secrets.TOKEN }}@github.com/EpitechPGE3-2025/G-EIP-601-ALL-6-1-eip-91.git
