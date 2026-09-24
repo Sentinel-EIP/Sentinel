@@ -132,6 +132,14 @@ fi
 
 # ------------------------------------------------------------- .env
 echo "-- fichier .env de la stack cloud"
+# Droits trop larges : signale en echec, mais sauvegarde quand meme (chiffree).
+# Pas de correction automatique : ce fichier n'appartient pas a ce script.
+if [ -f "$CLOUD_ENV_FILE" ]; then
+  case "$(ls -l "$CLOUD_ENV_FILE")" in
+    -rw-------*|-r--------*) ;;
+    *) note_fail "$CLOUD_ENV_FILE lisible par d'autres comptes : chmod 600 \"$CLOUD_ENV_FILE\"" ;;
+  esac
+fi
 if [ ! -f "$CLOUD_ENV_FILE" ]; then
   note_fail "$CLOUD_ENV_FILE introuvable"
 elif [ "$DRY" = "1" ]; then

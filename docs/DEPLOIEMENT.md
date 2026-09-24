@@ -35,7 +35,7 @@ docker network create sentinel-edge
 
 ```bash
 cd infra/stacks/cloud
-cp .env.example .env
+cp .env.example .env && chmod 600 .env
 for i in 1 2 3 4; do openssl rand -hex 24; done   # un par champ *_PASSWORD
 nano .env      # + domaines, NC_ADMIN_USER et MINIO_ROOT_USER
 docker compose up -d

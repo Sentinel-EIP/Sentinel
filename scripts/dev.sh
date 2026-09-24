@@ -7,6 +7,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 COMPOSE="docker compose -f docker-compose.yml -f docker-compose.dev.yml"
 
 [ -f .env ] || { echo "Absence de .env — copier .env.example puis le remplir."; exit 1; }
+# Le .env contient les secrets : lisible par son seul proprietaire, a chaque appel.
+case "$(ls -l .env)" in
+  -rw-------*|-r--------*) ;;
+  *) chmod 600 .env && echo "Droits de .env ramenes a 600 (il contient les secrets)." ;;
+esac
 
 # (Re)cree le role applicatif Postgres. Idempotent ; `up -d` recree db si le
 # .env a change, pour que le script lise les valeurs a jour.
