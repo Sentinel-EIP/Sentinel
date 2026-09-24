@@ -20,7 +20,10 @@ controle utilisateur. Le projet combine :
 ## Demarrage rapide
 
 ```bash
-cp .env.example .env    # remplir POSTGRES_PASSWORD et API_SECRET_KEY
+cp .env.example .env
+for v in POSTGRES_PASSWORD APP_DB_PASSWORD REDIS_PASSWORD API_SECRET_KEY; do
+  sed -i "s/^$v=$/$v=$(openssl rand -hex 32)/" .env
+done
 ./scripts/dev.sh up
 ```
 

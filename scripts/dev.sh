@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Point d'entree unique pour l'environnement de developpement.
-#   ./scripts/dev.sh up|down|logs|ps|migrate|seed|test|lint|shell|reset
+#   ./scripts/dev.sh up|down|logs|ps|migrate|seed|test|lint|shell|db-roles|reset
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -8,9 +8,17 @@ COMPOSE="docker compose -f docker-compose.yml -f docker-compose.dev.yml"
 
 [ -f .env ] || { echo "Absence de .env — copier .env.example puis le remplir."; exit 1; }
 
+# (Re)cree le role applicatif Postgres. Idempotent ; `up -d` recree db si le
+# .env a change, pour que le script lise les valeurs a jour.
+db_roles() {
+  $COMPOSE up -d --wait db
+  $COMPOSE exec -T db sh /docker-entrypoint-initdb.d/10-app-role.sh
+}
+
 case "${1:-help}" in
   up)
     $COMPOSE up -d --build
+    db_roles >/dev/null      # migre un volume cree avant le role applicatif
     echo
     echo "  API      http://localhost:8000/docs"
     echo "  ML       http://localhost:8100/docs"
@@ -36,6 +44,7 @@ case "${1:-help}" in
     $COMPOSE exec frontend npm run lint
     ;;
   shell)   $COMPOSE exec "${2:-api}" bash ;;
+  db-roles) db_roles ;;
   reset)
     read -rp "Supprimer TOUTES les donnees locales (db, redis, modeles) ? [oui/N] " ok
     [ "$ok" = "oui" ] && $COMPOSE down -v || echo "annule"

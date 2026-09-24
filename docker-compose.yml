@@ -1,10 +1,35 @@
 # Stack de base Sentinel. En local, utiliser docker-compose.dev.yml en surcharge :
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 # ou simplement ./scripts/dev.sh up
+#
+# Cloisonnement :
+#   data (internal) : db, redis <- api, worker   aucune route sortante, aucun port
+#   app             : api, worker, ml, frontend, proxy
+# Chaque service ne recoit que les variables dont il a besoin (pas d'env_file
+# global) ; les valeurs viennent du .env par interpolation.
 
 x-logging: &logging
   driver: json-file
   options: { max-size: "10m", max-file: "3" }
+
+x-common-env: &common-env
+  ENVIRONMENT: ${ENVIRONMENT:-local}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  TZ: ${TZ:-Europe/Paris}
+
+# api et worker se connectent avec le role APPLICATIF, non superutilisateur,
+# cree par infra/db/init/10-app-role.sh. Le superutilisateur reste dans db.
+x-db-env: &db-env
+  POSTGRES_USER: ${APP_DB_USER:-sentinel_app}
+  POSTGRES_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manquant (openssl rand -hex 32)}
+  POSTGRES_DB: ${POSTGRES_DB:-sentinel}
+  POSTGRES_HOST: db
+  POSTGRES_PORT: "5432"
+
+x-redis-env: &redis-env
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD manquant (openssl rand -hex 32)}
 
 services:
 
@@ -14,13 +39,19 @@ services:
     container_name: sentinel-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-sentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant (openssl rand -hex 32)}
+      POSTGRES_DB: ${POSTGRES_DB:-sentinel}
+      # Lus par 10-app-role.sh uniquement
+      APP_DB_USER: ${APP_DB_USER:-sentinel_app}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manquant (openssl rand -hex 32)}
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./infra/db/init/10-app-role.sh:/docker-entrypoint-initdb.d/10-app-role.sh:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      # -h 127.0.0.1 : pendant l'initdb, le serveur temporaire n'ecoute que sur le
+      # socket ; sans -h, db passe "healthy" avant la creation du role applicatif.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -31,11 +62,15 @@ services:
     image: redis:7-alpine
     container_name: sentinel-redis
     restart: unless-stopped
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ["redis-server", "--appendonly", "yes",
+              "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD manquant (openssl rand -hex 32)}"]
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD:?REDIS_PASSWORD manquant (openssl rand -hex 32)}
     volumes:
       - redis-data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      # redis-cli sort en 0 meme sur une erreur NOAUTH : on exige PONG.
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -49,7 +84,11 @@ services:
       dockerfile: infra/docker/Dockerfile.backend
     container_name: sentinel-api
     restart: unless-stopped
-    env_file: .env
+    environment:
+      <<: [*common-env, *db-env, *redis-env]
+      API_SECRET_KEY: ${API_SECRET_KEY:?API_SECRET_KEY manquant (openssl rand -hex 32)}
+      API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:5173}
+      ML_SERVICE_URL: http://ml:8100
     depends_on:
       db: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -70,7 +109,11 @@ services:
     container_name: sentinel-worker
     restart: unless-stopped
     command: ["celery", "-A", "app.worker.celery_app", "worker", "-l", "info"]
-    env_file: .env
+    environment:
+      <<: [*common-env, *db-env, *redis-env]
+      # Collecteurs de donnees de marche : seuls consommateurs des cles d'exchange.
+      BINANCE_API_KEY: ${BINANCE_API_KEY:-}
+      BINANCE_API_SECRET: ${BINANCE_API_SECRET:-}
     depends_on:
       db: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -79,13 +122,16 @@ services:
 
   # ----------------------------------- Couche 2 : modeles IA, image separee
   # Isole pour que PyTorch (~2 Go) ne soit pas rebuild a chaque modif d'une route.
+  # Aucun secret, aucun acces a data.
   ml:
     build:
       context: .
       dockerfile: infra/docker/Dockerfile.ml
     container_name: sentinel-ml
     restart: unless-stopped
-    env_file: .env
+    environment:
+      <<: *common-env
+      ML_MODEL_CACHE: ${ML_MODEL_CACHE:-/models}
     volumes:
       - ml-models:/models
     healthcheck:
@@ -112,7 +158,7 @@ services:
     image: nginx:alpine
     container_name: sentinel-proxy
     restart: unless-stopped
-    ports: ["8080:80"]
+    ports: ["127.0.0.1:8080:80"]    # locale-first : jamais sur le reseau local
     volumes:
       - ./infra/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on: [api, frontend]
@@ -120,7 +166,8 @@ services:
     logging: *logging
 
 networks:
-  data:      # db + redis + services qui y accedent, jamais expose
+  data:      # db + redis + services qui y accedent : ni port publiable, ni Internet
+    internal: true
   app:       # services applicatifs + proxy
 
 volumes:

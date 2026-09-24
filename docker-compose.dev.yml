@@ -1,11 +1,17 @@
 # Surcharge developpement : hot-reload, ports exposes, pas de proxy.
+# Tous les ports sont publies sur 127.0.0.1 : jamais sur le reseau local.
+# Depuis Docker 28, un port publie reste joignable par IP depuis les autres
+# conteneurs de l'hote, quel que soit le reseau : pas de donnees reelles en dev.
 services:
 
   db:
-    ports: ["5432:5432"]      # acces depuis un client local (DBeaver, psql)
+    # Acces depuis un client local (DBeaver, psql), avec le role applicatif.
+    # Le reseau data etant internal, la publication passe par un reseau dedie
+    # a db (db-host) ; consequence : en dev, db a une sortie Internet.
+    ports: ["127.0.0.1:${DEV_DB_PORT:-5432}:5432"]
+    networks: [data, db-host]
 
-  redis:
-    ports: ["6379:6379"]
+  # redis : volontairement non publie (docker compose exec redis redis-cli).
 
   api:
     build:
@@ -13,7 +19,7 @@ services:
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     volumes:
       - ./backend:/app        # hot-reload : le code local prime sur l'image
-    ports: ["8000:8000"]
+    ports: ["127.0.0.1:8000:8000"]
 
   worker:
     command: ["watchmedo", "auto-restart", "--directory=/app", "--pattern=*.py",
@@ -27,7 +33,7 @@ services:
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8100", "--reload"]
     volumes:
       - ./ml:/app
-    ports: ["8100:8100"]
+    ports: ["127.0.0.1:8100:8100"]
 
   frontend:
     build:
@@ -36,7 +42,10 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules     # garde les deps de l'image, pas celles de l'hote
-    ports: ["5173:5173"]
+    ports: ["127.0.0.1:5173:5173"]
 
   proxy:
     profiles: ["proxy"]       # non demarre en dev : on tape les ports directement
+
+networks:
+  db-host:    # dev uniquement : seul reseau non internal de db, pour publier 5432

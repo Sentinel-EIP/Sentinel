@@ -1,6 +1,7 @@
 """Configuration centralisee. Aucune valeur en dur ailleurs dans le code."""
 from functools import lru_cache
 from typing import Literal
+from urllib.parse import quote
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -19,6 +20,7 @@ class Settings(BaseSettings):
 
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str = ""
 
     API_SECRET_KEY: str = ""
     API_CORS_ORIGINS: str = "http://localhost:5173"
@@ -27,13 +29,15 @@ class Settings(BaseSettings):
     @property
     def database_url(self) -> str:
         return (
-            f"postgresql+psycopg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"postgresql+psycopg://{quote(self.POSTGRES_USER, safe='')}"
+            f":{quote(self.POSTGRES_PASSWORD, safe='')}"
             f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         )
 
     @property
     def redis_url(self) -> str:
-        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0"
+        auth = f":{quote(self.REDIS_PASSWORD, safe='')}@" if self.REDIS_PASSWORD else ""
+        return f"redis://{auth}{self.REDIS_HOST}:{self.REDIS_PORT}/0"
 
     @property
     def cors_origins(self) -> list[str]:
