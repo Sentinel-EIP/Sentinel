@@ -1,0 +1,129 @@
+# Stack de base Sentinel. En local, utiliser docker-compose.dev.yml en surcharge :
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# ou simplement ./scripts/dev.sh up
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+services:
+
+  # ------------------------------------------------ Couche 1-2 : donnees
+  db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: sentinel-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [data]
+    logging: *logging
+
+  redis:
+    image: redis:7-alpine
+    container_name: sentinel-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [data]
+    logging: *logging
+
+  # --------------------------------------------- Couche 6 : API / presentation
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: sentinel-api
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks: [data, app]
+    logging: *logging
+
+  # ------------------------------------- Jobs asynchrones (ingestion, batchs)
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: sentinel-worker
+    restart: unless-stopped
+    command: ["celery", "-A", "app.worker.celery_app", "worker", "-l", "info"]
+    env_file: .env
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    networks: [data, app]
+    logging: *logging
+
+  # ----------------------------------- Couche 2 : modeles IA, image separee
+  # Isole pour que PyTorch (~2 Go) ne soit pas rebuild a chaque modif d'une route.
+  ml:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.ml
+    container_name: sentinel-ml
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ml-models:/models
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8100/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks: [app]
+    logging: *logging
+
+  # --------------------------------------------- Couche 6 : interface web
+  frontend:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.frontend
+    container_name: sentinel-frontend
+    restart: unless-stopped
+    networks: [app]
+    logging: *logging
+
+  # ------------------------------------------------ Reverse proxy local
+  proxy:
+    image: nginx:alpine
+    container_name: sentinel-proxy
+    restart: unless-stopped
+    ports: ["8080:80"]
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [api, frontend]
+    networks: [app]
+    logging: *logging
+
+networks:
+  data:      # db + redis + services qui y accedent, jamais expose
+  app:       # services applicatifs + proxy
+
+volumes:
+  db-data:
+  redis-data:
+  ml-models:
