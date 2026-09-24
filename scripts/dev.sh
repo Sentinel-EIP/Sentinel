@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Point d'entree unique pour l'environnement de developpement.
-#   ./scripts/dev.sh up|down|logs|ps|migrate|seed|test|lint|shell|db-roles|reset
+#   ./scripts/dev.sh up|down|logs|ps|migrate|seed|test|lint|shell|psql|db-roles|reset
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -44,6 +44,11 @@ case "${1:-help}" in
     $COMPOSE exec frontend npm run lint
     ;;
   shell)   $COMPOSE exec "${2:-api}" bash ;;
+  psql)      # role applicatif, jamais le superutilisateur (docs/adr/0001)
+    # shellcheck disable=SC2016  # variables developpees dans le conteneur db
+    $COMPOSE exec db sh -c \
+      'PGPASSWORD="$APP_DB_PASSWORD" exec psql -h 127.0.0.1 -U "$APP_DB_USER" -d "$POSTGRES_DB"'
+    ;;
   db-roles) db_roles ;;
   reset)
     read -rp "Supprimer TOUTES les donnees locales (db, redis, modeles) ? [oui/N] " ok

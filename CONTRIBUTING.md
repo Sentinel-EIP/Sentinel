@@ -18,10 +18,17 @@ Un secret vide fait echouer `docker compose` avec un message explicite.
 | API      | http://localhost:8000/docs   |
 | ML       | http://localhost:8100/docs   |
 | Frontend | http://localhost:5173        |
-| Postgres | 127.0.0.1:5432, role `APP_DB_USER` |
+| Postgres | `./scripts/dev.sh psql` (non publie) |
 
-Tous les ports sont publies sur 127.0.0.1. Redis n'est pas publie :
-`docker compose exec redis redis-cli` (authentifie via `REDISCLI_AUTH`).
+Tous les ports sont publies sur 127.0.0.1. Postgres et Redis ne sont pas
+publies du tout, meme en dev : `./scripts/dev.sh psql` ouvre un psql avec le
+role applicatif, `docker compose exec redis redis-cli` un client Redis
+(authentifie via `REDISCLI_AUTH`). Sous Docker Desktop, l'hote ne voit pas les
+IP des conteneurs : un tunnel SSH vers db n'a rien a viser.
+
+Le schema Postgres porte le nom du role applicatif, et c'est une contrainte de
+securite : ne pas le renommer, voir
+[ADR 0001](docs/adr/0001-schema-applicatif-postgres.md).
 
 **`.env` existant** (cree avant le role applicatif) : `docker compose` refuse de
 demarrer tant que `APP_DB_PASSWORD` et `REDIS_PASSWORD` manquent. Les ajouter a
@@ -31,7 +38,7 @@ deviendrait la cle. `./scripts/dev.sh up` cree ensuite le role sur le volume
 existant (`./scripts/dev.sh db-roles` le fait a la demande).
 
 Commandes : `up`, `down`, `logs [service]`, `ps`, `migrate`, `revision "msg"`,
-`seed`, `test`, `lint`, `shell [service]`, `db-roles`, `reset`.
+`seed`, `test`, `lint`, `shell [service]`, `psql`, `db-roles`, `reset`.
 
 ## Branches
 

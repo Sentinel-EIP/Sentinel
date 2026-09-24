@@ -4,14 +4,9 @@
 # conteneurs de l'hote, quel que soit le reseau : pas de donnees reelles en dev.
 services:
 
-  db:
-    # Acces depuis un client local (DBeaver, psql), avec le role applicatif.
-    # Le reseau data etant internal, la publication passe par un reseau dedie
-    # a db (db-host) ; consequence : en dev, db a une sortie Internet.
-    ports: ["127.0.0.1:${DEV_DB_PORT:-5432}:5432"]
-    networks: [data, db-host]
-
-  # redis : volontairement non publie (docker compose exec redis redis-cli).
+  # db et redis : volontairement non publies, meme en dev. Le reseau data reste
+  # internal (aucune sortie Internet). Acces : ./scripts/dev.sh psql
+  # (role applicatif) et docker compose exec redis redis-cli.
 
   api:
     build:
@@ -46,6 +41,3 @@ services:
 
   proxy:
     profiles: ["proxy"]       # non demarre en dev : on tape les ports directement
-
-networks:
-  db-host:    # dev uniquement : seul reseau non internal de db, pour publier 5432
