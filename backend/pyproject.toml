@@ -1,0 +1,50 @@
+[project]
+name = "sentinel-backend"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "gunicorn>=23.0",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.6",
+  "sqlmodel>=0.0.22",
+  "psycopg[binary]>=3.2",
+  "alembic>=1.14",
+  "redis>=5.2",
+  "celery>=5.4",
+  "httpx>=0.28",
+  "structlog>=24.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "pytest-asyncio>=0.24",
+  "hypothesis>=6.115",
+  "ruff>=0.8",
+  "mypy>=1.13",
+  "bandit>=1.8",
+  "pip-audit>=2.7",
+  "watchdog>=6.0",
+  "schemathesis>=3.38",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "S", "C4"]
+ignore = ["S101"]          # assert autorise dans les tests
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=app --cov-report=term-missing --cov-fail-under=70"
+asyncio_mode = "auto"
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]

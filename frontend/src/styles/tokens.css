@@ -1,0 +1,91 @@
+/* SENTINEL — design system v1.2 (VERSION GELEE)
+   Un composant ne consomme jamais un hexadecimal en dur : il consomme un role.
+   Ratios de contraste mesures sur --surface-raised-2, surface de reference. */
+:root {
+  /* fonds & surfaces — bg-base sert aussi de plan creux */
+  --bg-base: #0B0E14;          --surface-raised: #12161F;
+  --surface-raised-2: #171C27; --surface-inset: #1E2430;
+
+  /* bordures */
+  --border-subtle: rgba(255,255,255,.08);
+  --border-strong: rgba(255,255,255,.16);
+
+  /* texte — tous >= 4,5:1 */
+  --text-primary: #E4E8F0;     /* 13,9:1 */
+  --text-secondary: #9AA3B6;   /*  6,7:1 */
+  --text-tertiary: #838C9F;    /*  5,1:1 — plancher */
+
+  /* accent */
+  --accent: #46B8DC;           --accent-line: rgba(70,184,220,.32);
+  --accent-soft: rgba(70,184,220,.12); --accent-ink: #08222C;
+
+  /* semantique — usage strictement encadre */
+  --warning: #D9B36C;          --warning-soft: rgba(217,179,108,.10);
+  --risk-critical: #EE5C61;    --risk-critical-line: rgba(238,92,97,.28);
+  --risk-critical-soft: rgba(238,92,97,.14);
+  --value-negative: #9A8E88;   --value-positive: #3DAE7C;
+
+  /* etat des donnees */
+  --state-stale: #7C93A8;      --state-stale-soft: rgba(124,147,168,.14);
+  --state-offline: #B0847A;
+
+  /* graphique — aucun rouge/vert reflexe sur les prix */
+  --candle-up: #93A7BE;        --candle-down: #6B6A72;
+  --grid-line: rgba(255,255,255,.045);
+
+  /* interaction & overlay */
+  --focus-ring: #7FD3EC;       --focus-ring-offset: 2px;
+  --overlay-scrim: rgba(7,9,14,.72);
+
+  /* saisie & chargement */
+  --field-bg: var(--bg-base);  --field-border: var(--border-strong);
+  --field-invalid: var(--warning);   /* jamais --risk-critical */
+  --skeleton-sheen: rgba(255,255,255,.05); --duration-skeleton: 1400ms;
+
+  /* responsive & cible tactile */
+  --touch-target-min: 44px;
+  --bp-desktop: 1440px; --bp-compact: 1200px; --bp-tablet: 900px; --bp-mobile: 600px;
+
+  /* typographie */
+  --font-ui: 'Space Grotesk', system-ui, sans-serif;
+  --font-numeric: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* espacements — base 4 stricte */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px;
+  --space-4: 16px; --space-5: 24px; --space-6: 32px;
+
+  /* rayons */
+  --radius-sm: 4px; --radius-md: 6px; --radius-lg: 10px;
+
+  /* profondeur */
+  --z-base: 0; --z-chart-overlay: 10; --z-panel: 20;
+  --z-tooltip: 30; --z-modal: 40; --z-toast: 50;
+
+  /* mouvement */
+  --duration-fast: 120ms; --duration-base: 200ms; --duration-slow: 320ms;
+  --ease-out: cubic-bezier(.2,.8,.24,1);
+  --ease-in-out: cubic-bezier(.4,0,.2,1);
+
+  /* fraicheur de CONNEXION — heartbeat du flux, jamais la variation du prix */
+  --heartbeat-timeout-price: 5s;      --heartbeat-timeout-exposure: 10s;
+  --heartbeat-timeout-risk-budget: 10s; --heartbeat-timeout-indicators: 15s;
+  --heartbeat-timeout-sentiment: 180s;
+  --value-age-hint: 60s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 1ms; --duration-base: 1ms; --duration-slow: 1ms; }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+}
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--bg-base),
+              0 0 0 calc(var(--focus-ring-offset) + 2px) var(--focus-ring);
+}
