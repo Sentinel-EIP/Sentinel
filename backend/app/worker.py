@@ -1,4 +1,5 @@
 """Jobs asynchrones : ingestion OHLCV, collecte news, recalculs batch."""
+
 from celery import Celery
 
 from app.core.config import get_settings
@@ -11,7 +12,7 @@ celery_app.conf.update(
     accept_content=["json"],
     timezone="UTC",
     enable_utc=True,
-    task_acks_late=True,          # un worker qui meurt ne perd pas la tache
+    task_acks_late=True,  # un worker qui meurt ne perd pas la tache
     worker_prefetch_multiplier=1,
 )
 

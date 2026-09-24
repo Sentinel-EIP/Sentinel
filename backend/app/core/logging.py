@@ -1,4 +1,5 @@
 """Logs structures JSON : exploitables tels quels par Loki/Promtail."""
+
 import logging
 import sys
 
@@ -9,8 +10,11 @@ from app.core.config import get_settings
 
 def configure_logging() -> None:
     settings = get_settings()
-    logging.basicConfig(format="%(message)s", stream=sys.stdout,
-                        level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO))
+    logging.basicConfig(
+        format="%(message)s",
+        stream=sys.stdout,
+        level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO),
+    )
     structlog.configure(
         processors=[
             structlog.contextvars.merge_contextvars,

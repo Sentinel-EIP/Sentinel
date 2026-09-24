@@ -7,10 +7,17 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+coverage/
+*.tsbuildinfo
+playwright-report/
+test-results/
 node_modules/
 dist/
 .DS_Store
-models/
+# Poids de modeles telecharges. Ancre : un motif "models/" nu ignorerait
+# aussi les paquets de code (backend/app/models/).
+/models/
+/ml/models/
 data/raw/
 
 # Configurations locales nommees <outil>.env (ex. backup-cloud.env)

@@ -1,4 +1,5 @@
 """Sondes de sante. /health pour Docker, /health/ready pour la CI et le proxy."""
+
 import httpx
 from fastapi import APIRouter
 from sqlalchemy import text

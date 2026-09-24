@@ -1,4 +1,5 @@
 """Configuration centralisee. Aucune valeur en dur ailleurs dans le code."""
+
 from functools import lru_cache
 from typing import Literal
 from urllib.parse import quote
@@ -13,7 +14,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     POSTGRES_USER: str = "sentinel"
-    POSTGRES_PASSWORD: str = "change-me"
+    POSTGRES_PASSWORD: str = ""  # role applicatif : APP_DB_PASSWORD, exige par la compose
     POSTGRES_DB: str = "sentinel"
     POSTGRES_HOST: str = "db"
     POSTGRES_PORT: int = 5432
