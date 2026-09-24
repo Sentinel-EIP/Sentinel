@@ -12,3 +12,6 @@ dist/
 .DS_Store
 models/
 data/raw/
+
+# Configurations locales nommees <outil>.env (ex. backup-cloud.env)
+*.env
