@@ -21,7 +21,7 @@ Commandes : `up`, `down`, `logs [service]`, `ps`, `migrate`, `revision "msg"`,
 ## Branches
 
 - `main` — production, protegee, build rouge interdit
-- `develop` — integration, cible par defaut des PR
+- `dev` — integration, cible par defaut des PR
 - `feat/<scope>-<sujet>`, `fix/<scope>-<sujet>`
 
 ## Commits
