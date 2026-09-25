@@ -18,7 +18,8 @@ Derniere revue : 2026-09-25.
   ```bash
   docker run --rm -v <projet>_ml-models:/models alpine chown -R 10002:10002 /models
   ```
-  (`sentineleip_ml-models` sur le poste qui a servi au squelette.)
+  (`sentineleip_ml-models` sur le poste qui a servi au squelette : fait le
+  2026-09-25, le volume etait vide.)
 - **Prevention en place** : le dev utilise desormais son propre volume
   (`ml-models-dev`), et le ML verifie au demarrage que ses caches sont
   inscriptibles (`check_model_cache`, `ml/app/main.py`) : l'erreur survient au
@@ -43,27 +44,85 @@ Derniere revue : 2026-09-25.
   `internal`) ; ces binaires servent a l'initialisation ou sont inutilises.
 - **Controle** : le job CI `images-tierces` scanne toutes les images tierces
   (liste derivee de la compose) et publie le resultat dans le resume du run,
-  **sans bloquer** tant que cet ecart est ouvert.
-- **Pistes** : image derivee (`apk upgrade`, retrait des outils inutilises,
-  execution en uid 70 pour se passer de `gosu`, parametres memoire explicites
-  a la place de `timescaledb-tune`), tag precis et digest. Le scan deviendra
-  alors bloquant.
+  **sans bloquer** : on ne bloque pas la CI sur des binaires embarques dans une
+  image officielle qu'on ne controle pas.
+- **Pour rendre le scan bloquant un jour** :
+  1. Image derivee `infra/docker/Dockerfile.db`, `FROM` un tag precis
+     (`timescale/timescaledb:<version>-pg16`) epingle par digest, avec
+     `apk upgrade --no-cache` (corrige `libexpat`).
+  2. Retirer ce qui ne sert pas a l'execution :
+     - `timescaledb-parallel-copy` : outil d'import en ligne de commande,
+       inutilise ;
+     - `timescaledb-tune` : ne tourne qu'a l'initialisation ; le remplacer par
+       `NO_TS_TUNE=true` et des parametres memoire explicites (`-c
+       shared_buffers=...`), de toute facon necessaires des qu'on posera un
+       `mem_limit` ;
+     - `gosu` : l'entrypoint ne s'en sert que s'il demarre en root. Lancer db en
+       `user: "70:70"` (valide pendant l'audit, sans capacite, volumes
+       existants compris), puis retirer le binaire.
+  3. Remplacer `image:` par `build:` dans la compose : l'inventaire fait passer
+     l'image d'office des images tierces (rapport) aux images construites
+     (build + Trivy **bloquant**), sans aucune liste a modifier.
+  4. Pour une vulnerabilite corrigeable mais sans objet, une entree
+     `.trivyignore.yaml` justifiee, avec date d'expiration (`expired_at`),
+     plutot qu'une exception permanente.
+  5. Critere de sortie : 0 HIGH/CRITICAL corrigeable sur l'image derivee.
+     `redis:7-alpine` y est deja et pourra suivre le meme chemin.
 
-## E4 — Stack cloud exposee sur Internet sans controle bloquant
+## E4 — Stack cloud (`infra/stacks/cloud`) : inutilisable en l'etat
 
-- **Constat** (Trivy v0.70.0, 2026-09-25) :
-  - `nextcloud:30-apache` est en fin de vie : 1 180 vulnerabilites
-    HIGH/CRITICAL corrigeables ;
-  - `minio/minio:latest` et `minio/mc:latest` ne sont plus publiques
-    (`UNAUTHORIZED`) : la stack ne peut plus etre redeployee de zero, et le
-    projet MinIO est archive ;
-  - `postgres:16-alpine` : 22 (binaire `gosu`).
-- **Exposition** : forte. Nextcloud et l'API S3 sont publies sur Internet par
-  les relais du VPS.
-- **Controle** : ports verifies (127.0.0.1 uniquement, derives de la compose),
-  images scannees en rapport, non bloquant.
-- **Decision a prendre** : mettre Nextcloud a jour, remplacer MinIO, ou sortir
-  cette stack du depot produit.
+Jamais deployee : rien a corriger en urgence, mais elle ne peut pas l'etre
+telle quelle. A reprendre avant son premier deploiement. Constats du
+2026-09-25 (Trivy v0.70.0, registres interroges directement).
+
+### Nextcloud
+
+- `nextcloud:30-apache` est en fin de vie : 1 180 vulnerabilites HIGH/CRITICAL
+  corrigeables.
+- Versions maintenues : 33 (fin de vie 2027-02), 34 (2027-06), 35 (sortie le
+  2026-09-16, fin de vie 2027-09). Une majeure tous les quatre mois, un an de
+  support chacune.
+- **Version a viser : Nextcloud 35**, sur le dernier tag de correctif
+  (`35.0.1-apache` au 2026-09-25), epingle par digest. Premiere installation,
+  donc aucune montee de version a enchainer ; c'est la fenetre de support la
+  plus longue. Si l'equipe prefere une version plus eprouvee : 34 (`34.0.4`),
+  pour trois mois de support en moins.
+- Ensuite, monter d'une majeure a la fois (Nextcloud n'en saute pas), au
+  rythme des sorties.
+- A verifier au deploiement : prerequis de la 35 (versions de PostgreSQL et de
+  Redis supportees) face a `postgres:16-alpine` et `redis:7-alpine`.
+
+### MinIO : plus d'images publiques
+
+- MinIO a cesse de publier ses images communautaires en octobre 2025, puis a
+  archive son depot en 2026. Docker Hub a supprime l'espace `minio` en
+  septembre 2026 (`hub.docker.com/v2/repositories/minio/minio` : 404). Sur
+  quay.io, les images communautaires sont gelees depuis le 2025-09-07, sans
+  correctif, et un pull anonyme de `quay.io/minio/minio:latest` est refuse (401).
+- `minio/minio:latest` et `minio/mc:latest` ne se telechargent donc plus : la
+  stack ne demarre pas.
+- **Options, a trancher** :
+  - **Garage** (Deuxfleurs, AGPL-3.0) : concu pour l'auto-hebergement leger ;
+    v2.4.1 du 2026-09-08, images publiees en continu ;
+  - **SeaweedFS** (Apache-2.0) : 4.47 du 2026-09-14, images signees ;
+  - recompiler MinIO depuis les sources archivees, ou une reconstruction
+    tierce : plus aucun correctif amont, deconseille pour un service expose ;
+  - se passer d'un stockage objet : le besoin reel des buckets
+    `sentinel-models`, `sentinel-datasets` et `sentinel-artifacts` reste a
+    confirmer.
+- **A verifier quel que soit le choix** : versionnement des objets (active par
+  `minio-init` sur `sentinel-models`), compatibilite avec rclone
+  (`scripts/backup-cloud.sh`), remplacement de la console d'administration,
+  relais et DNS `s3.*`.
+
+### Le reste de la stack
+
+- `postgres:16-alpine` : 22 vulnerabilites, toutes dans `gosu` (meme cas que
+  E3). `redis:7-alpine` et `alpine/socat` (relais) : 0.
+- **Exposition, une fois deployee** : forte. Nextcloud et l'API S3 sont
+  publies sur Internet par les relais du VPS.
+- **Controle actuel** : ports verifies (127.0.0.1 uniquement, derives de la
+  compose) ; images scannees en rapport, non bloquant.
 
 ## E5 — Anciennes valeurs d'infrastructure accessibles par SHA
 
@@ -117,3 +176,50 @@ suivre, ou le depot revenir en arriere :
   15 min visees (`sentinel_deployment_cicd_plan.md` section 10), et l'image ML
   est construite deux fois (build puis smoke). Piste : le smoke reutilise les
   images du build (cache gha), ou le build repasse au merge.
+
+## E10 — Signal d'achat ou non : contradiction sur la nature du produit
+
+**A trancher en equipe** (ordre du jour de la reunion mentor). Le depot ne
+tranche pas : les deux positions sont exposees telles quelles.
+
+### Position A : aucune direction, aucun signal d'achat
+
+- **Sources** : l'ancienne regle 1 de CONTRIBUTING (« aucune prediction de
+  direction [...] jamais une fleche haussiere ni un signal d'achat ») ;
+  l'ancienne docstring du service ML (« ne predit JAMAIS la direction du
+  prix ») ; le contrat de `/volatility/cone` (« Amplitude probable. Aucune
+  direction implicite. ») ; le design system v1.2 (« aucun rouge/vert reflexe
+  sur les prix »).
+- **Ce qu'elle implique** : le ML produit des amplitudes, des regimes et des
+  scores, chacun avec sa fiabilite historique mesuree. Le produit aide a
+  decider sans recommander : il n'y a pas de synthese achat / vente. Reste a
+  definir qui decide d'un ordre en paper trading et en reel (US1.4).
+
+### Position B : signal synthetise achat / vente / attente
+
+- **Sources** : le dossier technique. `sentinel_solution_track_action_plan.md`,
+  US3.1 (tendance haussiere / baissiere / neutre, avec niveau de confiance),
+  US3.3 (signal achat / vente / attente, avec explication) et US3.4 ;
+  `sentinel_beta_test_plan.md`, F6 et F8 ; `sentinel_deployment_cicd_plan.md`,
+  section 3 (signal-synthesizer, execution-gateway).
+- **Ce qu'elle implique** : un module de synthese produit le signal, qualifie
+  et explique, et l'execution peut le suivre (paper, puis reel) sous le
+  controle du risk-governor.
+
+### Ce qui depend de la decision
+
+- Le contrat de sortie du service ML (direction ou non) et l'existence du
+  signal-synthesizer.
+- L'interface : vue Signal du framework, et couleurs du design system.
+- Le plan de test beta (F6, F8) et les criteres de reussite associes.
+- Le cadrage du produit vis-a-vis du conseil en investissement, a verifier
+  quelle que soit la position retenue.
+
+### Etat du depot en attendant
+
+- CONTRIBUTING, regle 1, et la docstring du service ML renvoient ici, sans
+  prendre parti.
+- Aucun module ne produit encore de direction ni de signal.
+- Regle commune aux deux positions, appliquee des maintenant : toute sortie
+  affichee porte son niveau de confiance et son explication (US3.4).
+

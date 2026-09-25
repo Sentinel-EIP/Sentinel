@@ -95,10 +95,12 @@ Chaque regle indique sa source ; en cas de doute, le dossier technique fait foi.
 **Issues du dossier technique** (`sentinel_solution_track_action_plan.md`,
 US1.4 et US3.x ; `sentinel_technology_environment.md`, couches 4 et 5) :
 
-1. **Tout signal est qualifie et explique.** La tendance (haussiere, baissiere
-   ou neutre, US3.1) et le signal synthetise (achat, vente ou attente, US3.3)
-   portent leur niveau de confiance et les facteurs qui les ont produits
-   (US3.4).
+1. **Nature des sorties : en suspens, a trancher en equipe.** Le dossier
+   demande une tendance (US3.1) et un signal achat / vente / attente (US3.3) ;
+   l'ancienne regle de ce fichier l'interdisait. Les deux positions sont
+   exposees dans [ECARTS](docs/ECARTS.md), E10. En attendant, toute sortie
+   affichee porte son niveau de confiance et son explication (US3.4), point
+   commun aux deux positions.
 2. **Le risk-governor a le dernier mot.** Aucun ordre ne part sans passer par
    ses garde-fous (drawdown, exposition, suspension, mode cash : couche 4), et
    l'execution est progressive : analyse seule, paper trading, puis reel

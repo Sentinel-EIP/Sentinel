@@ -9,9 +9,9 @@ Modules prevus, conformes au dossier technique :
   - sentiment : scoring du flux de news
   - anomalies : detection de regimes de stress
 
-Chaque sortie (tendance, regime, amplitude, score) porte son niveau de
-confiance (dossier : US3.1). La synthese en signal achat / vente / attente
-(US3.3) et le passage par le risk-governor se font hors de ce service.
+Chaque sortie porte son niveau de confiance et son explication (US3.4).
+Produire ou non une direction de prix (tendance, signal achat / vente) est en
+suspens, a trancher en equipe : voir docs/ECARTS.md, E10.
 """
 
 import os
