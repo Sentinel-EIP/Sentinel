@@ -48,7 +48,8 @@ backend/     API FastAPI, workers Celery, migrations   (api, auth, db, core, ris
 ml/          service des modeles IA, image separee     (model, data)
 frontend/    interface React + design system v1.2      (frontend)
 infra/       Dockerfiles, configuration Nginx          (infra, config)
-scripts/     dev.sh, point d'entree unique             (infra)
+scripts/     dev.sh, point d'entree unique ; ci/        (infra)
+docs/        adr/, deploiement, sauvegardes, ECARTS.md  (docs)
 .github/     CI : lint, tests, securite, build         (ci, cd)
 EIP-documentation/
   deliverables/        livrables rediges du projet

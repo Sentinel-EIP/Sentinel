@@ -86,6 +86,13 @@ code comme a l'interface :
    sur l'absence de variation d'un prix.
 5. **Durcir une regle de risque est immediat ; l'assouplir attend 24 h.**
 
+## Ecarts connus
+
+Les limites acceptees ou en attente de decision sont dans
+[docs/ECARTS.md](docs/ECARTS.md), avec leur symptome : si quelque chose casse
+de facon inexpliquee, commencer par la. Ajouter une entree plutot que de
+laisser un contournement sans trace.
+
 ## Secrets
 
 Jamais dans le depot. `gitleaks` tourne sur chaque PR. Les variables passent
