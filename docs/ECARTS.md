@@ -82,11 +82,11 @@ telle quelle. A reprendre avant son premier deploiement. Constats du
 - Versions maintenues : 33 (fin de vie 2027-02), 34 (2027-06), 35 (sortie le
   2026-09-16, fin de vie 2027-09). Une majeure tous les quatre mois, un an de
   support chacune.
-- **Version a viser : Nextcloud 35**, sur le dernier tag de correctif
-  (`35.0.1-apache` au 2026-09-25), epingle par digest. Premiere installation,
-  donc aucune montee de version a enchainer ; c'est la fenetre de support la
-  plus longue. Si l'equipe prefere une version plus eprouvee : 34 (`34.0.4`),
-  pour trois mois de support en moins.
+- **Choix retenu (2026-09-25) : Nextcloud 35**, sur le dernier tag de
+  correctif (`35.0.1-apache` au 2026-09-25), epingle par digest. Premiere
+  installation, donc aucune montee de version a enchainer ; c'est la fenetre
+  de support la plus longue. Alternative ecartee : 34 (`34.0.4`), plus
+  eprouvee mais supportee trois mois de moins.
 - Ensuite, monter d'une majeure a la fois (Nextcloud n'en saute pas), au
   rythme des sorties.
 - A verifier au deploiement : prerequis de la 35 (versions de PostgreSQL et de
@@ -101,19 +101,27 @@ telle quelle. A reprendre avant son premier deploiement. Constats du
   correctif, et un pull anonyme de `quay.io/minio/minio:latest` est refuse (401).
 - `minio/minio:latest` et `minio/mc:latest` ne se telechargent donc plus : la
   stack ne demarre pas.
-- **Options, a trancher** :
-  - **Garage** (Deuxfleurs, AGPL-3.0) : concu pour l'auto-hebergement leger ;
-    v2.4.1 du 2026-09-08, images publiees en continu ;
-  - **SeaweedFS** (Apache-2.0) : 4.47 du 2026-09-14, images signees ;
-  - recompiler MinIO depuis les sources archivees, ou une reconstruction
-    tierce : plus aucun correctif amont, deconseille pour un service expose ;
-  - se passer d'un stockage objet : le besoin reel des buckets
-    `sentinel-models`, `sentinel-datasets` et `sentinel-artifacts` reste a
-    confirmer.
-- **A verifier quel que soit le choix** : versionnement des objets (active par
-  `minio-init` sur `sentinel-models`), compatibilite avec rclone
-  (`scripts/backup-cloud.sh`), remplacement de la console d'administration,
-  relais et DNS `s3.*`.
+- **Choix retenu (2026-09-25) : Garage** (Deuxfleurs, AGPL-3.0, compatible
+  S3 ; v2.4.1 du 2026-09-08, images publiees en continu). Suffisant pour un
+  stockage interne a quatre, sans recompiler un service expose. **Sous reserve
+  des verifications ci-dessous, a faire au deploiement de la stack cloud.**
+- Alternatives ecartees :
+  - SeaweedFS (Apache-2.0, 4.47 du 2026-09-14) : repli possible si une
+    verification echoue, a rediscuter le cas echeant ;
+  - recompiler MinIO depuis ses sources archivees, ou une reconstruction
+    tierce : plus aucun correctif amont, pour un service expose ;
+  - se passer de stockage objet.
+- **A verifier au deploiement, avec Garage** :
+  - versionnement des objets, aujourd'hui active par `minio-init` sur
+    `sentinel-models` : pris en charge, ou a remplacer (par exemple par un
+    bucket d'historique) ;
+  - creation des buckets et des cles d'acces, qui remplace `minio-init` et
+    `mc` ;
+  - compatibilite S3 des clients prevus : rclone (`scripts/backup-cloud.sh`,
+    remote `minio:` a renommer) et les futurs clients applicatifs ;
+  - administration sans la console MinIO (CLI `garage`, ou interface
+    d'administration) ;
+  - relais VPS et DNS `s3.*` : port et en-tetes attendus par Garage.
 
 ### Le reste de la stack
 
