@@ -15,6 +15,7 @@ dependencies = [
   "celery>=5.4",
   "httpx>=0.28",
   "structlog>=24.4",
+  "prometheus-fastapi-instrumentator>=8.1",
 ]
 
 [project.optional-dependencies]
@@ -49,3 +50,10 @@ asyncio_mode = "auto"
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]
+
+# Politique de tests : les paquets critiques exigent 90 % de couverture, en plus
+# du seuil global. Seule liste a tenir : scripts/ci/critical_coverage.py la lit,
+# et echoue si un paquet declare n'existe plus (renomme sans mise a jour ici).
+[tool.sentinel]
+critical-packages = ["app/risk", "app/execution"]
+critical-coverage = 90

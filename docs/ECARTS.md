@@ -89,3 +89,31 @@ Derniere revue : 2026-09-25.
   Dependabot. Deux builds du meme commit peuvent differer.
 - L'`apk upgrade` des images nginx est non reproductible par construction
   (compromis assume : il applique les correctifs publies depuis l'image de base).
+- `wagoid/commitlint-github-action` est epinglee par SHA, mais execute l'image
+  Docker `wagoid/commitlint-github-action:6.2.1`, referencee par tag.
+
+## E8 — Branches `main` et `dev` non protegees
+
+- Les regles de PR du dossier (review obligatoire, CI verte avant merge) ne
+  sont pas imposees : l'API GitHub renvoie `protected: false` pour `main` et
+  `dev`, et `main` a deja ete reecrite (force-push).
+- Le squash merge n'est pas impose non plus : c'est pourquoi la CI verifie a
+  la fois le titre de la PR et chacun de ses commits.
+- **Correctif** (administrateur du depot) : regle de protection ou ruleset sur
+  `main` et `dev`, avec review requise, jobs de CI requis et squash merge seul.
+
+## E9 — Dossier technique a mettre a jour
+
+Le depot s'ecarte volontairement du dossier sur ces points ; le dossier doit
+suivre, ou le depot revenir en arriere :
+
+- branche d'integration `dev` (dossier : `develop`) ; prefixes `feat/`, `fix/`
+  (dossier : `feature/`) ;
+- design system v1.2 (`frontend/src/styles/tokens.css`) absent du dossier ;
+- regles d'equipe 5 et 6 de CONTRIBUTING (fiabilite historique mesuree,
+  assouplissement d'une regle de risque differe de 24 h) ;
+- build des images, scan Trivy et smoke **en PR** (dossier : au merge sur
+  develop, `sentinel_testing_policy.md` 4.2) : la chaine de PR depasse les
+  15 min visees (`sentinel_deployment_cicd_plan.md` section 10), et l'image ML
+  est construite deux fois (build puis smoke). Piste : le smoke reutilise les
+  images du build (cache gha), ou le build repasse au merge.

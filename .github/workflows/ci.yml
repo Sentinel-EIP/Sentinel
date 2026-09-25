@@ -51,6 +51,9 @@ jobs:
           POSTGRES_PASSWORD: sentinel
           REDIS_HOST: localhost
         run: pytest
+      # Paquets critiques (risque, execution) : 90 %, liste dans pyproject.toml.
+      - name: Couverture des paquets critiques (seuil 90 %)
+        run: python ../scripts/ci/critical_coverage.py
       - name: Scripts CI (ruff, format, mypy ; config du backend)
         run: |
           ruff check --config pyproject.toml ../scripts
@@ -86,6 +89,32 @@ jobs:
       - run: npm run lint
       - run: npx tsc -b
       - run: npm run test
+
+  # --------------------------------------------- commits de la PR (commitlint)
+  # Squash merge (dossier, 4.2) : c'est le TITRE de la PR qui devient le commit
+  # de dev/main ; il est donc verifie ici, avant le merge. Les commits de la PR
+  # le sont aussi, tant que le squash n'est pas impose par GitHub (ECARTS, E8).
+  commits:
+    name: Commits — Conventional Commits, scope obligatoire
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0 }
+      - name: Commits de la PR
+        uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
+        with:
+          configFile: commitlint.config.cjs   # explicite plutot que decouvert
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with: { node-version: "22" }
+      - name: Titre de la PR (futur commit du squash merge)
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund \
+            @commitlint/cli@19 @commitlint/config-conventional@19
+          printf '%s\n' "$PR_TITLE" | npx commitlint --config commitlint.config.cjs
 
   # ------------------------------------------------------- securite (PR)
   security:
@@ -278,6 +307,19 @@ jobs:
           r = json.load(sys.stdin)
           print(r)
           raise SystemExit(r['status'] != 'ok')
+          "
+      # Regle : metriques scrapees en interne, jamais publiees par le proxy.
+      - name: Metriques internes, invisibles depuis le proxy
+        run: |
+          for path in /api/metrics /api/metrics/ /api//metrics /api/%6detrics; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8080$path")
+            echo "$path -> $code"
+            test "$code" = 404
+          done
+          docker compose exec -T api python -c "
+          import urllib.request
+          body = urllib.request.urlopen('http://localhost:8000/metrics', timeout=10).read()
+          raise SystemExit(b'http_requests_total' not in body)
           "
       - name: Journaux en cas d'echec
         if: failure()

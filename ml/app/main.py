@@ -9,9 +9,9 @@ Modules prevus, conformes au dossier technique :
   - sentiment : scoring du flux de news
   - anomalies : detection de regimes de stress
 
-IMPORTANT : ce service ne predit JAMAIS la direction du prix. Il produit des
-amplitudes, des regimes et des scores, chacun accompagne de sa fiabilite
-historique mesuree.
+Chaque sortie (tendance, regime, amplitude, score) porte son niveau de
+confiance (dossier : US3.1). La synthese en signal achat / vente / attente
+(US3.3) et le passage par le risk-governor se font hors de ce service.
 """
 
 import os
@@ -20,6 +20,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field
 
 from app.core.config import get_settings
@@ -54,6 +55,10 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="Sentinel ML", version="0.1.0", lifespan=lifespan)
+
+# /metrics : scrape interne par Prometheus (ml:8100/metrics). Un seul processus
+# uvicorn : pas de mode multi-processus ici.
+Instrumentator().instrument(app).expose(app, include_in_schema=False)
 
 
 class VolatilityConeRequest(BaseModel):

@@ -13,6 +13,7 @@ dependencies = [
   "ta>=0.11",
   "transformers>=4.46",
   "structlog>=24.4",
+  "prometheus-fastapi-instrumentator>=8.1",
 ]
 
 [project.optional-dependencies]

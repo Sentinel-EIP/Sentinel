@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Point d'entree unique pour l'environnement de developpement.
-#   ./scripts/dev.sh up|down|logs|ps|migrate|seed|test|lint|shell|psql|db-roles|reset
+#   ./scripts/dev.sh up|down|logs|ps|migrate|test|lint|shell|psql|db-roles|reset
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -40,7 +40,6 @@ case "${1:-help}" in
     [ -n "${2:-}" ] || { echo "Usage : ./scripts/dev.sh revision \"message\""; exit 1; }
     $COMPOSE exec api alembic revision --autogenerate -m "$2"
     ;;
-  seed)    $COMPOSE exec api python -m app.seed ;;
   test)
     $COMPOSE exec api pytest
     $COMPOSE exec ml pytest

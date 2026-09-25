@@ -66,6 +66,6 @@ environ 2 Go, et les melanger imposerait ce poids a chaque rebuild de l'API.
 | Environnement | Usage                                      |
 | ------------- | ------------------------------------------ |
 | Local Dev     | poste developpeur, `docker-compose.dev.yml` |
-| Shared Dev    | equipe, deploiement auto depuis `develop`   |
+| Shared Dev    | equipe, deploiement auto depuis `dev`       |
 | Staging       | miroir de production, validation des RC     |
 | Production    | execution stable, sauvegardes et alerting   |

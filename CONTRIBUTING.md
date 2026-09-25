@@ -38,13 +38,25 @@ deviendrait la cle. `./scripts/dev.sh up` cree ensuite le role sur le volume
 existant (`./scripts/dev.sh db-roles` le fait a la demande).
 
 Commandes : `up`, `down`, `logs [service]`, `ps`, `migrate`, `revision "msg"`,
-`seed`, `test`, `lint`, `shell [service]`, `psql`, `db-roles`, `reset`.
+`test`, `lint`, `shell [service]`, `psql`, `db-roles`, `reset`.
 
-## Branches
+## Branches et pull requests
 
-- `main` — production, protegee, build rouge interdit
+Modele du dossier technique (`sentinel_deployment_cicd_plan.md`, section 4),
+avec deux adaptations assumees, a reporter dans le dossier (voir
+[ECARTS](docs/ECARTS.md), E9) : `dev` au lieu de `develop`, et `feat/`, `fix/`
+(alignes sur les types de commit) au lieu de `feature/`.
+
+- `main` — production ; build rouge interdit
 - `dev` — integration, cible par defaut des PR
-- `feat/<scope>-<sujet>`, `fix/<scope>-<sujet>`
+- `feat/<scope>-<sujet>`, `fix/<scope>-<sujet>` — travail courant
+- `hotfix/*` — correctif urgent de production
+- `release/*` — preparation de version (SemVer, tags `-rc`)
+- `staging/*` — pre-production
+
+Regles de PR (dossier, 4.2) : au moins une review, CI verte, squash merge sur
+`dev` et `main`. Ces regles ne sont **pas encore imposees** par GitHub : `main`
+et `dev` ne sont pas protegees (ECARTS, E8).
 
 ## Commits
 
@@ -66,25 +78,47 @@ Une fonctionnalite est terminee quand :
 - ses tests unitaires existent et passent ;
 - ses cas d'erreur sont verifies ;
 - son impact risque est couvert par un test ;
+- son comportement est observable (metriques `/metrics`, logs structures) et
+  trace dans les dashboards de test (`sentinel_testing_policy.md`, section 8) ;
 - la CI est verte, sans exception.
 
-Seuils de couverture : backend >= 70 % (modules risque et execution >= 90 %),
-frontend >= 60 %.
+Seuils de couverture, appliques par la CI : backend >= 70 % au global, et
+>= 90 % pour chaque paquet critique declare dans `backend/pyproject.toml`
+(`[tool.sentinel]`, aujourd'hui `app/risk` et `app/execution`) ; frontend
+>= 60 % (`frontend/vite.config.ts`). Un nouveau module critique s'ajoute a
+cette liste, pas ailleurs.
 
-## Regles produit non negociables
+## Regles produit
 
-Elles proviennent du dossier technique et du design system, et s'appliquent au
-code comme a l'interface :
+Chaque regle indique sa source ; en cas de doute, le dossier technique fait foi.
 
-1. **Aucune prediction de direction.** Le service ML produit des amplitudes,
-   des regimes et des scores — jamais une fleche haussiere ni un signal
-   d'achat.
-2. **Tout score affiche porte sa fiabilite historique mesuree.**
+**Issues du dossier technique** (`sentinel_solution_track_action_plan.md`,
+US1.4 et US3.x ; `sentinel_technology_environment.md`, couches 4 et 5) :
+
+1. **Tout signal est qualifie et explique.** La tendance (haussiere, baissiere
+   ou neutre, US3.1) et le signal synthetise (achat, vente ou attente, US3.3)
+   portent leur niveau de confiance et les facteurs qui les ont produits
+   (US3.4).
+2. **Le risk-governor a le dernier mot.** Aucun ordre ne part sans passer par
+   ses garde-fous (drawdown, exposition, suspension, mode cash : couche 4), et
+   l'execution est progressive : analyse seule, paper trading, puis reel
+   encadre (US1.4, couche 5).
+
+**Issues du design system v1.2** (`frontend/src/styles/tokens.css`, absent du
+dossier) :
+
 3. **`risk-critical` (rouge) est reserve au depassement d'un seuil de risque.**
-   Un chiffre negatif ordinaire s'ecrit en `value-negative`.
-4. **L'etat "perime" se declenche sur le heartbeat de la connexion**, jamais
+   Un chiffre negatif ordinaire s'ecrit en `value-negative` ; aucun rouge ni
+   vert reflexe sur les prix.
+4. **L'etat « perime » se declenche sur le heartbeat de la connexion**, jamais
    sur l'absence de variation d'un prix.
-5. **Durcir une regle de risque est immediat ; l'assouplir attend 24 h.**
+
+**Decisions d'equipe absentes du dossier**, a y reporter ou a abandonner
+(ECARTS, E9) :
+
+5. **Tout score affiche porte sa fiabilite historique mesuree**, au-dela du
+   simple niveau de confiance demande par le dossier.
+6. **Durcir une regle de risque est immediat ; l'assouplir attend 24 h.**
 
 ## Ecarts connus
 
