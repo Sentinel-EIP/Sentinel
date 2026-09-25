@@ -156,8 +156,10 @@ telle quelle. A reprendre avant son premier deploiement. Constats du
   Dependabot. Deux builds du meme commit peuvent differer.
 - L'`apk upgrade` des images nginx est non reproductible par construction
   (compromis assume : il applique les correctifs publies depuis l'image de base).
-- `wagoid/commitlint-github-action` est epinglee par SHA, mais execute l'image
-  Docker `wagoid/commitlint-github-action:6.2.1`, referencee par tag.
+- `wagoid/commitlint-github-action`, encore utilisee par `mirror.yml`, est
+  epinglee par SHA mais execute l'image Docker
+  `wagoid/commitlint-github-action:6.2.1`, referencee par tag. La CI des PR n'en
+  depend plus : elle lance `scripts/verifier.sh commits`, commitlint 19.8.1.
 
 ## E8 — Branches `main` et `dev` non protegees
 

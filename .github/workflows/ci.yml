@@ -59,6 +59,11 @@ jobs:
           ruff check --config pyproject.toml ../scripts
           ruff format --check --config pyproject.toml ../scripts
           mypy ../scripts
+      # Meta-test de scripts/verifier.sh : un test rouge doit le faire echouer.
+      - name: Meta-test de verifier.sh (test rouge)
+        env:
+          VERIFIER_NATIVE: "1"
+        run: ../scripts/verifier-autotest.sh backend
 
   ml:
     name: ML — lint et tests
@@ -91,9 +96,10 @@ jobs:
       - run: npm run test
 
   # --------------------------------------------- commits de la PR (commitlint)
-  # Squash merge (dossier, 4.2) : c'est le TITRE de la PR qui devient le commit
-  # de dev/main ; il est donc verifie ici, avant le merge. Les commits de la PR
-  # le sont aussi, tant que le squash n'est pas impose par GitHub (ECARTS, E8).
+  # Meme script qu'en local (scripts/verifier.sh commits) : ce que la CI verifie,
+  # chacun peut le verifier avant de pousser. Le titre de la PR, qui devient le
+  # commit du squash merge, a son propre workflow (pr-titre.yml), relance a
+  # chaque renommage.
   commits:
     name: Commits — Conventional Commits, scope obligatoire
     if: github.event_name == 'pull_request'
@@ -102,19 +108,21 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
-      - name: Commits de la PR
-        uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
-        with:
-          configFile: commitlint.config.cjs   # explicite plutot que decouvert
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with: { node-version: "22" }
-      - name: Titre de la PR (futur commit du squash merge)
+      - run: >-
+          npm install --no-save --no-package-lock --no-audit --no-fund
+          @commitlint/cli@19.8.1 @commitlint/config-conventional@19.8.1
+      # Meta-test : un message hors convention doit faire echouer verifier.sh.
+      - run: scripts/verifier-autotest.sh message
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          npm install --no-save --no-package-lock --no-audit --no-fund \
-            @commitlint/cli@19 @commitlint/config-conventional@19
-          printf '%s\n' "$PR_TITLE" | npx commitlint --config commitlint.config.cjs
+          VERIFIER_NATIVE: "1"
+      - name: Chaque commit de la PR
+        env:
+          VERIFIER_NATIVE: "1"
+          VERIFIER_BASE: ${{ github.event.pull_request.base.sha }}
+          VERIFIER_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: scripts/verifier.sh commits
 
   # ------------------------------------------------------- securite (PR)
   security:

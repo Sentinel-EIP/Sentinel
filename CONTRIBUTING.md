@@ -58,9 +58,29 @@ Regles de PR (dossier, 4.2) : au moins une review, CI verte, squash merge sur
 `dev` et `main`. Ces regles ne sont **pas encore imposees** par GitHub : `main`
 et `dev` ne sont pas protegees (ECARTS, E8).
 
+## Verifier avant de commiter et de pousser
+
+```bash
+scripts/verifier.sh                        # backend, ml, frontend, commits
+scripts/verifier.sh message msg.txt && git commit -F msg.txt
+scripts/verifier.sh titre "feat(api): ..." # titre de PR, avant de l'ouvrir
+```
+
+Memes etapes et meme environnement que la CI, qui lance d'ailleurs ce script
+pour les commits. Chaque commit de la branche depuis `origin/dev` passe
+commitlint avec la configuration du depot. Le script lance tout, affiche
+chaque partie en vert ou en rouge, et sort en echec si une seule echoue :
+`scripts/verifier.sh && git commit ...` ne commite jamais sur du rouge. Ne
+jamais filtrer sa sortie avant le `&&` (`... | tail -1 && git commit`) : le
+filtre rendrait son propre code. Une partie seulement : `scripts/verifier.sh
+backend frontend`. Tout tourne dans des conteneurs, depot en lecture seule.
+Son meta-test, `scripts/verifier-autotest.sh`, tourne en CI.
+
 ## Commits
 
 Conventional Commits, verifies par `commitlint`. Le scope est **obligatoire**.
+Avec le squash merge, c'est le **titre de la PR** qui devient le commit de
+`dev` : il est verifie lui aussi, et reverifie a chaque renommage.
 
 ```
 feat(risk): ajoute le plafond de pertes consecutives

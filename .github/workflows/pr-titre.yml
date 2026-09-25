@@ -1,0 +1,31 @@
+name: Titre de PR
+
+# Squash merge (dossier, 4.2) : le titre de la PR devient le commit de dev et
+# de main. Workflow separe pour etre relance au renommage (`edited`) sans
+# rejouer toute la CI ; `pull_request` seul ne se declenche pas sur `edited`,
+# et relancer un run rejoue l'ancien titre.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  titre:
+    name: Titre de PR — Conventional Commits
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with: { node-version: "22" }
+      - run: >-
+          npm install --no-save --no-package-lock --no-audit --no-fund
+          @commitlint/cli@19.8.1 @commitlint/config-conventional@19.8.1
+      - name: Titre (futur commit du squash merge)
+        env:
+          VERIFIER_NATIVE: "1"
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: scripts/verifier.sh titre "$PR_TITLE"
