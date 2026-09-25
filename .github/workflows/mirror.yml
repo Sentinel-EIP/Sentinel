@@ -9,6 +9,7 @@ jobs:
   check-commit-convention:
     if: github.repository == 'Sentinel-EIP/Sentinel'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -21,6 +22,7 @@ jobs:
   mirror:
     if: github.repository == 'Sentinel-EIP/Sentinel'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: check-commit-convention
     steps:
       - name: Mirror repository

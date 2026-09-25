@@ -15,6 +15,7 @@ jobs:
   backend:
     name: Backend — lint, types, tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres:16-alpine
@@ -50,10 +51,16 @@ jobs:
           POSTGRES_PASSWORD: sentinel
           REDIS_HOST: localhost
         run: pytest
+      - name: Scripts CI (ruff, format, mypy ; config du backend)
+        run: |
+          ruff check --config pyproject.toml ../scripts
+          ruff format --check --config pyproject.toml ../scripts
+          mypy ../scripts
 
   ml:
     name: ML — lint et tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     defaults:
       run: { working-directory: ml }
     steps:
@@ -68,6 +75,7 @@ jobs:
   frontend:
     name: Frontend — lint et tests
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run: { working-directory: frontend }
     steps:
@@ -83,6 +91,7 @@ jobs:
   security:
     name: Securite — secrets, deps, code
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }
@@ -105,27 +114,51 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with: { python-version: "3.11" }
       - run: pip install bandit pip-audit
+      # Tout le Python suivi par git, hors tests : un nouveau service est
+      # analyse sans qu'il faille l'ajouter a une liste.
       - name: Bandit
-        run: bandit -r backend/app ml/app -ll
+        run: git ls-files -z '*.py' ':!:**/tests/**' | xargs -0 bandit -ll
+      # Chaque fichier Python doit relever d'un job qui le lint et le type :
+      # un nouveau dossier fait echouer la CI tant qu'il n'est pas rattache.
+      - name: Aucun Python hors des perimetres lintes
+        run: |
+          outside=$(git ls-files '*.py' | grep -vE '^(backend|ml|scripts)/' || true)
+          if [ -n "$outside" ]; then
+            echo "::error::Python hors de backend/, ml/ et scripts/ : a rattacher a un job de lint"
+            echo "$outside"
+            exit 1
+          fi
       - name: pip-audit
         run: pip-audit -r <(pip install -q pip-tools && echo) || true
 
-  # ----------------------------------------- merge develop : build + scan
-  build:
-    name: Build des images
-    if: github.event_name == 'push'
-    needs: [backend, ml, frontend, security]
+  # ------------------------------ inventaire derive de la configuration
+  # Les images a construire, les images tierces et les ports publies viennent
+  # de `docker compose config` sur chaque fichier compose suivi par git : aucune
+  # liste tenue a la main, un service ajoute est controle d'office.
+  inventaire:
+    name: Inventaire — images et ports (derives de la compose)
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      images: ${{ steps.inv.outputs.images }}
+      third_party: ${{ steps.inv.outputs.third_party }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Ports publies sur 127.0.0.1 uniquement ; listes d'images
+        id: inv
+        run: python3 scripts/ci/compose_inventory.py --github-output "$GITHUB_OUTPUT"
+
+  # ------------------------------------------- build + scan de nos images
+  build:
+    name: Build et scan — ${{ matrix.name }}
+    needs: [inventaire, backend, ml, frontend, security]
+    if: needs.inventaire.outputs.images != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
     strategy:
+      fail-fast: false
       matrix:
-        include:
-          # check : l'image prod demarre-t-elle ? Le dev et la CI ont setuptools,
-          # la prod non : une dependance qui en aurait besoin ne casserait qu'ici.
-          # no_cache : etapes a toujours reconstruire (apk upgrade des correctifs).
-          - { name: backend,  file: infra/docker/Dockerfile.backend,  check: "python -c 'import app.main, app.worker'" }
-          - { name: ml,       file: infra/docker/Dockerfile.ml,       check: "python -c 'import app.main, torch, sklearn, transformers'" }
-          - { name: frontend, file: infra/docker/Dockerfile.frontend, check: "nginx -t", no_cache: prod }
-          - { name: proxy,    file: infra/docker/Dockerfile.proxy,    check: "nginx -t", no_cache: prod }
+        include: ${{ fromJSON(needs.inventaire.outputs.images) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
@@ -134,18 +167,15 @@ jobs:
         with:
           context: .
           file: ${{ matrix.file }}
-          target: prod
+          target: ${{ matrix.target }}
           push: false
           load: true
           tags: sentinel-${{ matrix.name }}:ci
+          # Etape qui applique des correctifs systeme (apk upgrade) : toujours
+          # reconstruite, sinon le cache fige le correctif du premier build.
           no-cache-filters: ${{ matrix.no_cache }}
           cache-from: type=gha,scope=${{ matrix.name }}
           cache-to: type=gha,mode=max,scope=${{ matrix.name }}
-      - name: Image prod utilisable
-        # --add-host : nginx -t resout les amonts du proxy (api, frontend).
-        run: >-
-          docker run --rm --add-host api:127.0.0.1 --add-host frontend:127.0.0.1
-          --entrypoint sh sentinel-${{ matrix.name }}:ci -c "${{ matrix.check }}"
       - name: Trivy — vulnerabilites de l'image
         # Epingle par SHA : les tags d'origine (dont 0.28.0) ont ete reecrits vers
         # du code malveillant en mars 2026 (GHSA-69fq-xp46-6x23), puis supprimes.
@@ -157,12 +187,57 @@ jobs:
           exit-code: "1"
           ignore-unfixed: true
 
+  # ------------------------------------ images tierces : rapport, voir ECARTS
+  # Images utilisees telles quelles (base, redis, stack cloud). Non bloquant tant
+  # que les ecarts connus ne sont pas traites (docs/ECARTS.md) : le resultat part
+  # dans le resume du run, l'etape apparait en echec sans faire echouer la CI.
+  images-tierces:
+    name: Images tierces — ${{ matrix.image }}
+    needs: [inventaire]
+    if: needs.inventaire.outputs.third_party != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.inventaire.outputs.third_party) }}
+    steps:
+      - name: Trivy — ${{ matrix.image }}
+        id: scan
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.70.0
+          image-ref: ${{ matrix.image }}
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+          ignore-unfixed: true
+          format: table
+          output: trivy.txt
+      - name: Resume du run
+        if: always()
+        env:
+          IMAGE: ${{ matrix.image }}
+          USED_BY: ${{ matrix.used_by }}
+          OUTCOME: ${{ steps.scan.outcome }}
+        run: |
+          if [ "$OUTCOME" = failure ]; then
+            echo "::warning title=Image tierce::$IMAGE : HIGH/CRITICAL corrigeables ou scan impossible (docs/ECARTS.md)"
+          fi
+          {
+            echo "### $IMAGE"
+            echo "Utilisee par : $USED_BY"
+            echo '```'
+            cat trivy.txt 2>/dev/null || echo "scan impossible (image introuvable ?)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
   # ----------------------------------- demarrage de la stack complete
   compose:
     name: Smoke — la stack demarre
-    if: github.event_name == 'push'
     needs: [build]
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Preparer le .env
@@ -175,7 +250,7 @@ jobs:
       # les sondes passent par docker compose exec, depuis les conteneurs.
       # --wait attend chaque healthcheck : db (TCP, apres l'init), redis, api, ml,
       # worker (ping Celery via le broker), frontend et proxy (nginx non-root).
-      # Aucune sonde ne part avant.
+      # Aucune sonde ne part avant. Ce sont les images PROD qui demarrent ici.
       - name: Demarrer et attendre les healthchecks
         run: docker compose up -d --build --wait --wait-timeout 300
       - name: API prete (base et ML joignables)
@@ -186,6 +261,15 @@ jobs:
           print(r)
           raise SystemExit(r['status'] != 'ok')
           "
+      # Images prod sans pip ni setuptools : chaque dependance runtime declaree
+      # (liste derivee du pyproject.toml) doit s'importer, pas seulement le code
+      # que les healthchecks touchent.
+      - name: Dependances runtime importables (images prod)
+        run: |
+          for svc in api worker ml; do
+            echo "== $svc"
+            docker compose exec -T "$svc" python - < scripts/ci/import_runtime_deps.py
+          done
       - name: Proxy -> frontend et API (seul port publie, 127.0.0.1:8080)
         run: |
           curl -fsS http://127.0.0.1:8080/ | grep -q '<div id="root">'
