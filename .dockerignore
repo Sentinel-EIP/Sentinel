@@ -1,0 +1,39 @@
+# Liste blanche : seuls les dossiers copies par les Dockerfiles partent au daemon.
+# Tout nouveau dossier a copier doit etre ajoute ici explicitement.
+*
+!backend/
+!ml/
+!frontend/
+!infra/nginx/
+
+# Dans ces dossiers : ni secrets (un backend/.env serait copie dans l'image et lu
+# par pydantic-settings), ni artefacts, ni tests.
+**/.env*
+!**/.env.example
+**/*.env
+**/.envrc
+**/*.pem
+**/*.key
+**/*.p12
+**/id_rsa*
+**/id_ed25519*
+**/.npmrc
+**/.pypirc
+**/.coverage*
+**/htmlcov
+**/__pycache__
+**/*.py[cod]
+**/.venv
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/celerybeat-schedule*
+**/node_modules
+**/*.tsbuildinfo
+**/*.md
+frontend/dist
+frontend/coverage
+frontend/playwright-report
+frontend/test-results
+backend/tests
+ml/tests

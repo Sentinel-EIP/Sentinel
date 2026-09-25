@@ -1,0 +1,10 @@
+# Reverse proxy local : nginx NON-ROOT (uid 101), port 8080. Configuration figee
+# dans l'image, qui est donc construite et scannee (Trivy) comme les autres.
+FROM nginxinc/nginx-unprivileged:stable-alpine AS prod
+# Correctifs de securite Alpine publies depuis la derniere image de base.
+# Non reproductible par nature : la CI reconstruit cette etape sans cache.
+USER root
+RUN apk upgrade --no-cache
+USER 101
+COPY infra/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 8080

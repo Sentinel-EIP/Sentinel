@@ -117,6 +117,16 @@ services:
     depends_on:
       db: { condition: service_healthy }
       redis: { condition: service_healthy }
+    healthcheck:
+      # Pret quand Celery repond via le broker, pas quand le processus demarre.
+      # -d cible le seul noeud de ce conteneur (celery@<hostname>).
+      # C'est cette sonde qui fait attendre `docker compose up --wait` (smoke CI).
+      test: ["CMD-SHELL", "celery -A app.worker.celery_app inspect ping -d celery@$$HOSTNAME --timeout 5 > /dev/null"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 60s
+      start_interval: 2s
     networks: [data, app]
     logging: *logging
 
@@ -150,18 +160,34 @@ services:
       dockerfile: infra/docker/Dockerfile.frontend
     container_name: sentinel-frontend
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
     networks: [app]
     logging: *logging
 
   # ------------------------------------------------ Reverse proxy local
   proxy:
-    image: nginx:alpine
+    build:                          # nginx non-root (uid 101), config dans l'image
+      context: .
+      dockerfile: infra/docker/Dockerfile.proxy
     container_name: sentinel-proxy
     restart: unless-stopped
-    ports: ["127.0.0.1:8080:80"]    # locale-first : jamais sur le reseau local
-    volumes:
-      - ./infra/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on: [api, frontend]
+    ports: ["127.0.0.1:8080:8080"]  # locale-first : jamais sur le reseau local
+    depends_on:
+      api: { condition: service_healthy }
+      frontend: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
     networks: [app]
     logging: *logging
 

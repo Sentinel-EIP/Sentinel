@@ -22,6 +22,9 @@ db_roles() {
 
 case "${1:-help}" in
   up)
+    # node_modules du frontend vit dans un volume anonyme, qui masquerait les
+    # dependances de la nouvelle image (npm ci) : on le jette a chaque up.
+    $COMPOSE rm -fsv frontend >/dev/null 2>&1 || true
     $COMPOSE up -d --build
     db_roles >/dev/null      # migre un volume cree avant le role applicatif
     echo

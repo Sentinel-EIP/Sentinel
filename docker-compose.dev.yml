@@ -17,6 +17,9 @@ services:
     ports: ["127.0.0.1:8000:8000"]
 
   worker:
+    # Cible dev obligatoire : watchmedo (extra dev) n'existe pas dans l'image prod.
+    build:
+      target: dev
     command: ["watchmedo", "auto-restart", "--directory=/app", "--pattern=*.py",
               "--recursive", "--", "celery", "-A", "app.worker.celery_app", "worker", "-l", "info"]
     volumes:
@@ -38,6 +41,8 @@ services:
       - ./frontend:/app
       - /app/node_modules     # garde les deps de l'image, pas celles de l'hote
     ports: ["127.0.0.1:5173:5173"]
+    healthcheck:              # en dev, c'est Vite (5173) qui repond, pas nginx (8080)
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5173/"]
 
   proxy:
     profiles: ["proxy"]       # non demarre en dev : on tape les ports directement
