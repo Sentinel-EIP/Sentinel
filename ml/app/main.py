@@ -10,8 +10,9 @@ Modules prevus, conformes au dossier technique :
   - anomalies : detection de regimes de stress
 
 Chaque sortie porte son niveau de confiance et son explication (US3.4).
-Produire ou non une direction de prix (tendance, signal achat / vente) est en
-suspens, a trancher en equipe : voir docs/ECARTS.md, E10.
+Une direction de prix (tendance, signal achat / vente) peut etre produite,
+toujours avec sa fiabilite mesuree : decision du 2026-09-27, a valider (voir
+CONTRIBUTING, regle 1, et docs/ECARTS.md, E10).
 """
 
 import os
