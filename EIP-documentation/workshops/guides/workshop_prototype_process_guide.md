@@ -22,8 +22,6 @@ Le POC, aussi appelé preuve de concept, se concentre sur les fonctionnalités c
 >
 > *Wikipédia - Preuve de concept*
 
----
-
 ## Étape 1 - PRÉPARER
 
 Cette phase de brainstorming doit vous permettre de :
@@ -33,8 +31,6 @@ Cette phase de brainstorming doit vous permettre de :
 * définir les objectifs que vous souhaitez atteindre à la fin de chacune des prochaines étapes.
 
 *Nous vous encourageons à créer un document partagé avec l’ensemble de votre groupe de projet qui référence les choix effectués et les décisions prises lors de vos sessions de brainstorming.*
-
----
 
 ## Étape 2 - CODER & APPRENDRE
 
@@ -47,8 +43,6 @@ Voici quelques conseils pour réussir cette première phase de développement :
 
 *Nous vous encourageons à faire le bilan de ce qui a bien fonctionné et de ce qui pourrait être amélioré à l’avenir. C’est aussi l’occasion de revoir vos objectifs ; après cette première phase de développement, vous aurez une vision plus réaliste des objectifs que vous pouvez atteindre d’ici la fin de la phase de prototypage.*
 
----
-
 ## Étape 3 - ALPHA
 
 Grâce à l’expérience acquise lors de la phase précédente CODER & APPRENDRE, vous êtes maintenant prêts à développer une version alpha de votre projet.
@@ -60,8 +54,6 @@ Voici quelques conseils pour réussir cette deuxième phase de développement :
 
 *Nous vous encourageons à vous donner la liberté d’apporter des changements. Vous avez encore la possibilité de faire des modifications sur votre projet, votre stack, sans conséquences significatives sur votre projet, alors profitez-en.*
 
----
-
 ## Étape 4 - AJUSTER
 
 Il est temps d’arrêter vos développements pour finaliser votre prototype et préparer la release.
@@ -72,5 +64,4 @@ Rappelez-vous que lors d’une démonstration, un temps de compilation trop long
 
 *Nous devons être fiers de ce que nous avons accompli. L’enthousiasme montré par les créateurs lors d’une démonstration compte pour 50 % de la perception du succès de votre prototype. Cela permet de voir au-delà des simples résultats.*
 
----
 *v 0.1*
