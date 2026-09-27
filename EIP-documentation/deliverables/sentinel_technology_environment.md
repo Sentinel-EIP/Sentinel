@@ -1,16 +1,14 @@
-# Environnement Technologique - Sentinel
+# Environnement technologique — SENTINEL
 
 ## 1) Vision technique
 
-Sentinel est concu comme une plateforme locale-first, modulaire et explicable pour l aide a la decision et l execution disciplinee en investissement.
+SENTINEL est conçu comme une plateforme locale-first, modulaire et explicable pour l'aide à la décision et l'exécution disciplinée en investissement.
 
 Objectifs techniques :
-- robustesse et maitrise du risque,
-- tracabilite complete des donnees et decisions,
-- independance maximale vis-a-vis du cloud,
-- deploiement reproductible sur poste local ou serveur dedie.
-
----
+- robustesse et maîtrise du risque,
+- traçabilité complète des données et décisions,
+- indépendance maximale vis-à-vis du cloud,
+- déploiement reproductible sur poste local ou serveur dédié.
 
 ## 2) Stack cible
 
@@ -24,7 +22,7 @@ Objectifs techniques :
 ### 2.2 Data et stockage
 
 - PostgreSQL 16+
-- Extension TimescaleDB (series temporelles)
+- Extension TimescaleDB (séries temporelles)
 - Redis (cache/broker)
 
 ### 2.3 IA/ML
@@ -46,60 +44,56 @@ Objectifs techniques :
 - Docker Compose
 - Nginx reverse proxy
 
-### 2.6 Observabilite
+### 2.6 Observabilité
 
-- Prometheus (metriques)
+- Prometheus (métriques)
 - Grafana (dashboards)
 - Loki + Promtail (logs)
 
----
-
 ## 3) Topologie logique des modules
 
-### Couche 1 - Ingestion
+### Couche 1 — Ingestion
 
 - collecteurs OHLCV/volumes/news
 - validation et normalisation des flux
 
-### Couche 2 - Analyse
+### Couche 2 — Analyse
 
 - moteur indicateurs techniques
-- modeles IA specialises (tendance, volatilite, anomalies, stress)
+- modèles IA spécialisés (tendance, volatilité, anomalies, stress)
 
-### Couche 3 - Decision
+### Couche 3 — Décision
 
-- synthese des signaux
-- explication des decisions
+- synthèse des signaux
+- explication des décisions
 
-### Couche 4 - Protection
+### Couche 4 — Protection
 
 - risk-governor (drawdown, exposition, suspension, mode cash)
 
-### Couche 5 - Execution
+### Couche 5 — Exécution
 
 - paper trading
-- execution reel encadree (phase ulterieure)
+- exécution réelle encadrée (phase ultérieure)
 
-### Couche 6 - Presentation
+### Couche 6 — Présentation
 
 - API et interface web locale
 - supervision et commandes utilisateur
-
----
 
 ## 4) Environnements
 
 ### 4.1 Local Dev
 
-- usage developpeur individuel
+- usage développeur individuel
 - compose minimal (api, db, redis, ui)
-- donnees de test
+- données de test
 
 ### 4.2 Shared Dev
 
-- environnement equipe
-- deploiement automatique depuis develop
-- tests integration continus
+- environnement équipe
+- déploiement automatique depuis develop
+- tests intégration continus
 
 ### 4.3 Staging
 
@@ -109,58 +103,50 @@ Objectifs techniques :
 
 ### 4.4 Production
 
-- execution stable
-- controle strict des changements
+- exécution stable
+- contrôle strict des changements
 - sauvegardes et alerting actifs
 
----
-
-## 5) Exigences systeme (base)
+## 5) Exigences système (base)
 
 ### 5.1 Poste de dev
 
-- CPU 4 coeurs minimum
-- RAM 16 Go recommande
+- CPU 4 cœurs minimum
+- RAM 16 Go recommandé
 - SSD 20 Go libres minimum
-- Linux recommande, macOS/Windows possibles avec Docker
+- Linux recommandé, macOS/Windows possibles avec Docker
 
-### 5.2 Serveur dedie (staging/prod)
+### 5.2 Serveur dédié (staging/prod)
 
-- CPU 8 coeurs
+- CPU 8 cœurs
 - RAM 32 Go
 - SSD NVMe 200 Go
-- sauvegardes quotidiennes + retention 30 jours
+- sauvegardes quotidiennes + rétention 30 jours
 
----
+## 6) Sécurité et conformité
 
-## 6) Securite et conformite
-
-- secrets hors depot Git
+- secrets hors dépôt Git
 - chiffrement des communications internes sensibles
 - principle of least privilege sur comptes et services
 - journalisation des actions critiques
-- scans de securite automatises en CI
-
----
+- scans de sécurité automatisés en CI
 
 ## 7) Standards engineering
 
-- style guides backend/frontend formalises
+- style guides backend/frontend formalisés
 - conventions de commits (Conventional Commits)
 - revues de code obligatoires
-- definitions de done incluant tests et observabilite
+- définitions de done incluant tests et observabilité
 
----
-
-## 8) Evolution prevue
+## 8) Évolution prévue
 
 Court terme :
-- architecture compose stable et industrialisee
+- architecture compose stable et industrialisée
 
 Moyen terme :
-- orchestration k3s/kubernetes si charge et equipe augmentent
+- orchestration k3s/kubernetes si charge et équipe augmentent
 
 Long terme :
-- federation multi-brokers
-- moteur de backtesting distribue
-- extension de la couche explicabilite IA
+- fédération multi-brokers
+- moteur de backtesting distribué
+- extension de la couche explicabilité IA

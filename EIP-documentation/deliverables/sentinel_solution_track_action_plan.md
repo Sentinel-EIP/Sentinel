@@ -1,360 +1,338 @@
-# INNOVATION TRACK - PLAN D'ACTION
+# Innovation track — Plan d'action
 
-## SENTINEL - Projet Innovant Epitech (Tech4)
+SENTINEL — projet innovant Epitech (Tech4)
 
----
+## 1. Contexte
 
-# 1. Contexte
+### Origine du projet
 
-## Origine du Projet
+SENTINEL est né de l'observation que les systèmes d'investissement automatisés deviennent de plus en plus accessibles au grand public, mais que la plupart des solutions souffrent de défauts critiques : opacité (systèmes « boîte noire »), dépendance au cloud, optimisation centrée sur la performance au détriment de la gestion du risque, et perte de contrôle pour l'utilisateur.
 
-Sentinel est ne de l'observation que les systemes d'investissement automatises deviennent de plus en plus accessibles au grand public, mais que la plupart des solutions souffrent de defauts critiques : opacite (systemes "boite noire"), dependance au cloud, optimisation centree sur la performance au detriment de la gestion du risque, et perte de controle pour l'utilisateur.
+Ce projet est né de la volonté de créer une alternative qui privilégie la transparence, le contrôle utilisateur et la préservation du capital plutôt que la performance maximale.
 
-Ce projet est ne de la volonte de creer une alternative qui privilegie la transparence, le controle utilisateur et la preservation du capital plutot que la performance maximale.
+### Problème identifié
 
-## Probleme Identifie
+Les solutions d'investissement automatisé actuelles présentent plusieurs limites :
+- **Fonctionnement opaque** : les utilisateurs ne peuvent pas comprendre comment les décisions sont prises
+- **Dépendance au cloud** : les données et l'exécution reposent sur des infrastructures externes
+- **Obsession de la performance** : les systèmes sont optimisés pour les rendements plutôt que la gestion du risque
+- **Perte de contrôle** : les utilisateurs ne peuvent pas intervenir ou comprendre le comportement du système
+- **Trading émotionnel** : les émotions humaines mènent à de mauvaises décisions d'investissement
 
-Les solutions d'investissement automatise actuelles presentent plusieurs limites :
-- **Fonctionnement opaque** : Les utilisateurs ne peuvent pas comprendre comment les decisions sont prises
-- **Dependance au cloud** : Les donnees et l'execution reposent sur des infrastructures externes
-- **Obsession de la performance** : Les systemes sont optimises pour les rendements plutot que la gestion du risque
-- **Perte de controle** : Les utilisateurs ne peuvent pas intervenir ou comprendre le comportement du systeme
-- **Trading emotionnel** : Les emotions humaines menent a de mauvaises decisions d'investissement
+### Solution proposée
 
-## Solution Proposee
+SENTINEL est un **système d'IA local d'aide et d'exécution d'investissement** qui :
+- Analyse les marchés financiers via plusieurs modèles d'IA spécialisés
+- Synthétise les analyses en signaux compréhensibles
+- Propose ou exécute des décisions disciplinées
+- Maintient un contrôle utilisateur permanent
+- Fonctionne entièrement en local (aucune dépendance au cloud)
 
-Sentinel est un **systeme d'IA local d'aide et d'execution d'investissement** qui :
-- Analyse les marches financiers via plusieurs modeles d'IA specialises
-- Synthetise les analyses en signaux comprehensibles
-- Propose ou execute des decisions disciplinees
-- Maintient un controle utilisateur permanent
-- Fonctionne entierement en local (aucune dependance au cloud)
+**Philosophie fondamentale** : privilégier la survie du capital face aux différentes conditions de marché plutôt que la recherche d'une performance maximale.
 
-**Philosophie fondamentale** : Privilegier la survie du capital face aux differentes conditions de marche plutot que la recherche d'une performance maximale.
+### Objectif du projet
 
-## Objectif du Projet
+L'objectif principal est de démontrer la faisabilité d'un système d'IA financière discipliné, explicable et centré sur la robustesse, qui élimine le principal facteur de risque en investissement : les émotions humaines.
 
-L'objectif principal est de demontrer la faisabilite d'un systeme d'IA financiere discipline, explicable et centre sur la robustesse, qui elimine le principal facteur de risque en investissement : les emotions humaines.
+### Track choisi
 
-## Track Choisi
+**Track Solution** — SENTINEL est une solution technologique répondant à un problème clairement identifié pour une base d'utilisateurs définie (investisseurs individuels recherchant une assistance automatisée à l'investissement transparente et contrôlée).
 
-**Track Solution** - Sentinel est une solution technologique repondant a un probleme clairement identifie pour une base d'utilisateurs definie (investisseurs individuels recherchant une assistance automatisee a l'investissement transparente et controlee).
+### Entités externes
 
-## Entites Externes
+Actuellement, le projet est développé en interne par l'équipe. Des partenariats futurs pourraient inclure :
+- Fournisseurs de données financières (pour les API de données de marché)
+- Bêta-testeurs de la communauté d'investissement
+- Experts en technologie financière pour la validation
 
-Actuellement, le projet est developpe en interne par l'equipe. Des partenariats futurs pourraient inclure :
-- Fournisseurs de donnees financieres (pour les API de donnees de marche)
-- Beta testeurs de la communaute d'investissement
-- Experts en technologie financiere pour la validation
+## 2. Spécifications techniques
 
----
+### Stack technologique
 
-# 2. Specifications Techniques
+**Backend**
 
-## Stack Technologique
-
-### Backend
 | Composant | Technologie | Objectif |
 |-----------|-------------|----------|
-| Moteur Principal | Python | Modeles IA, traitement des donnees, synthese des signaux |
+| Moteur principal | Python | Modèles IA, traitement des données, synthèse des signaux |
 | Framework API | FastAPI | API RESTful pour la communication frontend |
-| Base de Donnees | PostgreSQL + TimescaleDB | Stockage des donnees historiques, optimisation series temporelles |
-| File de Taches | Celery + Redis | Traitement asynchrone, taches planifiees |
+| Base de données | PostgreSQL + TimescaleDB | Stockage des données historiques, optimisation séries temporelles |
+| File de tâches | Celery + Redis | Traitement asynchrone, tâches planifiées |
 
-### IA/ML
+**IA/ML**
+
 | Composant | Technologie | Objectif |
 |-----------|-------------|----------|
-| Framework ML | PyTorch / scikit-learn | Entrainement et inference des modeles |
-| Analyse Technique | TA-Lib / pandas-ta | Calcul des indicateurs techniques |
-| Traitement Donnees | Pandas / NumPy | Manipulation et analyse des donnees |
+| Framework ML | PyTorch / scikit-learn | Entraînement et inférence des modèles |
+| Analyse technique | TA-Lib / pandas-ta | Calcul des indicateurs techniques |
+| Traitement données | Pandas / NumPy | Manipulation et analyse des données |
 
-### Frontend
+**Frontend**
+
 | Composant | Technologie | Objectif |
 |-----------|-------------|----------|
-| Framework Web | React / Next.js | Interface utilisateur |
-| Graphiques | TradingView Lightweight Charts | Visualisation des donnees de marche |
-| Gestion d'Etat | Zustand / Redux | Etat de l'application |
+| Framework web | React / Next.js | Interface utilisateur |
+| Graphiques | TradingView Lightweight Charts | Visualisation des données de marché |
+| Gestion d'état | Zustand / Redux | État de l'application |
 
-### Infrastructure
+**Infrastructure**
+
 | Composant | Technologie | Objectif |
 |-----------|-------------|----------|
-| Conteneurisation | Docker | Deploiement local |
+| Conteneurisation | Docker | Déploiement local |
 | Orchestration | Docker Compose | Gestion multi-services |
-| Reverse Proxy | Nginx | Serveur web local |
+| Reverse proxy | Nginx | Serveur web local |
 
----
+### User stories
 
-## User Stories
+**US1 — Configuration système**
 
-### US1 - Configuration Systeme
-
-| ID | User Story | Criteres d'Acceptation |
+| ID | User story | Critères d'acceptation |
 |----|------------|------------------------|
-| US1.1 | En tant qu'admin, je veux configurer les connexions aux sources de donnees pour que le systeme puisse recevoir les donnees de marche | Identifiants API sauvegardes, statut de connexion affiche, flux de donnees confirme |
-| US1.2 | En tant qu'utilisateur, je veux selectionner les actifs a surveiller pour me concentrer sur mes interets d'investissement | Liste d'actifs configurable, changements appliques immediatement |
-| US1.3 | En tant qu'utilisateur, je veux definir mes parametres de risque pour que le systeme respecte ma tolerance au risque | Limite de drawdown, limite d'exposition et seuils d'alerte configurables |
-| US1.4 | En tant qu'utilisateur, je veux choisir mon mode operatoire pour utiliser le systeme selon mes besoins | Modes analyse seule, paper trading ou trading reel selectionnables |
+| US1.1 | En tant qu'admin, je veux configurer les connexions aux sources de données pour que le système puisse recevoir les données de marché | Identifiants API sauvegardés, statut de connexion affiché, flux de données confirmé |
+| US1.2 | En tant qu'utilisateur, je veux sélectionner les actifs à surveiller pour me concentrer sur mes intérêts d'investissement | Liste d'actifs configurable, changements appliqués immédiatement |
+| US1.3 | En tant qu'utilisateur, je veux définir mes paramètres de risque pour que le système respecte ma tolérance au risque | Limite de drawdown, limite d'exposition et seuils d'alerte configurables |
+| US1.4 | En tant qu'utilisateur, je veux choisir mon mode opératoire pour utiliser le système selon mes besoins | Modes analyse seule, paper trading ou trading réel sélectionnables |
 
-### US2 - Donnees de Marche et Visualisation
+**US2 — Données de marché et visualisation**
 
-| ID | User Story | Criteres d'Acceptation |
+| ID | User story | Critères d'acceptation |
 |----|------------|------------------------|
-| US2.1 | En tant qu'utilisateur, je veux voir les donnees de marche en temps reel pour comprendre les conditions actuelles | Donnees OHLCV affichees, rafraichissement auto, latence < 3s |
-| US2.2 | En tant qu'utilisateur, je veux voir les indicateurs techniques pour valider l'analyse du systeme | Plusieurs indicateurs affiches (RSI, MACD, Bollinger, etc.) |
-| US2.3 | En tant qu'utilisateur, je veux consulter les graphiques historiques pour analyser les patterns passes | Graphiques zoomables, plusieurs timeframes disponibles |
+| US2.1 | En tant qu'utilisateur, je veux voir les données de marché en temps réel pour comprendre les conditions actuelles | Données OHLCV affichées, rafraîchissement auto, latence < 3s |
+| US2.2 | En tant qu'utilisateur, je veux voir les indicateurs techniques pour valider l'analyse du système | Plusieurs indicateurs affichés (RSI, MACD, Bollinger, etc.) |
+| US2.3 | En tant qu'utilisateur, je veux consulter les graphiques historiques pour analyser les patterns passés | Graphiques zoomables, plusieurs timeframes disponibles |
 
-### US3 - Analyse IA
+**US3 — Analyse IA**
 
-| ID | User Story | Criteres d'Acceptation |
+| ID | User story | Critères d'acceptation |
 |----|------------|------------------------|
-| US3.1 | En tant qu'utilisateur, je veux voir l'analyse de tendance pour comprendre la direction du marche | Classification haussiere/baissiere/neutre avec niveau de confiance |
-| US3.2 | En tant qu'utilisateur, je veux voir le regime de volatilite pour comprendre les conditions du marche | Classification basse/moyenne/haute/extreme affichee |
-| US3.3 | En tant qu'utilisateur, je veux voir le signal synthetise pour connaitre la recommandation du systeme | Signal achat/vente/attente avec explication du raisonnement |
-| US3.4 | En tant qu'utilisateur, je veux comprendre pourquoi un signal a ete genere pour faire confiance au systeme | Facteurs de decision listes, contributions des modeles visibles |
+| US3.1 | En tant qu'utilisateur, je veux voir l'analyse de tendance pour comprendre la direction du marché | Classification haussière/baissière/neutre avec niveau de confiance |
+| US3.2 | En tant qu'utilisateur, je veux voir le régime de volatilité pour comprendre les conditions du marché | Classification basse/moyenne/haute/extrême affichée |
+| US3.3 | En tant qu'utilisateur, je veux voir le signal synthétisé pour connaître la recommandation du système | Signal achat/vente/attente avec explication du raisonnement |
+| US3.4 | En tant qu'utilisateur, je veux comprendre pourquoi un signal a été généré pour faire confiance au système | Facteurs de décision listés, contributions des modèles visibles |
 
-### US4 - Gestion du Risque
+**US4 — Gestion du risque**
 
-| ID | User Story | Criteres d'Acceptation |
+| ID | User story | Critères d'acceptation |
 |----|------------|------------------------|
-| US4.1 | En tant qu'utilisateur, je veux surveiller mon drawdown actuel pour connaitre mon exposition au risque | Pourcentage de drawdown temps reel vs maximum autorise |
+| US4.1 | En tant qu'utilisateur, je veux surveiller mon drawdown actuel pour connaître mon exposition au risque | Pourcentage de drawdown temps réel vs maximum autorisé |
 | US4.2 | En tant qu'utilisateur, je veux recevoir des alertes quand les seuils de risque sont atteints pour agir | Notifications push, alertes visuelles, email optionnel |
-| US4.3 | En tant qu'utilisateur, je veux forcer le mode cash pour sortir de toutes les positions immediatement | Sortie d'urgence en un clic, toutes les positions cloturees |
-| US4.4 | En tant qu'utilisateur, je veux que le systeme reduise automatiquement l'exposition en haute volatilite pour proteger mon capital | Dimensionnement automatique des positions base sur le regime de volatilite |
+| US4.3 | En tant qu'utilisateur, je veux forcer le mode cash pour sortir de toutes les positions immédiatement | Sortie d'urgence en un clic, toutes les positions clôturées |
+| US4.4 | En tant qu'utilisateur, je veux que le système réduise automatiquement l'exposition en haute volatilité pour protéger mon capital | Dimensionnement automatique des positions basé sur le régime de volatilité |
 
-### US5 - Operations de Trading
+**US5 — Opérations de trading**
 
-| ID | User Story | Criteres d'Acceptation |
+| ID | User story | Critères d'acceptation |
 |----|------------|------------------------|
-| US5.1 | En tant qu'utilisateur, je veux executer des trades en paper trading pour tester les strategies sans argent reel | Portefeuille virtuel, simulation d'execution realiste |
-| US5.2 | En tant qu'utilisateur, je veux voir mes positions ouvertes pour connaitre mon exposition actuelle | Actif, quantite, prix d'entree, P&L actuel affiches |
-| US5.3 | En tant qu'utilisateur, je veux acceder a l'historique des decisions pour revoir les actions passees | Journal complet avec timestamps, signaux et resultats |
-| US5.4 | En tant qu'utilisateur, je veux voir les metriques de performance pour evaluer l'efficacite du systeme | Taux de reussite, ratio de Sharpe, drawdown max, rendement total |
+| US5.1 | En tant qu'utilisateur, je veux exécuter des trades en paper trading pour tester les stratégies sans argent réel | Portefeuille virtuel, simulation d'exécution réaliste |
+| US5.2 | En tant qu'utilisateur, je veux voir mes positions ouvertes pour connaître mon exposition actuelle | Actif, quantité, prix d'entrée, P&L actuel affichés |
+| US5.3 | En tant qu'utilisateur, je veux accéder à l'historique des décisions pour revoir les actions passées | Journal complet avec timestamps, signaux et résultats |
+| US5.4 | En tant qu'utilisateur, je veux voir les métriques de performance pour évaluer l'efficacité du système | Taux de réussite, ratio de Sharpe, drawdown max, rendement total |
 
-### US6 - Controle Systeme
+**US6 — Contrôle système**
 
-| ID | User Story | Criteres d'Acceptation |
+| ID | User story | Critères d'acceptation |
 |----|------------|------------------------|
-| US6.1 | En tant qu'utilisateur, je veux arreter le systeme immediatement pour empecher des actions non souhaitees | Arret d'urgence en un clic, confirmation de l'arret |
-| US6.2 | En tant qu'utilisateur, je veux verifier l'etat du systeme pour savoir que tous les modules fonctionnent | Tableau de bord de sante des modules, notifications d'erreur |
-| US6.3 | En tant qu'utilisateur, je veux exporter mes donnees pour les analyser en externe | Export CSV/JSON des trades, signaux et performance |
+| US6.1 | En tant qu'utilisateur, je veux arrêter le système immédiatement pour empêcher des actions non souhaitées | Arrêt d'urgence en un clic, confirmation de l'arrêt |
+| US6.2 | En tant qu'utilisateur, je veux vérifier l'état du système pour savoir que tous les modules fonctionnent | Tableau de bord de santé des modules, notifications d'erreur |
+| US6.3 | En tant qu'utilisateur, je veux exporter mes données pour les analyser en externe | Export CSV/JSON des trades, signaux et performance |
 
----
+### Jalons
 
-## Jalons
-
-### Jalon 1 : Fondation (T1 2026)
+**Jalon 1 : Fondation (T1 2026)**
 
 **Objectifs :**
-- [ ] Completer l'infrastructure de collecte de donnees
-- [ ] Implementer le calcul des indicateurs techniques de base
-- [ ] Developper le schema de base de donnees et le stockage
-- [ ] Creer les endpoints API de base
-- [ ] Construire une UI minimale pour la visualisation des donnees
+- [ ] Compléter l'infrastructure de collecte de données
+- [ ] Implémenter le calcul des indicateurs techniques de base
+- [ ] Développer le schéma de base de données et le stockage
+- [ ] Créer les endpoints API de base
+- [ ] Construire une UI minimale pour la visualisation des données
 
 **Livrables :**
-- Pipeline de donnees fonctionnel pour au moins 3 paires d'actifs
-- Indicateurs techniques affiches sur les graphiques
+- Pipeline de données fonctionnel pour au moins 3 paires d'actifs
+- Indicateurs techniques affichés sur les graphiques
 - Documentation API REST basique
 
----
-
-### Jalon 2 : Integration des Modeles IA (T2 2026)
+**Jalon 2 : Intégration des modèles IA (T2 2026)**
 
 **Objectifs :**
-- [ ] Entrainer et deployer le modele de detection de tendance
-- [ ] Entrainer et deployer le classificateur de regime de volatilite
-- [ ] Implementer le moteur de synthese des signaux
-- [ ] Creer la couche d'explicabilite des decisions
-- [ ] Integrer les modeles avec l'API
+- [ ] Entraîner et déployer le modèle de détection de tendance
+- [ ] Entraîner et déployer le classificateur de régime de volatilité
+- [ ] Implémenter le moteur de synthèse des signaux
+- [ ] Créer la couche d'explicabilité des décisions
+- [ ] Intégrer les modèles avec l'API
 
 **Livrables :**
-- 3 modeles IA fonctionnels avec precision documentee
-- Generation de signaux avec scores de confiance
-- Fonctionnalite d'explication des decisions
+- 3 modèles IA fonctionnels avec précision documentée
+- Génération de signaux avec scores de confiance
+- Fonctionnalité d'explication des décisions
 
----
-
-### Jalon 3 : Gouverneur de Risque (T3 2026)
+**Jalon 3 : Gouverneur de risque (T3 2026)**
 
 **Objectifs :**
-- [ ] Implementer le systeme de surveillance du drawdown
-- [ ] Construire la logique de reduction automatique d'exposition
-- [ ] Creer le systeme de notification d'alertes
-- [ ] Developper la fonctionnalite d'arret d'urgence
-- [ ] Implementer le moteur de paper trading
+- [ ] Implémenter le système de surveillance du drawdown
+- [ ] Construire la logique de réduction automatique d'exposition
+- [ ] Créer le système de notification d'alertes
+- [ ] Développer la fonctionnalité d'arrêt d'urgence
+- [ ] Implémenter le moteur de paper trading
 
 **Livrables :**
 - Module de gestion du risque complet
-- Paper trading avec simulation realiste
-- Systeme d'alertes (in-app + email optionnel)
+- Paper trading avec simulation réaliste
+- Système d'alertes (in-app + email optionnel)
 
----
-
-### Jalon 4 : Interface Utilisateur et Experience (T4 2026)
+**Jalon 4 : Interface utilisateur et expérience (T4 2026)**
 
 **Objectifs :**
-- [ ] Completer le tableau de bord avec toutes les fonctionnalites
-- [ ] Implementer le design responsive
-- [ ] Ajouter la persistance des preferences utilisateur
-- [ ] Creer le flux d'onboarding
-- [ ] Realiser les tests d'utilisabilite
+- [ ] Compléter le tableau de bord avec toutes les fonctionnalités
+- [ ] Implémenter le design responsive
+- [ ] Ajouter la persistance des préférences utilisateur
+- [ ] Créer le flux d'onboarding
+- [ ] Réaliser les tests d'utilisabilité
 
 **Livrables :**
-- UI prete pour la production
+- UI prête pour la production
 - Documentation utilisateur
-- Rapport de test d'utilisabilite avec ameliorations
+- Rapport de test d'utilisabilité avec améliorations
 
----
-
-### Jalon 5 : Validation et Lancement (T1 2027)
+**Jalon 5 : Validation et lancement (T1 2027)**
 
 **Objectifs :**
-- [ ] Backtesting extensif sur donnees historiques
-- [ ] Tests beta avec de vrais utilisateurs
+- [ ] Backtesting extensif sur données historiques
+- [ ] Tests bêta avec de vrais utilisateurs
 - [ ] Optimisation des performances
-- [ ] Audit de securite
-- [ ] Documentation complete
+- [ ] Audit de sécurité
+- [ ] Documentation complète
 
 **Livrables :**
-- Rapport des resultats de backtesting
-- Analyse des retours beta testeurs
-- Build de production optimise
-- Documentation technique complete
+- Rapport des résultats de backtesting
+- Analyse des retours bêta-testeurs
+- Build de production optimisé
+- Documentation technique complète
 
----
+## 3. Spécifications non techniques
 
-# 3. Specifications Non Techniques
+Track sélectionné : Solution
 
-## Track Selectionne : Solution
+### Sujets obligatoires
 
-### Sujets Obligatoires
-
-#### 1. Developper et Retenir une Communaute d'Utilisateurs
+**1. Développer et retenir une communauté d'utilisateurs**
 
 **Intention :**
-Construire une communaute d'early adopters est essentiel pour le succes de Sentinel. Puisque le projet cible des investisseurs individuels soucieux de transparence et de controle, nous devons identifier et engager des utilisateurs qui partagent ces valeurs.
+Construire une communauté d'early adopters est essentiel pour le succès de SENTINEL. Puisque le projet cible des investisseurs individuels soucieux de transparence et de contrôle, nous devons identifier et engager des utilisateurs qui partagent ces valeurs.
 
-**Plan d'Action :**
+**Plan d'action :**
 
 1. **Construire une base d'early adopters**
-   - Creer une landing page expliquant la philosophie et la proposition de valeur unique de Sentinel
-   - Lancer une liste d'attente pour l'acces beta
-   - Cibler les communautes : r/algotrading, r/investing, Hacker News, communautes indie hackers
-   - Objectif : 100 inscriptions sur la liste d'attente avant le lancement beta
+   - Créer une landing page expliquant la philosophie et la proposition de valeur unique de SENTINEL
+   - Lancer une liste d'attente pour l'accès bêta
+   - Cibler les communautés : r/algotrading, r/investing, Hacker News, communautés indie hackers
+   - Objectif : 100 inscriptions sur la liste d'attente avant le lancement bêta
 
 2. **Organiser des sessions de test et feedback**
-   - Appels video mensuels avec les beta testeurs (5-10 utilisateurs par session)
-   - Mecanisme de feedback in-app pour les rapports de bugs et suggestions
-   - Formulaires de feedback structures apres chaque jalon
-   - Roadmap publique influencee par les votes de la communaute
+   - Appels vidéo mensuels avec les bêta-testeurs (5-10 utilisateurs par session)
+   - Mécanisme de feedback in-app pour les rapports de bugs et suggestions
+   - Formulaires de feedback structurés après chaque jalon
+   - Roadmap publique influencée par les votes de la communauté
 
 3. **Engagement communautaire**
-   - Serveur Discord pour les discussions en temps reel
-   - Newsletter mensuelle avec les mises a jour de developpement
-   - Developpement transparent : changelog public, discussions ouvertes sur les decisions de design
+   - Serveur Discord pour les discussions en temps réel
+   - Newsletter mensuelle avec les mises à jour de développement
+   - Développement transparent : changelog public, discussions ouvertes sur les décisions de design
 
 **Objectifs :**
-- 50+ beta testeurs actifs d'ici T3 2026
-- Taux de retention de 80% parmi les early adopters
-- Priorisation des fonctionnalites guidee par la communaute
+- 50+ bêta-testeurs actifs d'ici T3 2026
+- Taux de rétention de 80% parmi les early adopters
+- Priorisation des fonctionnalités guidée par la communauté
 
----
-
-#### 2. Travailler sur l'Experience Utilisateur
+**2. Travailler sur l'expérience utilisateur**
 
 **Intention :**
-Un outil financier doit etre intuitif et digne de confiance. Les utilisateurs doivent se sentir confiants dans leur comprehension du systeme et maintenir un sentiment de controle en permanence.
+Un outil financier doit être intuitif et digne de confiance. Les utilisateurs doivent se sentir confiants dans leur compréhension du système et maintenir un sentiment de contrôle en permanence.
 
-**Plan d'Action :**
+**Plan d'action :**
 
-1. **Identifier et ameliorer les fonctionnalites moins fluides**
-   - Implementer des analytics pour suivre le flux utilisateur (temps sur page, patterns de clics)
-   - Realiser des tests A/B sur les interfaces critiques (tableau de bord, parametres de risque)
+1. **Identifier et améliorer les fonctionnalités moins fluides**
+   - Implémenter des analytics pour suivre le flux utilisateur (temps sur page, patterns de clics)
+   - Réaliser des tests A/B sur les interfaces critiques (tableau de bord, paramètres de risque)
    - Identifier les points de friction via des interviews utilisateurs
-   - Ameliorations iteratives basees sur les donnees
+   - Améliorations itératives basées sur les données
 
 2. **Optimiser le design produit**
-   - Systeme de design avec couleurs, typographie et composants coherents
-   - Design mobile-responsive pour le suivi en deplacement
-   - Conformite accessibilite (WCAG 2.1 AA)
-   - Hierarchie visuelle claire priorisant les informations critiques (alertes de risque, positions actuelles)
+   - Système de design avec couleurs, typographie et composants cohérents
+   - Design mobile-responsive pour le suivi en déplacement
+   - Conformité accessibilité (WCAG 2.1 AA)
+   - Hiérarchie visuelle claire priorisant les informations critiques (alertes de risque, positions actuelles)
 
-3. **Experience d'onboarding**
-   - Assistant de configuration etape par etape pour les nouveaux utilisateurs
-   - Tutoriels interactifs pour les fonctionnalites cles
-   - Divulgation progressive : commencer simple, reveler la complexite selon les besoins
+3. **Expérience d'onboarding**
+   - Assistant de configuration étape par étape pour les nouveaux utilisateurs
+   - Tutoriels interactifs pour les fonctionnalités clés
+   - Divulgation progressive : commencer simple, révéler la complexité selon les besoins
 
 **Objectifs :**
-- Taux de completion des taches > 90% pour les workflows principaux
+- Taux de complétion des tâches > 90% pour les workflows principaux
 - Score System Usability Scale (SUS) > 75
-- Temps jusqu'a la premiere action significative < 5 minutes
+- Temps jusqu'à la première action significative < 5 minutes
 
----
+### Sujets optionnels (sélection : 2)
 
-### Sujets Optionnels (Selection : 2)
-
-#### 3. Optimiser les Relations avec l'Audience Cible
+**3. Optimiser les relations avec l'audience cible**
 
 **Intention :**
-Comprendre nos utilisateurs en profondeur nous permet de construire des fonctionnalites qui comptent vraiment et de communiquer efficacement sur la valeur du projet.
+Comprendre nos utilisateurs en profondeur nous permet de construire des fonctionnalités qui comptent vraiment et de communiquer efficacement sur la valeur du projet.
 
-**Plan d'Action :**
+**Plan d'action :**
 
-1. **Implementer des mecanismes pour comprendre les utilisateurs finaux**
-   - Personas utilisateurs bases sur les interviews de beta testeurs
-   - Enquetes regulieres (NPS trimestriel, satisfaction des fonctionnalites)
+1. **Implémenter des mécanismes pour comprendre les utilisateurs finaux**
+   - Personas utilisateurs basés sur les interviews de bêta-testeurs
+   - Enquêtes régulières (NPS trimestriel, satisfaction des fonctionnalités)
    - Analytics d'usage pour comprendre les patterns de comportement
-   - Interviews individuelles avec les utilisateurs avances
+   - Interviews individuelles avec les utilisateurs avancés
 
-2. **Communication reguliere sur les ameliorations**
-   - Changelog public a chaque release
-   - Modal "Nouveautes" pour les mises a jour significatives
-   - Digest email mensuel avec ameliorations et conseils
-   - Mises a jour sur les reseaux sociaux sur la progression du developpement
+2. **Communication régulière sur les améliorations**
+   - Changelog public à chaque release
+   - Modal « Nouveautés » pour les mises à jour significatives
+   - Digest email mensuel avec améliorations et conseils
+   - Mises à jour sur les réseaux sociaux sur la progression du développement
 
 **Objectifs :**
 - Score NPS > 40
-- Taux de reponse aux demandes de fonctionnalites : accusé de reception sous 48h
+- Taux de réponse aux demandes de fonctionnalités : accusé de réception sous 48h
 - Engagement utilisateur actif mensuel > 60%
 
----
-
-#### 4. Renforcer la Credibilite et Developper la Reputation
+**4. Renforcer la crédibilité et développer la réputation**
 
 **Intention :**
-En tant qu'outil financier, Sentinel doit etablir la confiance par la transparence, la competence demontree et la reconnaissance de la communaute.
+En tant qu'outil financier, SENTINEL doit établir la confiance par la transparence, la compétence démontrée et la reconnaissance de la communauté.
 
-**Plan d'Action :**
+**Plan d'action :**
 
-1. **Participer a des evenements et conferences**
-   - Presenter aux showcases et demo days Epitech
-   - Soumettre aux conferences fintech/IA (sessions posters, demos)
+1. **Participer à des événements et conférences**
+   - Présenter aux showcases et demo days Epitech
+   - Soumettre aux conférences fintech/IA (sessions posters, démos)
    - Participer aux hackathons pertinents
    - S'engager dans des webinaires en ligne sur le trading algorithmique
 
-2. **Publier des demonstrations et etudes de cas**
-   - Resultats de backtesting detailles avec methodologie
-   - Articles de blog expliquant l'architecture du systeme et les decisions de design
-   - Demonstrations video des fonctionnalites cles
-   - Etudes de cas de beta testeurs (donnees de performance anonymisees)
+2. **Publier des démonstrations et études de cas**
+   - Résultats de backtesting détaillés avec méthodologie
+   - Articles de blog expliquant l'architecture du système et les décisions de design
+   - Démonstrations vidéo des fonctionnalités clés
+   - Études de cas de bêta-testeurs (données de performance anonymisées)
 
 3. **Leadership d'opinion**
    - Articles techniques sur l'IA en finance
-   - Contributions open-source (bibliotheques, outils developpes pour Sentinel)
-   - Engagement dans les communautes en ligne pertinentes
+   - Contributions open-source (bibliothèques, outils développés pour SENTINEL)
+   - Engagement dans les communautés en ligne pertinentes
 
 **Objectifs :**
-- 3+ presentations a des conferences/evenements d'ici T4 2026
-- 5+ etudes de cas/demonstrations publiees
-- Presence reconnue dans les communautes de trading algorithmique
+- 3+ présentations à des conférences/événements d'ici T4 2026
+- 5+ études de cas/démonstrations publiées
+- Présence reconnue dans les communautés de trading algorithmique
 
----
+## Résumé
 
-## Resume
+Ce plan d'action trace le chemin de SENTINEL à travers Tech4 avec :
+- **Des jalons techniques clairs** couvrant l'infrastructure de données, l'intégration IA, la gestion du risque, l'UX et la validation
+- **Des user stories détaillées** couvrant toutes les fonctionnalités du système
+- **Des objectifs non techniques centrés sur la communauté** assurant l'engagement utilisateur et l'adéquation produit-marché
 
-Ce plan d'action trace le chemin de Sentinel a travers Tech4 avec :
-- **Des jalons techniques clairs** couvrant l'infrastructure de donnees, l'integration IA, la gestion du risque, l'UX et la validation
-- **Des user stories detaillees** couvrant toutes les fonctionnalites du systeme
-- **Des objectifs non techniques centres sur la communaute** assurant l'engagement utilisateur et l'adequation produit-marche
-
-Le projet suit le **track Solution**, se concentrant sur la construction d'une communaute d'utilisateurs, l'optimisation de l'experience, la comprehension de l'audience cible et l'etablissement de la credibilite dans l'espace fintech.
+Le projet suit le **track Solution**, se concentrant sur la construction d'une communauté d'utilisateurs, l'optimisation de l'expérience, la compréhension de l'audience cible et l'établissement de la crédibilité dans l'espace fintech.

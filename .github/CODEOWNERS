@@ -1,0 +1,51 @@
+# CODEOWNERS — Sentinel
+#
+# Assigne automatiquement le relecteur selon les fichiers touches par une PR.
+# La derniere regle qui correspond l'emporte : l'ordre compte, du general
+# au specifique.
+#
+# Perimetres :
+#   @JulesDRS        infrastructure, deploiement, UX
+#   @jeremyarmijo    backend, ML, CI/CD, outillage
+#   @paulverpilleux  base de donnees, migrations, donnees
+#   @Peres-Aurelien  frontend
+
+# ---------------------------------------------------------------- par defaut
+# Tout ce qui n'est pas couvert plus bas remonte a l'equipe entiere.
+*                               @JulesDRS @jeremyarmijo @paulverpilleux @Peres-Aurelien
+
+# ------------------------------------------------------------- infrastructure
+/infra/                         @JulesDRS
+/scripts/dev.sh                 @JulesDRS
+/docs/DEPLOIEMENT.md            @JulesDRS
+/docs/SAUVEGARDES.md            @JulesDRS
+/.env.example                   @JulesDRS
+/.dockerignore                  @JulesDRS
+Dockerfile*                     @JulesDRS
+docker-compose*.yml             @JulesDRS
+
+# --------------------------------------------------------------- CI et qualite
+/.github/                       @jeremyarmijo
+/scripts/verifier.sh            @jeremyarmijo
+/scripts/verifier-autotest.sh   @jeremyarmijo
+/commitlint.config.cjs          @jeremyarmijo
+/.pre-commit-config.yaml        @jeremyarmijo
+
+# ------------------------------------------------------------- backend et ML
+/backend/                       @jeremyarmijo
+/ml/                            @jeremyarmijo
+
+# --------------------------------------------------------- base de donnees
+/backend/alembic/               @paulverpilleux
+/backend/app/models/            @paulverpilleux
+/infra/db/                      @paulverpilleux @JulesDRS
+
+# ----------------------------------------------------------------- frontend
+/frontend/                      @Peres-Aurelien
+/frontend/src/styles/           @Peres-Aurelien @JulesDRS
+
+# -------------------------------------------------------- decisions communes
+# Les ADR engagent tout le monde : deux relecteurs minimum.
+/docs/adr/                      @JulesDRS @jeremyarmijo
+/docs/ECARTS.md                 @JulesDRS @jeremyarmijo
+/CONTRIBUTING.md                @JulesDRS @jeremyarmijo @paulverpilleux @Peres-Aurelien
