@@ -27,8 +27,6 @@ Les instructions de cet exercice sont très simples, vous devez répondre à une
 * la fonctionnalité principale de notre projet est affectée par la météo réelle ;
 * il est possible pour les utilisateurs de modder notre projet, sans qu'ils aient besoin de recompiler l'exécutable du projet à partir de notre code source.
 
----
-
 ## Exemples
 
 **Exemple 1**
@@ -41,8 +39,6 @@ Les instructions de cet exercice sont très simples, vous devez répondre à une
 >
 > **Idée :** « Je souhaite développer un moteur de jeu avec une physique randomisée, garantissant que chaque partie offre une expérience unique sans modifier le code source du jeu. Spécifiquement conçu pour les plateformes mobiles, ce moteur intègre parfaitement le gameplay à physique aléatoire avec les gyroscopes et les accéléromètres. C'est une excellente opportunité pour explorer un gameplay innovant. Le principal défi réside dans la capacité à offrir de manière constante une expérience de jeu jouable. »
 
----
-
 ## Aide
 
 Vous pouvez utiliser ces questions pour vous aider à trouver de nouvelles idées :
@@ -51,8 +47,6 @@ Vous pouvez utiliser ces questions pour vous aider à trouver de nouvelles idée
 * Quels éléments clés sont en opposition ?
 * Est-il possible d'introduire quelque chose au début ou à la fin du processus pour modifier les éléments en opposition ?
 * Le temps, l'espace, les matériaux ou l'environnement exercent-ils une influence ?
-
----
 
 ## Livrable
 
@@ -69,5 +63,4 @@ Vos idées de projets seront évaluées selon 3 critères :
 * l'originalité et la créativité de la solution que vous proposez ;
 * la facilité pour l'évaluateur de comprendre votre idée.
 
----
 *v 0.1*

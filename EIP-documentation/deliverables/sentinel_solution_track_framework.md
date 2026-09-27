@@ -1,68 +1,62 @@
-# SOLUTION TRACK - FRAMEWORK COMPLET
+# Solution track — Framework complet
 
-## SENTINEL - Projet Innovant Epitech
+SENTINEL — projet innovant Epitech
 
----
+## Introduction
 
-# Introduction
+SENTINEL suit le **Track Solution** du Projet Innovant Epitech (EIP). Ce document décrit comment SENTINEL répond à de véritables problèmes dans l'espace de l'investissement automatisé, en se concentrant sur la compréhension des utilisateurs, le design d'expérience, la construction de communauté et la visibilité stratégique.
 
-Sentinel suit le **Track Solution** du Projet Innovant Epitech (EIP). Ce document decrit comment Sentinel repond a de veritables problemes dans l'espace de l'investissement automatise, en se concentrant sur la comprehension des utilisateurs, le design d'experience, la construction de communaute et la visibilite strategique.
+**Résumé du projet** : SENTINEL est un système d'IA local d'aide et d'exécution d'investissement qui privilégie la transparence, le contrôle utilisateur et la préservation du capital plutôt que la performance maximale.
 
-**Resume du Projet** : Sentinel est un systeme d'IA local d'aide et d'execution d'investissement qui privilegie la transparence, le controle utilisateur et la preservation du capital plutot que la performance maximale.
+## A. Développer et retenir une communauté d'utilisateurs — objectif obligatoire
 
----
+### Identification et ciblage
 
-# OBJECTIFS OBLIGATOIRES
+**Personas utilisateurs**
 
-## A. Developper et Retenir une Communaute d'Utilisateurs
-
-### Identification et Ciblage
-
-#### Personas Utilisateurs
-
-| Persona | Description | Points de Douleur | Objectifs |
+| Persona | Description | Points de douleur | Objectifs |
 |---------|-------------|-------------------|-----------|
-| **Alex - L'Investisseur Prudent** | 35-45 ans, competences techniques moderees, gere un portefeuille personnel de 20-50k€ | Craint de perdre son capital, se mefie des systemes boite noire, submerge par la volatilite du marche | Preserver le capital, comprendre les decisions, garder le controle |
-| **Sam - Le Trader Tech-Savvy** | 25-35 ans, developpeur logiciel, experimente avec le trading algorithmique | Frustre par les solutions dependantes du cloud, veut de la personnalisation, preoccupe par la confidentialite des donnees | Execution locale, IA explicable, transparence |
-| **Jordan - Le Professionnel Averse au Risque** | 40-55 ans, professionnel occupe, veut investir passivement mais de maniere controlee | Pas de temps pour le trading actif, veut des garde-fous contre les pertes majeures | Configuration et oubli avec limites de risque, alertes, intervention minimale necessaire |
+| **Alex — L'investisseur prudent** | 35-45 ans, compétences techniques modérées, gère un portefeuille personnel de 20-50k€ | Craint de perdre son capital, se méfie des systèmes boîte noire, submergé par la volatilité du marché | Préserver le capital, comprendre les décisions, garder le contrôle |
+| **Sam — Le trader tech-savvy** | 25-35 ans, développeur logiciel, expérimente avec le trading algorithmique | Frustré par les solutions dépendantes du cloud, veut de la personnalisation, préoccupé par la confidentialité des données | Exécution locale, IA explicable, transparence |
+| **Jordan — Le professionnel averse au risque** | 40-55 ans, professionnel occupé, veut investir passivement mais de manière contrôlée | Pas de temps pour le trading actif, veut des garde-fous contre les pertes majeures | Configuration et oubli avec limites de risque, alertes, intervention minimale nécessaire |
 
-#### Communautes Cibles
+**Communautés cibles**
 
-| Communaute | Plateforme | Pertinence | Strategie d'Engagement |
+| Communauté | Plateforme | Pertinence | Stratégie d'engagement |
 |------------|------------|------------|------------------------|
-| r/algotrading | Reddit | Elevee - enthousiastes du trading algorithmique | Contenu educatif, discussions techniques |
-| r/investing | Reddit | Moyenne - investisseurs generaux | Focus gestion du risque, angle transparence |
-| Refugies QuantConnect/Quantopian | Divers forums | Elevee - traders algo deplaces | Execution locale, message d'independance |
-| Indie Hackers | Communaute | Moyenne - constructeurs tech | Parcours technique, developpement ouvert |
-| Hacker News | Forum | Moyenne - audience tech-savvy | Approfondissements techniques, posts architecturaux |
+| r/algotrading | Reddit | Élevée — enthousiastes du trading algorithmique | Contenu éducatif, discussions techniques |
+| r/investing | Reddit | Moyenne — investisseurs généraux | Focus gestion du risque, angle transparence |
+| Réfugiés QuantConnect/Quantopian | Divers forums | Élevée — traders algo déplacés | Exécution locale, message d'indépendance |
+| Indie Hackers | Communauté | Moyenne — constructeurs tech | Parcours technique, développement ouvert |
+| Hacker News | Forum | Moyenne — audience tech-savvy | Approfondissements techniques, posts architecturaux |
 
-#### Proposition de Valeur par Segment
+**Proposition de valeur par segment**
 
-| Segment | Proposition de Valeur Principale |
+| Segment | Proposition de valeur principale |
 |---------|----------------------------------|
-| Investisseurs averses au risque | "Ne perdez jamais plus que ce que vous decidez. Sentinel applique automatiquement vos limites de risque." |
-| Utilisateurs soucieux de confidentialite | "Vos donnees, votre machine, votre controle. Aucune dependance au cloud." |
-| Chercheurs de transparence | "Chaque decision expliquee. Pas de boites noires." |
+| Investisseurs averses au risque | « Ne perdez jamais plus que ce que vous décidez. SENTINEL applique automatiquement vos limites de risque. » |
+| Utilisateurs soucieux de confidentialité | « Vos données, votre machine, votre contrôle. Aucune dépendance au cloud. » |
+| Chercheurs de transparence | « Chaque décision expliquée. Pas de boîtes noires. » |
 
-### Lancement et Gestion des Canaux Communautaires
+### Lancement et gestion des canaux communautaires
 
-#### Canaux Principaux
+**Canaux principaux**
 
-| Canal | Objectif | Frequence de Contenu | Responsable |
+| Canal | Objectif | Fréquence de contenu | Responsable |
 |-------|----------|---------------------|-------------|
-| **Serveur Discord** | Discussion temps reel, support, feedback | Moderation quotidienne | Lead Communaute |
-| **Newsletter** | Mises a jour, insights, contenu educatif | Bi-hebdomadaire | Lead Marketing |
-| **GitHub Discussions** | Feedback technique, demandes de fonctionnalites, bugs | Continu | Lead Tech |
-| **Twitter/X** | Mises a jour, engagement, visibilite | Quotidien | Lead Marketing |
-| **Blog** | Approfondissements, tutoriels, etudes de cas | Hebdomadaire | Rotation equipe |
+| **Serveur Discord** | Discussion temps réel, support, feedback | Modération quotidienne | Lead communauté |
+| **Newsletter** | Mises à jour, insights, contenu éducatif | Bi-hebdomadaire | Lead marketing |
+| **GitHub Discussions** | Feedback technique, demandes de fonctionnalités, bugs | Continu | Lead tech |
+| **Twitter/X** | Mises à jour, engagement, visibilité | Quotidien | Lead marketing |
+| **Blog** | Approfondissements, tutoriels, études de cas | Hebdomadaire | Rotation équipe |
 
-#### Structure du Serveur Discord
+**Structure du serveur Discord**
 
 ```
 SENTINEL DISCORD
 ├── #bienvenue-regles
 ├── #presentations
-├── GENERAL
+├── GÉNÉRAL
 │   ├── #discussion-generale
 │   ├── #annonces
 │   └── #feedback-suggestions
@@ -70,11 +64,11 @@ SENTINEL DISCORD
 │   ├── #aide-installation
 │   ├── #rapports-bugs
 │   └── #demandes-fonctionnalites
-├── COMMUNAUTE
+├── COMMUNAUTÉ
 │   ├── #discussion-trading
 │   ├── #gestion-risque
 │   └── #montrez-votre-setup
-├── DEVELOPPEMENT
+├── DÉVELOPPEMENT
 │   ├── #mises-a-jour-dev
 │   ├── #roadmap
 │   └── #tests-beta
@@ -82,488 +76,472 @@ SENTINEL DISCORD
     └── #appels-communaute
 ```
 
-#### Framework du Calendrier de Contenu
+**Framework du calendrier de contenu**
 
-| Semaine | Newsletter | Blog | Social | Evenement Communaute |
+| Semaine | Newsletter | Blog | Social | Événement communauté |
 |---------|------------|------|--------|----------------------|
-| 1 | Mise a jour developpement | Tutoriel technique | Mises a jour quotidiennes | - |
-| 2 | Spotlight utilisateur | Etude de cas | Mises a jour quotidiennes | Session AMA |
-| 3 | Preview fonctionnalite | Conseils gestion risque | Mises a jour quotidiennes | - |
-| 4 | Digest mensuel | Insights industrie | Mises a jour quotidiennes | Session feedback |
+| 1 | Mise à jour développement | Tutoriel technique | Mises à jour quotidiennes | - |
+| 2 | Spotlight utilisateur | Étude de cas | Mises à jour quotidiennes | Session AMA |
+| 3 | Preview fonctionnalité | Conseils gestion risque | Mises à jour quotidiennes | - |
+| 4 | Digest mensuel | Insights industrie | Mises à jour quotidiennes | Session feedback |
 
-### Acquisition et Activation des Beta Testeurs
+### Acquisition et activation des bêta-testeurs
 
-#### Strategie de Recrutement
+**Stratégie de recrutement**
 
-| Phase | Cible | Methode | Calendrier |
+| Phase | Cible | Méthode | Calendrier |
 |-------|-------|---------|------------|
-| **Alpha** | 10-20 utilisateurs | Reseau personnel, outreach direct | T1 2026 |
-| **Beta Fermee** | 50-100 utilisateurs | Liste d'attente, referrals communaute | T2 2026 |
-| **Beta Ouverte** | 200+ utilisateurs | Lancement public, partenariats | T3 2026 |
+| **Alpha** | 10-20 utilisateurs | Réseau personnel, outreach direct | T1 2026 |
+| **Bêta fermée** | 50-100 utilisateurs | Liste d'attente, referrals communauté | T2 2026 |
+| **Bêta ouverte** | 200+ utilisateurs | Lancement public, partenariats | T3 2026 |
 
-#### Flux d'Onboarding
+**Flux d'onboarding**
 
 ```
-Inscription → Email Bienvenue → Guide Setup → Premiere Config → Premiere Analyse → Demande Feedback → Invitation Communaute
+Inscription → Email Bienvenue → Guide Setup → Première Config → Première Analyse → Demande Feedback → Invitation Communauté
      │             │               │              │                │                  │                  │
      └───Jour 0────┴────Jour 1─────┴───Jour 2─────┴────Jour 3──────┴─────Jour 7───────┴────Jour 14───────┘
 ```
 
-#### Programme d'Engagement Beta Testeurs
+**Programme d'engagement bêta-testeurs**
 
-| Activite | Frequence | Recompense |
+| Activité | Fréquence | Récompense |
 |----------|-----------|------------|
-| Sondage feedback hebdomadaire | Hebdomadaire | Acces support prioritaire |
-| Test de fonctionnalites | Par release | Acces anticipe aux nouvelles fonctionnalites |
-| Rapport de bugs | Continu | Credit dans le changelog |
+| Sondage feedback hebdomadaire | Hebdomadaire | Accès support prioritaire |
+| Test de fonctionnalités | Par release | Accès anticipé aux nouvelles fonctionnalités |
+| Rapport de bugs | Continu | Crédit dans le changelog |
 | Interviews utilisateurs | Mensuel | Swag exclusif/reconnaissance |
-| Contribution communaute | Continu | Badge Beta Testeur, role special |
+| Contribution communauté | Continu | Badge bêta-testeur, rôle spécial |
 
-### Suivi, Mesure et Retention
+### Suivi, mesure et rétention
 
-#### Indicateurs Cles de Performance
+**Indicateurs clés de performance**
 
-| KPI | Definition | Cible | Mesure |
+| KPI | Définition | Cible | Mesure |
 |-----|------------|-------|--------|
-| **Taille Communaute** | Total membres Discord + Newsletter | 500 d'ici T4 2026 | Mensuel |
-| **Membres Actifs** | Membres actifs dans les 30 derniers jours | 40% du total | Mensuel |
-| **Taux de Retention** | Retention mois apres mois | >70% | Mensuel |
+| **Taille communauté** | Total membres Discord + Newsletter | 500 d'ici T4 2026 | Mensuel |
+| **Membres actifs** | Membres actifs dans les 30 derniers jours | 40% du total | Mensuel |
+| **Taux de rétention** | Rétention mois après mois | >70% | Mensuel |
 | **Score NPS** | Net Promoter Score | >40 | Trimestriel |
-| **Temps de Reponse** | Temps moyen de premiere reponse | <24h | Hebdomadaire |
-| **Conversion Beta** | Liste d'attente vers utilisateur beta actif | >30% | Par cohorte |
+| **Temps de réponse** | Temps moyen de première réponse | <24h | Hebdomadaire |
+| **Conversion bêta** | Liste d'attente vers utilisateur bêta actif | >30% | Par cohorte |
 
-#### Framework d'Analyse du Churn
+**Framework d'analyse du churn**
 
-| Signal de Churn | Methode de Detection | Intervention |
+| Signal de churn | Méthode de détection | Intervention |
 |-----------------|----------------------|--------------|
-| Pas de connexion depuis 14 jours | Analytics d'usage | Email de re-engagement |
-| Ticket support non resolu | Suivi des tickets | Escalade prioritaire |
-| Feedback negatif | Analyse des sondages | Outreach personnel |
-| Demande de fonctionnalite ignoree | Suivi des demandes | Communication de mise a jour de statut |
+| Pas de connexion depuis 14 jours | Analytics d'usage | Email de ré-engagement |
+| Ticket support non résolu | Suivi des tickets | Escalade prioritaire |
+| Feedback négatif | Analyse des sondages | Outreach personnel |
+| Demande de fonctionnalité ignorée | Suivi des demandes | Communication de mise à jour de statut |
 
-#### Processus de Boucle de Feedback
+**Processus de boucle de feedback**
 
 ```
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│  Collecter  │───►│ Categoriser │───►│ Prioriser   │───►│  Repondre   │
-│  Feedback   │    │ & Analyser  │    │ & Planifier │    │  & Cloturer │
+│  Collecter  │───►│ Catégoriser │───►│ Prioriser   │───►│  Répondre   │
+│  Feedback   │    │ & Analyser  │    │ & Planifier │    │  & Clôturer │
 └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
        ▲                                                        │
        └────────────────────────────────────────────────────────┘
                          Boucle Continue
 ```
 
-### Livrables Attendus
+### Livrables attendus
 
-- [ ] Personas utilisateurs documentes (minimum 3) avec preuves de validation
-- [ ] Plateforme communautaire configuree (serveur Discord configure et modere)
-- [ ] Systeme de newsletter avec gestion des abonnes
-- [ ] Funnel de recrutement beta testeurs et documentation d'onboarding
+- [ ] Personas utilisateurs documentés (minimum 3) avec preuves de validation
+- [ ] Plateforme communautaire configurée (serveur Discord configuré et modéré)
+- [ ] Système de newsletter avec gestion des abonnés
+- [ ] Funnel de recrutement bêta-testeurs et documentation d'onboarding
 - [ ] Calendrier d'engagement communautaire (3+ mois)
-- [ ] Tableau de bord KPI avec mecanismes de suivi
-- [ ] Systeme de collecte et traitement de feedback
-- [ ] Guidelines communautaires et politiques de moderation
-- [ ] Rapports mensuels de sante communautaire
+- [ ] Tableau de bord KPI avec mécanismes de suivi
+- [ ] Système de collecte et traitement de feedback
+- [ ] Guidelines communautaires et politiques de modération
+- [ ] Rapports mensuels de santé communautaire
 
-### Ce Qui N'est Pas Suffisant
+### Ce qui n'est pas suffisant
 
-- Creer des canaux communautaires sans moderation active ou engagement
-- Recruter des beta testeurs sans onboarding structure
-- Collecter du feedback sans reponse visible ou action
-- Definir des KPIs sans mesure et reporting reguliers
-- Contenu generique non adapte a l'audience cible
+- Créer des canaux communautaires sans modération active ou engagement
+- Recruter des bêta-testeurs sans onboarding structuré
+- Collecter du feedback sans réponse visible ou action
+- Définir des KPIs sans mesure et reporting réguliers
+- Contenu générique non adapté à l'audience cible
 - Ignorer les signaux de churn ou les membres inactifs
-- Communication a sens unique sans dialogue
+- Communication à sens unique sans dialogue
 
----
+## B. Améliorer l'expérience utilisateur (UX/UI) — objectif obligatoire
 
-## B. Ameliorer l'Experience Utilisateur (UX/UI)
+### Approche centrée utilisateur
 
-### Approche Centree Utilisateur
+**Méthodes de recherche**
 
-#### Methodes de Recherche
-
-| Methode | Objectif | Frequence | Taille Echantillon |
+| Méthode | Objectif | Fréquence | Taille échantillon |
 |---------|----------|-----------|-------------------|
-| **Interviews Utilisateurs** | Comprehension approfondie des besoins et points de douleur | Mensuel | 5-10 utilisateurs |
-| **Sondages** | Validation quantitative des hypotheses | Trimestriel | 50+ reponses |
-| **Tests d'Utilisabilite** | Evaluation des interfaces et flux | Par release majeure | 5-8 utilisateurs |
-| **Revue Analytics** | Analyse des patterns comportementaux | Hebdomadaire | Tous les utilisateurs |
-| **Analyse Tickets Support** | Identification des problemes communs | Hebdomadaire | Tous les tickets |
+| **Interviews utilisateurs** | Compréhension approfondie des besoins et points de douleur | Mensuel | 5-10 utilisateurs |
+| **Sondages** | Validation quantitative des hypothèses | Trimestriel | 50+ réponses |
+| **Tests d'utilisabilité** | Évaluation des interfaces et flux | Par release majeure | 5-8 utilisateurs |
+| **Revue analytics** | Analyse des patterns comportementaux | Hebdomadaire | Tous les utilisateurs |
+| **Analyse tickets support** | Identification des problèmes communs | Hebdomadaire | Tous les tickets |
 
-#### Cartographie des Points de Douleur
+**Cartographie des points de douleur**
 
-| Etape du Parcours | Points de Douleur | Severite | Approche Solution |
+| Étape du parcours | Points de douleur | Sévérité | Approche solution |
 |-------------------|-------------------|----------|-------------------|
-| **Setup** | Configuration API complexe | Elevee | Assistant guide, valeurs par defaut |
-| **Configuration** | Impact des parametres de risque peu clair | Elevee | Explications visuelles, previews |
+| **Setup** | Configuration API complexe | Élevée | Assistant guidé, valeurs par défaut |
+| **Configuration** | Impact des paramètres de risque peu clair | Élevée | Explications visuelles, previews |
 | **Surveillance** | Surcharge d'informations | Moyenne | Divulgation progressive |
 | **Alertes** | Trop/pas assez de notifications | Moyenne | Seuils personnalisables |
-| **Comprehension des Decisions** | Raisonnement IA opaque | Elevee | Couche d'explicabilite |
+| **Compréhension des décisions** | Raisonnement IA opaque | Élevée | Couche d'explicabilité |
 
-#### Personas UX (Connectes aux Personas Utilisateurs)
+**Personas UX (connectés aux personas utilisateurs)**
 
-| Persona | Confort Tech | Temps Disponible | Besoins Interface |
+| Persona | Confort tech | Temps disponible | Besoins interface |
 |---------|--------------|------------------|-------------------|
 | Alex | Moyen | 15 min/jour | Dashboard simple, alertes claires |
-| Sam | Eleve | 1+ heure/jour | Donnees detaillees, personnalisation |
-| Jordan | Faible-Moyen | 5 min/jour | Mobile-friendly, statut en un coup d'oeil |
+| Sam | Élevé | 1+ heure/jour | Données détaillées, personnalisation |
+| Jordan | Faible-Moyen | 5 min/jour | Mobile-friendly, statut en un coup d'œil |
 
-### Prototypage Haute Qualite
+### Prototypage haute qualité
 
-#### Processus de Design
+**Processus de design**
 
 ```
-Recherche → Croquis → Wireframes → Mockups → Prototype Interactif → Tests Utilisateurs → Iteration
+Recherche → Croquis → Wireframes → Mockups → Prototype Interactif → Tests Utilisateurs → Itération
 ```
 
-#### Ecrans Cles et Specifications Wireframe
+**Écrans clés et spécifications wireframe**
 
-| Ecran | Priorite | Elements Cles | Objectif Utilisateur |
+| Écran | Priorité | Éléments clés | Objectif utilisateur |
 |-------|----------|---------------|----------------------|
-| **Dashboard** | Critique | Statut systeme, positions actuelles, P&L, alertes | Comprehension en un coup d'oeil |
-| **Parametres de Risque** | Critique | Sliders de parametres, preview impact visuel, sauvegarder/reinitialiser | Configurer la tolerance au risque |
-| **Vue Signal** | Elevee | Signal actuel, confiance, decomposition du raisonnement | Comprendre les recommandations |
-| **Gestionnaire de Positions** | Elevee | Positions ouvertes, P&L, boutons de cloture | Surveiller et gerer l'exposition |
-| **Journal Historique** | Moyenne | Decisions passees, resultats, filtres | Revoir et apprendre |
-| **Parametres** | Moyenne | Selection de mode, notifications, preferences | Personnaliser l'experience |
+| **Dashboard** | Critique | Statut système, positions actuelles, P&L, alertes | Compréhension en un coup d'œil |
+| **Paramètres de risque** | Critique | Sliders de paramètres, preview impact visuel, sauvegarder/réinitialiser | Configurer la tolérance au risque |
+| **Vue signal** | Élevée | Signal actuel, confiance, décomposition du raisonnement | Comprendre les recommandations |
+| **Gestionnaire de positions** | Élevée | Positions ouvertes, P&L, boutons de clôture | Surveiller et gérer l'exposition |
+| **Journal historique** | Moyenne | Décisions passées, résultats, filtres | Revoir et apprendre |
+| **Paramètres** | Moyenne | Sélection de mode, notifications, préférences | Personnaliser l'expérience |
 
-#### Composants du Systeme de Design
+**Composants du système de design**
 
-| Categorie | Composants |
+| Catégorie | Composants |
 |-----------|------------|
-| **Couleurs** | Primaire (bleu confiance), Succes (vert), Avertissement (ambre), Danger (rouge), Neutre (gris) |
-| **Typographie** | Titres (Inter Bold), Corps (Inter Regular), Monospace (JetBrains Mono pour les donnees) |
+| **Couleurs** | Primaire (bleu confiance), Succès (vert), Avertissement (ambre), Danger (rouge), Neutre (gris) |
+| **Typographie** | Titres (Inter Bold), Corps (Inter Regular), Monospace (JetBrains Mono pour les données) |
 | **Composants** | Boutons, Cartes, Alertes, Graphiques, Tableaux, Formulaires, Modales, Tooltips |
-| **Patterns** | Etats de chargement, Etats vides, Etats d'erreur, Confirmations de succes |
+| **Patterns** | États de chargement, États vides, États d'erreur, Confirmations de succès |
 
-#### Progression de Fidelite du Prototype
+**Progression de fidélité du prototype**
 
-| Phase | Fidelite | Outil | Objectif |
+| Phase | Fidélité | Outil | Objectif |
 |-------|----------|-------|----------|
-| Exploration | Basse (croquis) | Papier/Excalidraw | Ideation rapide |
+| Exploration | Basse (croquis) | Papier/Excalidraw | Idéation rapide |
 | Validation | Moyenne (wireframes) | Figma | Validation de la structure |
 | Test | Haute (mockups) | Figma | Feedback visuel |
-| Developpement | Interactif | Figma/Code | Validation finale |
+| Développement | Interactif | Figma/Code | Validation finale |
 
-### Tests Utilisateurs et Iterations
+### Tests utilisateurs et itérations
 
-#### Protocole de Test d'Utilisabilite
+**Protocole de test d'utilisabilité**
 
-| Etape | Description | Duree |
+| Étape | Description | Durée |
 |-------|-------------|-------|
-| 1. Introduction | Expliquer l'objectif, pas de mauvaises reponses | 5 min |
-| 2. Contexte | Contexte utilisateur, niveau d'experience | 5 min |
-| 3. Taches | Scenarios specifiques a completer | 20-30 min |
-| 4. Debriefing | Questions ouvertes, impressions generales | 10 min |
+| 1. Introduction | Expliquer l'objectif, pas de mauvaises réponses | 5 min |
+| 2. Contexte | Contexte utilisateur, niveau d'expérience | 5 min |
+| 3. Tâches | Scénarios spécifiques à compléter | 20-30 min |
+| 4. Débriefing | Questions ouvertes, impressions générales | 10 min |
 
-#### Scenarios de Test
+**Scénarios de test**
 
-| Scenario | Criteres de Succes | Metriques |
+| Scénario | Critères de succès | Métriques |
 |----------|-------------------|-----------|
-| "Configurez votre drawdown maximum a 10%" | Complete sans aide | Temps, erreurs, satisfaction |
-| "Trouvez pourquoi le systeme a recommande ATTENTE" | Comprehension demontree | Score de comprehension |
-| "Arretez tout le trading immediatement" | Complete en <5 secondes | Temps de completion |
-| "Consultez vos trades de la semaine derniere" | Information correcte trouvee | Temps, precision |
+| « Configurez votre drawdown maximum à 10% » | Complété sans aide | Temps, erreurs, satisfaction |
+| « Trouvez pourquoi le système a recommandé ATTENTE » | Compréhension démontrée | Score de compréhension |
+| « Arrêtez tout le trading immédiatement » | Complété en <5 secondes | Temps de complétion |
+| « Consultez vos trades de la semaine dernière » | Information correcte trouvée | Temps, précision |
 
-#### Framework de Tests A/B
+**Framework de tests A/B**
 
-| Element | Variante A | Variante B | Metrique |
+| Élément | Variante A | Variante B | Métrique |
 |---------|------------|------------|----------|
-| Slider de risque | Entree numerique | Slider visuel | Temps de configuration, erreurs |
-| Affichage du signal | Texte seul | Texte + jauge visuelle | Score de comprehension |
-| Layout dashboard | Cartes | Tableau | Temps de completion des taches |
+| Slider de risque | Entrée numérique | Slider visuel | Temps de configuration, erreurs |
+| Affichage du signal | Texte seul | Texte + jauge visuelle | Score de compréhension |
+| Layout dashboard | Cartes | Tableau | Temps de complétion des tâches |
 
-#### Template de Journal d'Iteration
+**Template de journal d'itération**
 
-| Date | Probleme Identifie | Source | Solution Implementee | Resultat |
+| Date | Problème identifié | Source | Solution implémentée | Résultat |
 |------|-------------------|--------|----------------------|----------|
-| AAAA-MM-JJ | Description | Test utilisateur/analytics | Changements effectues | Amelioration mesuree |
+| AAAA-MM-JJ | Description | Test utilisateur/analytics | Changements effectués | Amélioration mesurée |
 
-### Documentation et Amelioration Continue
+### Documentation et amélioration continue
 
-#### Documentation de Design
+**Documentation de design**
 
 | Document | Contenu | Audience |
 |----------|---------|----------|
-| **Systeme de Design** | Couleurs, typographie, composants, patterns | Developpeurs, designers |
-| **Flux Utilisateurs** | Diagrammes de parcours etape par etape | Equipe, parties prenantes |
-| **Guide d'Accessibilite** | Conformite WCAG, meilleures pratiques | Developpeurs |
-| **Changelog** | Changements UI/UX par version | Utilisateurs, equipe |
+| **Système de design** | Couleurs, typographie, composants, patterns | Développeurs, designers |
+| **Flux utilisateurs** | Diagrammes de parcours étape par étape | Équipe, parties prenantes |
+| **Guide d'accessibilité** | Conformité WCAG, meilleures pratiques | Développeurs |
+| **Changelog** | Changements UI/UX par version | Utilisateurs, équipe |
 
-#### Conformite Accessibilite (WCAG 2.1 AA)
+**Conformité accessibilité (WCAG 2.1 AA)**
 
-| Critere | Implementation |
+| Critère | Implémentation |
 |---------|----------------|
 | Contraste couleur | Minimum 4.5:1 pour le texte |
 | Navigation clavier | Toutes les fonctions accessibles via clavier |
-| Lecteur d'ecran | HTML semantique, labels ARIA |
-| Indicateurs de focus | Etats de focus visibles |
+| Lecteur d'écran | HTML sémantique, labels ARIA |
+| Indicateurs de focus | États de focus visibles |
 | Identification des erreurs | Messages d'erreur clairs, pas juste la couleur |
 
-#### Cycle d'Amelioration Continue
+**Cycle d'amélioration continue**
 
 ```
-Mesurer (Analytics) → Analyser (Insights) → Prioriser (Impact/Effort) → Implementer → Mesurer
+Mesurer (Analytics) → Analyser (Insights) → Prioriser (Impact/Effort) → Implémenter → Mesurer
         │                                                                              │
         └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Livrables Attendus
+### Livrables attendus
 
-- [ ] Rapport de recherche utilisateur avec personas valides
+- [ ] Rapport de recherche utilisateur avec personas validés
 - [ ] Analyse des points de douleur et matrice de priorisation
-- [ ] Wireframes pour tous les ecrans cles
-- [ ] Mockups haute fidelite dans Figma (ou equivalent)
+- [ ] Wireframes pour tous les écrans clés
+- [ ] Mockups haute fidélité dans Figma (ou équivalent)
 - [ ] Prototype interactif pour les tests utilisateurs
-- [ ] Rapports de tests d'utilisabilite (minimum 3 rounds)
-- [ ] Documentation du systeme de design
-- [ ] Checklist audit accessibilite (WCAG 2.1 AA)
-- [ ] Documentation des resultats des tests A/B
-- [ ] Journal d'iteration UX avec comparaisons avant/apres
+- [ ] Rapports de tests d'utilisabilité (minimum 3 rounds)
+- [ ] Documentation du système de design
+- [ ] Checklist audit accessibilité (WCAG 2.1 AA)
+- [ ] Documentation des résultats des tests A/B
+- [ ] Journal d'itération UX avec comparaisons avant/après
 
-### Ce Qui N'est Pas Suffisant
+### Ce qui n'est pas suffisant
 
 - Designer sans recherche utilisateur ou validation
-- Wireframes basse fidelite uniquement sans progression vers haute fidelite
-- Sauter les tests d'utilisabilite avant le developpement
-- Ignorer les exigences d'accessibilite
-- Creer des designs sans documentation
-- Design unique sans iteration basee sur le feedback
+- Wireframes basse fidélité uniquement sans progression vers haute fidélité
+- Sauter les tests d'utilisabilité avant le développement
+- Ignorer les exigences d'accessibilité
+- Créer des designs sans documentation
+- Design unique sans itération basée sur le feedback
 - Supposer les besoins utilisateurs sans preuves
-- Design generique non adapte au contexte financier/investissement
+- Design générique non adapté au contexte financier/investissement
 
----
+## C. Augmenter la visibilité et l'impact sur les réseaux sociaux — objectif complémentaire
 
-# OBJECTIFS COMPLEMENTAIRES
+*(Sélectionné comme objectif complémentaire #1)*
 
-## C. Augmenter la Visibilite et l'Impact sur les Reseaux Sociaux
+### Stratégie par plateforme
 
-*(Selectionne comme Objectif Complementaire #1)*
-
-### Strategie par Plateforme
-
-| Plateforme | Audience Cible | Focus Contenu | Frequence de Publication |
+| Plateforme | Audience cible | Focus contenu | Fréquence de publication |
 |------------|----------------|---------------|--------------------------|
-| **Twitter/X** | Traders tech-savvy, communaute fintech | Mises a jour, insights, engagement | Quotidien |
+| **Twitter/X** | Traders tech-savvy, communauté fintech | Mises à jour, insights, engagement | Quotidien |
 | **LinkedIn** | Professionnels, connexions B2B | Leadership d'opinion, jalons | 2-3x/semaine |
-| **YouTube** | Apprenants, explications detaillees | Tutoriels, demos, approfondissements | Bi-hebdomadaire |
-| **Reddit** | Communautes de trading | Contenu educatif, discussions | Selon pertinence (pas de spam) |
+| **YouTube** | Apprenants, explications détaillées | Tutoriels, démos, approfondissements | Bi-hebdomadaire |
+| **Reddit** | Communautés de trading | Contenu éducatif, discussions | Selon pertinence (pas de spam) |
 
-### Plan et Execution de Contenu
+### Plan et exécution de contenu
 
-#### Piliers de Contenu
+**Piliers de contenu**
 
-| Pilier | Description | Types de Contenu | Ratio |
+| Pilier | Description | Types de contenu | Ratio |
 |--------|-------------|------------------|-------|
-| **Educatif** | Enseigner des concepts | Tutoriels, explications, conseils | 40% |
-| **Produit** | Fonctionnalites Sentinel, mises a jour | Demos, notes de release, previews | 30% |
-| **Communaute** | Histoires utilisateurs, engagement | Temoignages, Q&As, sondages | 20% |
-| **Industrie** | Insights marche, tendances | Commentaires, analyses | 10% |
+| **Éducatif** | Enseigner des concepts | Tutoriels, explications, conseils | 40% |
+| **Produit** | Fonctionnalités SENTINEL, mises à jour | Démos, notes de release, previews | 30% |
+| **Communauté** | Histoires utilisateurs, engagement | Témoignages, Q&As, sondages | 20% |
+| **Industrie** | Insights marché, tendances | Commentaires, analyses | 10% |
 
-#### Template Calendrier de Contenu
+**Template calendrier de contenu**
 
-| Jour | Plateforme | Type de Contenu | Sujet |
+| Jour | Plateforme | Type de contenu | Sujet |
 |------|------------|-----------------|-------|
-| Lundi | Twitter | Thread educatif | Concept de gestion du risque |
-| Mardi | LinkedIn | Mise a jour produit | Spotlight fonctionnalite |
+| Lundi | Twitter | Thread éducatif | Concept de gestion du risque |
+| Mardi | LinkedIn | Mise à jour produit | Spotlight fonctionnalité |
 | Mercredi | Twitter | Engagement | Sondage ou question |
-| Jeudi | YouTube | Tutoriel | Video how-to |
-| Vendredi | Twitter | Communaute | Spotlight utilisateur ou jalon |
+| Jeudi | YouTube | Tutoriel | Vidéo how-to |
+| Vendredi | Twitter | Communauté | Spotlight utilisateur ou jalon |
 
-### Amplification Payante et Organique
+### Amplification payante et organique
 
-#### Tactiques de Croissance Organique
+**Tactiques de croissance organique**
 
-| Tactique | Implementation |
+| Tactique | Implémentation |
 |----------|----------------|
-| Strategie hashtags | #algotrading #fintech #gestiondurisque #investissement |
-| Pods d'engagement | Participation active dans les communautes pertinentes |
+| Stratégie hashtags | #algotrading #fintech #gestiondurisque #investissement |
+| Pods d'engagement | Participation active dans les communautés pertinentes |
 | Cross-promotion | Partage sur les plateformes, inclusion newsletter |
-| Collaboration | Posts invites, apparitions podcast, contenu co-cree |
+| Collaboration | Posts invités, apparitions podcast, contenu co-créé |
 
-#### Publicite Payante (Selon Budget)
+**Publicité payante (selon budget)**
 
-| Plateforme | Type de Campagne | Cible | Allocation Budget |
+| Plateforme | Type de campagne | Cible | Allocation budget |
 |------------|------------------|-------|-------------------|
-| Twitter | Campagne followers | Interet trading algo | 40% |
-| LinkedIn | Notoriete | Professionnels fintech | 30% |
-| Reddit | Post sponsorise | Subreddits trading | 30% |
+| Twitter | Campagne followers | Intérêt trading algo | 40% |
+| LinkedIn | Notoriété | Professionnels fintech | 30% |
+| Reddit | Post sponsorisé | Subreddits trading | 30% |
 
-### Livrables Attendus
+### Livrables attendus
 
-- [ ] Comptes reseaux sociaux configures et brandes
-- [ ] Calendrier de contenu (6 mois planifies)
+- [ ] Comptes réseaux sociaux configurés et brandés
+- [ ] Calendrier de contenu (6 mois planifiés)
 - [ ] Templates de contenu et guidelines de marque
-- [ ] Tableau de bord metriques d'engagement
-- [ ] Rapports mensuels reseaux sociaux
+- [ ] Tableau de bord métriques d'engagement
+- [ ] Rapports mensuels réseaux sociaux
 - [ ] Liste d'outreach collaboration/partenariat
-- [ ] Portfolio de contenu echantillon (10+ pieces)
+- [ ] Portfolio de contenu échantillon (10+ pièces)
 
-### Ce Qui N'est Pas Suffisant
+### Ce qui n'est pas suffisant
 
-- Creer des comptes sans publication consistante
-- Contenu generique non adapte aux audiences des plateformes
-- Ignorer l'engagement (publier sans repondre)
+- Créer des comptes sans publication consistante
+- Contenu générique non adapté aux audiences des plateformes
+- Ignorer l'engagement (publier sans répondre)
 - Tactiques de spam ou croissance inauthentique
-- Metriques sans analyse ou action
+- Métriques sans analyse ou action
 
----
+## D. Renforcer la crédibilité et construire la réputation du projet — objectif complémentaire
 
-## D. Renforcer la Credibilite et Construire la Reputation du Projet
+*(Sélectionné comme objectif complémentaire #2)*
 
-*(Selectionne comme Objectif Complementaire #2)*
+### Canaux externes et présence
 
-### Canaux Externes et Presence
+**Participation aux événements**
 
-#### Participation aux Evenements
-
-| Type d'Evenement | Exemples | Objectif | Calendrier |
+| Type d'événement | Exemples | Objectif | Calendrier |
 |------------------|----------|----------|------------|
-| **Showcases Ecole** | Demo Days Epitech, presentations EIP | Exposition initiale | Continu |
-| **Hackathons** | Hackathons fintech, challenges trading | Credibilite, networking | Trimestriel |
-| **Conferences** | QuantCon, meetups fintech locaux | Presence industrie | Bi-annuel |
-| **Evenements en Ligne** | Webinaires, Twitter Spaces, Discord AMAs | Accessibilite, portee | Mensuel |
+| **Showcases école** | Demo Days Epitech, présentations EIP | Exposition initiale | Continu |
+| **Hackathons** | Hackathons fintech, challenges trading | Crédibilité, networking | Trimestriel |
+| **Conférences** | QuantCon, meetups fintech locaux | Présence industrie | Bi-annuel |
+| **Événements en ligne** | Webinaires, Twitter Spaces, Discord AMAs | Accessibilité, portée | Mensuel |
 
-#### Opportunites de Presentation
+**Opportunités de présentation**
 
-| Opportunite | Idees de Sujets | Audience Cible |
+| Opportunité | Idées de sujets | Audience cible |
 |-------------|-----------------|----------------|
-| Talks Epitech | "Construire un Systeme de Trading IA Local" | Etudiants, academiques |
-| Presentations meetup | "Approche Risk-First du Trading Algo" | Developpeurs, traders |
-| Apparitions podcast | "Transparence dans l'Investissement Automatise" | Audience tech generale |
+| Talks Epitech | « Construire un système de trading IA local » | Étudiants, académiques |
+| Présentations meetup | « Approche risk-first du trading algo » | Développeurs, traders |
+| Apparitions podcast | « Transparence dans l'investissement automatisé » | Audience tech générale |
 
-### Positionnement dans l'Ecosysteme
+### Positionnement dans l'écosystème
 
-#### Signaux de Credibilite
+**Signaux de crédibilité**
 
-| Signal | Implementation |
+| Signal | Implémentation |
 |--------|----------------|
-| **Articles techniques de blog** | Decisions d'architecture, explications modeles IA |
-| **Contributions open source** | Bibliotheques, outils, documentation |
-| **Developpement transparent** | Roadmap publique, changelog ouvert |
-| **Resultats de backtesting** | Methodologie et resultats publies |
-| **Avis tiers** | Temoignages beta testeurs, evaluations independantes |
+| **Articles techniques de blog** | Décisions d'architecture, explications modèles IA |
+| **Contributions open source** | Bibliothèques, outils, documentation |
+| **Développement transparent** | Roadmap publique, changelog ouvert |
+| **Résultats de backtesting** | Méthodologie et résultats publiés |
+| **Avis tiers** | Témoignages bêta-testeurs, évaluations indépendantes |
 
-#### Declaration de Positionnement
+**Déclaration de positionnement**
 
-> "Sentinel est l'assistant d'investissement IA transparent et local-first qui privilegie la preservation du capital et le controle utilisateur plutot que les promesses de performance boite noire."
+> « SENTINEL est l'assistant d'investissement IA transparent et local-first qui privilégie la préservation du capital et le contrôle utilisateur plutôt que les promesses de performance boîte noire. »
 
-### Capitaliser et Valoriser
+### Capitaliser et valoriser
 
-#### Etudes de Cas
+**Études de cas**
 
-| Etude de Cas | Contenu | Objectif |
+| Étude de cas | Contenu | Objectif |
 |--------------|---------|----------|
-| "Comment Sentinel a Prevenu un Drawdown de 15%" | Walkthrough scenario reel | Demontrer la valeur |
-| "Du Trading Emotionnel a l'Investissement Discipline" | Histoire de transformation utilisateur | Connexion emotionnelle |
-| "Construire la Confiance par la Transparence" | Architecture et explicabilite | Credibilite technique |
+| « Comment SENTINEL a prévenu un drawdown de 15% » | Walkthrough scénario réel | Démontrer la valeur |
+| « Du trading émotionnel à l'investissement discipliné » | Histoire de transformation utilisateur | Connexion émotionnelle |
+| « Construire la confiance par la transparence » | Architecture et explicabilité | Crédibilité technique |
 
-#### Prix et Reconnaissance - Cibles
+**Prix et reconnaissance — cibles**
 
-| Opportunite | Type | Calendrier |
+| Opportunité | Type | Calendrier |
 |-------------|------|------------|
-| Prix projet Epitech | Academique | Fin d'annee |
-| Competitions startup | Business | Selon disponibilite |
-| Reconnaissance open source | Communaute | Continu |
-| Prix innovation fintech | Industrie | Annee 2+ |
+| Prix projet Epitech | Académique | Fin d'année |
+| Compétitions startup | Business | Selon disponibilité |
+| Reconnaissance open source | Communauté | Continu |
+| Prix innovation fintech | Industrie | Année 2+ |
 
-### Livrables Attendus
+### Livrables attendus
 
-- [ ] Journal de participation aux evenements avec resultats
-- [ ] Materiaux de presentation (slides, demos)
-- [ ] Etudes de cas publiees (minimum 2)
+- [ ] Journal de participation aux événements avec résultats
+- [ ] Matériaux de présentation (slides, démos)
+- [ ] Études de cas publiées (minimum 2)
 - [ ] Articles techniques de blog (minimum 5)
-- [ ] Kit presse avec assets media
-- [ ] Collection de temoignages (minimum 10)
+- [ ] Kit presse avec assets média
+- [ ] Collection de témoignages (minimum 10)
 - [ ] Candidatures prix/reconnaissance
-- [ ] Tracker d'opportunites de presentation
+- [ ] Tracker d'opportunités de présentation
 
-### Ce Qui N'est Pas Suffisant
+### Ce qui n'est pas suffisant
 
-- Revendiquer une expertise sans preuves demonstrables
-- Assister aux evenements sans participation active
-- Etudes de cas generiques sans donnees reelles
-- Ignorer les feedbacks negatifs ou critiques
-- Surpromettre les capacites ou resultats
+- Revendiquer une expertise sans preuves démontrables
+- Assister aux événements sans participation active
+- Études de cas génériques sans données réelles
+- Ignorer les feedbacks négatifs ou critiques
+- Surpromettre les capacités ou résultats
 
----
+## Calendrier et jalons
 
-# CALENDRIER ET JALONS
-
-| Trimestre | Communaute | UX/UI | Visibilite | Credibilite |
+| Trimestre | Communauté | UX/UI | Visibilité | Crédibilité |
 |-----------|------------|-------|------------|-------------|
-| **T1 2026** | Personas, setup Discord, premiers 20 beta testeurs | Recherche utilisateur, wireframes | Comptes sociaux, plan de contenu | Premiers articles blog |
-| **T2 2026** | 50 beta testeurs, lancement newsletter, systeme feedback | Mockups, premiers tests utilisabilite | Publication consistante, 200 followers | Participation evenements |
-| **T3 2026** | 150 membres communaute, programmes d'engagement | Prototype interactif, iterations | 500 followers, collaborations | Etudes de cas publiees |
-| **T4 2026** | 300+ membres, forte retention | UI polie, audit accessibilite | 1000 followers, outreach presse | Temoignages, prix |
-| **T1 2027** | Communaute auto-suffisante | UX prete pour production | Presence etablie | Credibilite reconnue |
+| **T1 2026** | Personas, setup Discord, premiers 20 bêta-testeurs | Recherche utilisateur, wireframes | Comptes sociaux, plan de contenu | Premiers articles blog |
+| **T2 2026** | 50 bêta-testeurs, lancement newsletter, système feedback | Mockups, premiers tests utilisabilité | Publication consistante, 200 followers | Participation événements |
+| **T3 2026** | 150 membres communauté, programmes d'engagement | Prototype interactif, itérations | 500 followers, collaborations | Études de cas publiées |
+| **T4 2026** | 300+ membres, forte rétention | UI polie, audit accessibilité | 1000 followers, outreach presse | Témoignages, prix |
+| **T1 2027** | Communauté auto-suffisante | UX prête pour production | Présence établie | Crédibilité reconnue |
 
----
+## Critères d'évaluation
 
-# CRITERES D'EVALUATION
-
-## Matrice d'Evaluation
+### Matrice d'évaluation
 
 | Objectif | Poids | Excellent | Satisfaisant | Insuffisant |
 |----------|-------|-----------|--------------|-------------|
-| **Communaute** | 30% | 300+ membres, >70% retention, engagement actif | 100+ membres, >50% retention | <50 membres, pas d'engagement |
-| **UX/UI** | 30% | Systeme de design complet, 3+ rounds de tests, conforme WCAG | Prototypes basiques, 1 round de test | Pas de tests utilisateurs, pas d'iteration |
-| **Visibilite** | 20% | 1000+ followers, contenu consistant, collaborations | 300+ followers, publications regulieres | Comptes inactifs |
-| **Credibilite** | 20% | 5+ evenements, etudes de cas, temoignages | 2+ evenements, quelques publications | Pas de presence externe |
+| **Communauté** | 30% | 300+ membres, >70% rétention, engagement actif | 100+ membres, >50% rétention | <50 membres, pas d'engagement |
+| **UX/UI** | 30% | Système de design complet, 3+ rounds de tests, conforme WCAG | Prototypes basiques, 1 round de test | Pas de tests utilisateurs, pas d'itération |
+| **Visibilité** | 20% | 1000+ followers, contenu consistant, collaborations | 300+ followers, publications régulières | Comptes inactifs |
+| **Crédibilité** | 20% | 5+ événements, études de cas, témoignages | 2+ événements, quelques publications | Pas de présence externe |
 
-## Resume des Metriques de Succes
+### Résumé des métriques de succès
 
-| Metrique | Cible | Mesure |
+| Métrique | Cible | Mesure |
 |----------|-------|--------|
-| Taille communaute | 300+ membres | Discord + Newsletter |
-| Beta testeurs actifs | 100+ utilisateurs | Analytics produit |
-| Taux de retention | >70% | Mois apres mois |
+| Taille communauté | 300+ membres | Discord + Newsletter |
+| Bêta-testeurs actifs | 100+ utilisateurs | Analytics produit |
+| Taux de rétention | >70% | Mois après mois |
 | Score NPS | >40 | Sondage trimestriel |
-| Score utilisabilite (SUS) | >75 | Tests utilisateurs |
+| Score utilisabilité (SUS) | >75 | Tests utilisateurs |
 | Followers sociaux | 1000+ | Analytics plateformes |
-| Evenements participes | 5+ | Journal |
-| Etudes de cas publiees | 3+ | Portfolio |
+| Événements participés | 5+ | Journal |
+| Études de cas publiées | 3+ | Portfolio |
 
----
+## Collaboration avec le mentor
 
-# COLLABORATION AVEC LE MENTOR
+### Structure des réunions
 
-## Structure des Reunions
-
-| Reunion | Frequence | Duree | Focus |
+| Réunion | Fréquence | Durée | Focus |
 |---------|-----------|-------|-------|
 | Revue de progression | Bi-hebdomadaire | 30-45 min | Progression jalons, blocages |
-| Session strategie | Mensuel | 60 min | Planification long terme, pivots |
-| Approfondissement | Selon besoin | 60-90 min | Resolution de defis specifiques |
+| Session stratégie | Mensuel | 60 min | Planification long terme, pivots |
+| Approfondissement | Selon besoin | 60-90 min | Résolution de défis spécifiques |
 
-## Reporting
+### Reporting
 
-| Rapport | Frequence | Contenu |
+| Rapport | Fréquence | Contenu |
 |---------|-----------|---------|
-| Mise a jour rapide | Hebdomadaire | 3 bullets : fait, en cours, blocages |
-| Rapport de progression | Bi-hebdomadaire | Metriques, accomplissements, plans |
-| Revue comprehensive | Mensuel | Tous les objectifs, preuves, apprentissages |
+| Mise à jour rapide | Hebdomadaire | 3 bullets : fait, en cours, blocages |
+| Rapport de progression | Bi-hebdomadaire | Métriques, accomplissements, plans |
+| Revue compréhensive | Mensuel | Tous les objectifs, preuves, apprentissages |
 
-## Protocole d'Escalade
+### Protocole d'escalade
 
-1. **Discussion equipe** - Resolution de problemes interne
-2. **Consultation mentor** - Guidance strategique
-3. **Coordinateur academique** - Problemes de ressources ou calendrier
-4. **Direction EIP** - Risques critiques du projet
+1. **Discussion équipe** — résolution de problèmes interne
+2. **Consultation mentor** — guidance stratégique
+3. **Coordinateur académique** — problèmes de ressources ou calendrier
+4. **Direction EIP** — risques critiques du projet
 
----
+## Résumé
 
-# RESUME
+Ce framework Solution Track assure le succès de SENTINEL par :
 
-Ce framework Solution Track assure le succes de Sentinel par :
+**Objectifs obligatoires :**
+1. **Construction de communauté** — approche structurée pour identifier, recruter, engager et retenir les utilisateurs
+2. **Excellence UX/UI** — design centré utilisateur avec recherche, prototypage, tests et amélioration continue
 
-**Objectifs Obligatoires :**
-1. **Construction de Communaute** - Approche structuree pour identifier, recruter, engager et retenir les utilisateurs
-2. **Excellence UX/UI** - Design centre utilisateur avec recherche, prototypage, tests et amelioration continue
+**Objectifs complémentaires :**
+3. **Visibilité réseaux sociaux** — présence stratégique sur les plateformes avec contenu consistant et de valeur
+4. **Construction de crédibilité** — validation externe via événements, publications et témoignages
 
-**Objectifs Complementaires :**
-3. **Visibilite Reseaux Sociaux** - Presence strategique sur les plateformes avec contenu consistant et de valeur
-4. **Construction de Credibilite** - Validation externe via evenements, publications et temoignages
-
-Tous les objectifs ont des livrables clairs, des criteres de mesure et des standards definis pour ce qui n'est pas suffisant. Le calendrier fournit des jalons trimestriels, et la structure de collaboration avec le mentor assure un support et une responsabilisation continus.
+Tous les objectifs ont des livrables clairs, des critères de mesure et des standards définis pour ce qui n'est pas suffisant. Le calendrier fournit des jalons trimestriels, et la structure de collaboration avec le mentor assure un support et une responsabilisation continus.
