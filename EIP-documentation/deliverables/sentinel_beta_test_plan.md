@@ -12,7 +12,7 @@ Les systèmes automatisés d'investissement se démocratisent rapidement grâce 
 
 ### Objectifs
 
-SENTINEL est un système d'IA local d'aide et d'exécution d'investissement conçu pour :
+Sentinel est un système d'IA local d'aide et d'exécution d'investissement conçu pour :
 - Analyser les marchés financiers via plusieurs modèles d'IA spécialisés
 - Synthétiser ces analyses en signaux compréhensibles
 - Proposer ou exécuter des décisions disciplinées
@@ -22,7 +22,7 @@ SENTINEL est un système d'IA local d'aide et d'exécution d'investissement con�
 
 ### Architecture
 
-SENTINEL repose sur une architecture modulaire séparant clairement :
+Sentinel repose sur une architecture modulaire séparant clairement :
 1. **Collecte de données** : prix de marché (OHLCV), volumes, indicateurs techniques
 2. **Analyse IA** : modèles spécialisés (tendances, volatilité, anomalies, stress)
 3. **Synthèse des signaux** : agrégation des analyses en recommandations
@@ -112,7 +112,7 @@ Toutes les fonctionnalités listées seront démontrées lors de la présentatio
 
 ## 5. Résumé
 
-Ce plan de test bêta couvre les fonctionnalités essentielles de SENTINEL pour la version bêta :
+Ce plan de test bêta couvre les fonctionnalités essentielles de Sentinel pour la version bêta :
 - **16 fonctionnalités** couvrant l'ensemble du flux utilisateur
 - **2 rôles utilisateurs** (Utilisateur Standard et Admin)
 - **Critères de succès quantifiables** pour chaque fonctionnalité
