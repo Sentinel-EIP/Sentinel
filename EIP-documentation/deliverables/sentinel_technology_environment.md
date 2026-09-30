@@ -2,7 +2,7 @@
 
 ## 1) Vision technique
 
-SENTINEL est conçu comme une plateforme locale-first, modulaire et explicable pour l'aide à la décision et l'exécution disciplinée en investissement.
+Sentinel est conçu comme une plateforme locale-first, modulaire et explicable pour l'aide à la décision et l'exécution disciplinée en investissement.
 
 Objectifs techniques :
 - robustesse et maîtrise du risque,

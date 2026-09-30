@@ -1,12 +1,12 @@
 # Innovation track — Plan d'action
 
-SENTINEL — projet innovant Epitech (Tech4)
+Sentinel — projet innovant Epitech (Tech4)
 
 ## 1. Contexte
 
 ### Origine du projet
 
-SENTINEL est né de l'observation que les systèmes d'investissement automatisés deviennent de plus en plus accessibles au grand public, mais que la plupart des solutions souffrent de défauts critiques : opacité (systèmes « boîte noire »), dépendance au cloud, optimisation centrée sur la performance au détriment de la gestion du risque, et perte de contrôle pour l'utilisateur.
+Sentinel est né de l'observation que les systèmes d'investissement automatisés deviennent de plus en plus accessibles au grand public, mais que la plupart des solutions souffrent de défauts critiques : opacité (systèmes « boîte noire »), dépendance au cloud, optimisation centrée sur la performance au détriment de la gestion du risque, et perte de contrôle pour l'utilisateur.
 
 Ce projet est né de la volonté de créer une alternative qui privilégie la transparence, le contrôle utilisateur et la préservation du capital plutôt que la performance maximale.
 
@@ -21,7 +21,7 @@ Les solutions d'investissement automatisé actuelles présentent plusieurs limit
 
 ### Solution proposée
 
-SENTINEL est un **système d'IA local d'aide et d'exécution d'investissement** qui :
+Sentinel est un **système d'IA local d'aide et d'exécution d'investissement** qui :
 - Analyse les marchés financiers via plusieurs modèles d'IA spécialisés
 - Synthétise les analyses en signaux compréhensibles
 - Propose ou exécute des décisions disciplinées
@@ -36,7 +36,7 @@ L'objectif principal est de démontrer la faisabilité d'un système d'IA financ
 
 ### Track choisi
 
-**Track Solution** — SENTINEL est une solution technologique répondant à un problème clairement identifié pour une base d'utilisateurs définie (investisseurs individuels recherchant une assistance automatisée à l'investissement transparente et contrôlée).
+**Track Solution** — Sentinel est une solution technologique répondant à un problème clairement identifié pour une base d'utilisateurs définie (investisseurs individuels recherchant une assistance automatisée à l'investissement transparente et contrôlée).
 
 ### Entités externes
 
@@ -218,12 +218,12 @@ Track sélectionné : Solution
 **1. Développer et retenir une communauté d'utilisateurs**
 
 **Intention :**
-Construire une communauté d'early adopters est essentiel pour le succès de SENTINEL. Puisque le projet cible des investisseurs individuels soucieux de transparence et de contrôle, nous devons identifier et engager des utilisateurs qui partagent ces valeurs.
+Construire une communauté d'early adopters est essentiel pour le succès de Sentinel. Puisque le projet cible des investisseurs individuels soucieux de transparence et de contrôle, nous devons identifier et engager des utilisateurs qui partagent ces valeurs.
 
 **Plan d'action :**
 
 1. **Construire une base d'early adopters**
-   - Créer une landing page expliquant la philosophie et la proposition de valeur unique de SENTINEL
+   - Créer une landing page expliquant la philosophie et la proposition de valeur unique de Sentinel
    - Lancer une liste d'attente pour l'accès bêta
    - Cibler les communautés : r/algotrading, r/investing, Hacker News, communautés indie hackers
    - Objectif : 100 inscriptions sur la liste d'attente avant le lancement bêta
@@ -302,7 +302,7 @@ Comprendre nos utilisateurs en profondeur nous permet de construire des fonction
 **4. Renforcer la crédibilité et développer la réputation**
 
 **Intention :**
-En tant qu'outil financier, SENTINEL doit établir la confiance par la transparence, la compétence démontrée et la reconnaissance de la communauté.
+En tant qu'outil financier, Sentinel doit établir la confiance par la transparence, la compétence démontrée et la reconnaissance de la communauté.
 
 **Plan d'action :**
 
@@ -320,7 +320,7 @@ En tant qu'outil financier, SENTINEL doit établir la confiance par la transpare
 
 3. **Leadership d'opinion**
    - Articles techniques sur l'IA en finance
-   - Contributions open-source (bibliothèques, outils développés pour SENTINEL)
+   - Contributions open-source (bibliothèques, outils développés pour Sentinel)
    - Engagement dans les communautés en ligne pertinentes
 
 **Objectifs :**
@@ -330,7 +330,7 @@ En tant qu'outil financier, SENTINEL doit établir la confiance par la transpare
 
 ## Résumé
 
-Ce plan d'action trace le chemin de SENTINEL à travers Tech4 avec :
+Ce plan d'action trace le chemin de Sentinel à travers Tech4 avec :
 - **Des jalons techniques clairs** couvrant l'infrastructure de données, l'intégration IA, la gestion du risque, l'UX et la validation
 - **Des user stories détaillées** couvrant toutes les fonctionnalités du système
 - **Des objectifs non techniques centrés sur la communauté** assurant l'engagement utilisateur et l'adéquation produit-marché

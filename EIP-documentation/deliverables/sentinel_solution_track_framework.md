@@ -1,12 +1,12 @@
 # Solution track — Framework complet
 
-SENTINEL — projet innovant Epitech
+Sentinel — projet innovant Epitech
 
 ## Introduction
 
-SENTINEL suit le **Track Solution** du Projet Innovant Epitech (EIP). Ce document décrit comment SENTINEL répond à de véritables problèmes dans l'espace de l'investissement automatisé, en se concentrant sur la compréhension des utilisateurs, le design d'expérience, la construction de communauté et la visibilité stratégique.
+Sentinel suit le **Track Solution** du Projet Innovant Epitech (EIP). Ce document décrit comment Sentinel répond à de véritables problèmes dans l'espace de l'investissement automatisé, en se concentrant sur la compréhension des utilisateurs, le design d'expérience, la construction de communauté et la visibilité stratégique.
 
-**Résumé du projet** : SENTINEL est un système d'IA local d'aide et d'exécution d'investissement qui privilégie la transparence, le contrôle utilisateur et la préservation du capital plutôt que la performance maximale.
+**Résumé du projet** : Sentinel est un système d'IA local d'aide et d'exécution d'investissement qui privilégie la transparence, le contrôle utilisateur et la préservation du capital plutôt que la performance maximale.
 
 ## A. Développer et retenir une communauté d'utilisateurs — objectif obligatoire
 
@@ -34,7 +34,7 @@ SENTINEL suit le **Track Solution** du Projet Innovant Epitech (EIP). Ce documen
 
 | Segment | Proposition de valeur principale |
 |---------|----------------------------------|
-| Investisseurs averses au risque | « Ne perdez jamais plus que ce que vous décidez. SENTINEL applique automatiquement vos limites de risque. » |
+| Investisseurs averses au risque | « Ne perdez jamais plus que ce que vous décidez. Sentinel applique automatiquement vos limites de risque. » |
 | Utilisateurs soucieux de confidentialité | « Vos données, votre machine, votre contrôle. Aucune dépendance au cloud. » |
 | Chercheurs de transparence | « Chaque décision expliquée. Pas de boîtes noires. » |
 
@@ -345,7 +345,7 @@ Mesurer (Analytics) → Analyser (Insights) → Prioriser (Impact/Effort) → Im
 | Pilier | Description | Types de contenu | Ratio |
 |--------|-------------|------------------|-------|
 | **Éducatif** | Enseigner des concepts | Tutoriels, explications, conseils | 40% |
-| **Produit** | Fonctionnalités SENTINEL, mises à jour | Démos, notes de release, previews | 30% |
+| **Produit** | Fonctionnalités Sentinel, mises à jour | Démos, notes de release, previews | 30% |
 | **Communauté** | Histoires utilisateurs, engagement | Témoignages, Q&As, sondages | 20% |
 | **Industrie** | Insights marché, tendances | Commentaires, analyses | 10% |
 
@@ -433,7 +433,7 @@ Mesurer (Analytics) → Analyser (Insights) → Prioriser (Impact/Effort) → Im
 
 **Déclaration de positionnement**
 
-> « SENTINEL est l'assistant d'investissement IA transparent et local-first qui privilégie la préservation du capital et le contrôle utilisateur plutôt que les promesses de performance boîte noire. »
+> « Sentinel est l'assistant d'investissement IA transparent et local-first qui privilégie la préservation du capital et le contrôle utilisateur plutôt que les promesses de performance boîte noire. »
 
 ### Capitaliser et valoriser
 
@@ -441,7 +441,7 @@ Mesurer (Analytics) → Analyser (Insights) → Prioriser (Impact/Effort) → Im
 
 | Étude de cas | Contenu | Objectif |
 |--------------|---------|----------|
-| « Comment SENTINEL a prévenu un drawdown de 15% » | Walkthrough scénario réel | Démontrer la valeur |
+| « Comment Sentinel a prévenu un drawdown de 15% » | Walkthrough scénario réel | Démontrer la valeur |
 | « Du trading émotionnel à l'investissement discipliné » | Histoire de transformation utilisateur | Connexion émotionnelle |
 | « Construire la confiance par la transparence » | Architecture et explicabilité | Crédibilité technique |
 
@@ -534,7 +534,7 @@ Mesurer (Analytics) → Analyser (Insights) → Prioriser (Impact/Effort) → Im
 
 ## Résumé
 
-Ce framework Solution Track assure le succès de SENTINEL par :
+Ce framework Solution Track assure le succès de Sentinel par :
 
 **Objectifs obligatoires :**
 1. **Construction de communauté** — approche structurée pour identifier, recruter, engager et retenir les utilisateurs

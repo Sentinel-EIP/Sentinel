@@ -2,7 +2,7 @@
 
 ## 1) Objectif
 
-Mettre en place une chaîne CI/CD fiable et une infrastructure locale-first permettant à SENTINEL de :
+Mettre en place une chaîne CI/CD fiable et une infrastructure locale-first permettant à Sentinel de :
 - livrer rapidement sans casser la production,
 - garantir la traçabilité des décisions et des versions,
 - renforcer la robustesse (priorité risque, pas performance brute),

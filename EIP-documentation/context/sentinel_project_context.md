@@ -1,19 +1,19 @@
 # Présentation initiale du projet
 
 > [!WARNING]
-> Cette présentation date du lancement du projet, avant le recentrage du 30 août 2026. Depuis, la vision validée fait de SENTINEL un outil d'accompagnement visuel et de prévention, pas un robot de trading automatique, et l'exécution des trades est repoussée après le MVP. La vision à jour est dans la page « Vision et périmètre du MVP » de l'espace Outline de l'équipe.
+> Cette présentation date du lancement du projet, avant le recentrage du 30 août 2026. Depuis, la vision validée fait de Sentinel un outil d'accompagnement visuel et de prévention, pas un robot de trading automatique, et l'exécution des trades est repoussée après le MVP. La vision à jour est dans la page « Vision et périmètre du MVP » de l'espace Outline de l'équipe.
 
-SENTINEL est un système d’IA local d’aide et d’exécution d’investissement, conçu pour analyser les marchés financiers de manière disciplinée, compréhensible et contrôlable par l’utilisateur.
+Sentinel est un système d’IA local d’aide et d’exécution d’investissement, conçu pour analyser les marchés financiers de manière disciplinée, compréhensible et contrôlable par l’utilisateur.
 
 Aujourd’hui, beaucoup de systèmes d'investissement automatisé promettent des performances irréalistes, reposent sur des boîtes noires ou exposent inutilement le capital. Résultat : perte de contrôle, sur-optimisation et risques mal maîtrisés.
 
-SENTINEL prend le contre-pied.
+Sentinel prend le contre-pied.
 
 L’objectif n’est pas de « battre le marché », mais de survivre aux marchés, quels que soient leurs régimes.
 
 ## À propos de nous
 
-SENTINEL est un système d’IA local d’aide et d’exécution d’investissement qui analyse les marchés de façon disciplinée, transparente et sous le contrôle de l’utilisateur. Contrairement aux solutions automatisées opaques et orientées performance à tout prix, SENTINEL privilégie la maîtrise du risque et la robustesse. Son objectif n’est pas de battre le marché, mais d’y survivre, quels que soient les régimes.
+Sentinel est un système d’IA local d’aide et d’exécution d’investissement qui analyse les marchés de façon disciplinée, transparente et sous le contrôle de l’utilisateur. Contrairement aux solutions automatisées opaques et orientées performance à tout prix, Sentinel privilégie la maîtrise du risque et la robustesse. Son objectif n’est pas de battre le marché, mais d’y survivre, quels que soient les régimes.
 
 ## Contexte et problématique
 
@@ -28,7 +28,7 @@ Ce projet s’inscrit dans une démarche visant à proposer une alternative plus
 
 ## Vision
 
-L’objectif du projet SENTINEL est de concevoir un système local capable :
+L’objectif du projet Sentinel est de concevoir un système local capable :
 
 - d’analyser les marchés financiers via plusieurs modèles d’IA spécialisés ;
 - de synthétiser ces analyses en signaux compréhensibles ;
@@ -39,7 +39,7 @@ La philosophie du projet est de privilégier la survie du capital face aux diff�
 
 ## Mission
 
-SENTINEL a pour objectif de supprimer le principal facteur de risque en investissement : le facteur humain et ses émotions, en confiant l’analyse et l’exécution à une IA disciplinée, tout en conservant un contrôle humain total.
+Sentinel a pour objectif de supprimer le principal facteur de risque en investissement : le facteur humain et ses émotions, en confiant l’analyse et l’exécution à une IA disciplinée, tout en conservant un contrôle humain total.
 
 ## Ça existe déjà ?
 
@@ -47,7 +47,7 @@ Plusieurs solutions existent déjà dans le domaine.
 
 ### Bots de trading automatisés
 
-Ils offrent plus de flexibilité mais nécessitent souvent des compétences techniques importantes et restent orientés performance. SENTINEL se distingue par :
+Ils offrent plus de flexibilité mais nécessitent souvent des compétences techniques importantes et restent orientés performance. Sentinel se distingue par :
 
 - une exécution locale ;
 - une gouvernance forte du risque ;
@@ -60,7 +60,7 @@ Ils proposent une automatisation simplifiée de l’investissement mais restent 
 
 ## Architecture modulaire
 
-SENTINEL repose sur une architecture modulaire séparant clairement :
+Sentinel repose sur une architecture modulaire séparant clairement :
 
 - la collecte de données de marché ;
 - l’analyse par modèles IA spécialisés ;
@@ -109,7 +109,7 @@ Ce module garantit que l’exécution reste toujours dans un cadre maîtrisé.
 
 ## Interface utilisateur
 
-SENTINEL intègre une interface locale accessible via navigateur. Elle permet :
+Sentinel intègre une interface locale accessible via navigateur. Elle permet :
 
 - le suivi de l’état du marché et du système ;
 - la consultation des positions ouvertes ;
@@ -177,7 +177,7 @@ Les livrables incluent :
 
 ## Conclusion
 
-SENTINEL propose une approche prudente de l’automatisation de l’investissement, privilégiant :
+Sentinel propose une approche prudente de l’automatisation de l’investissement, privilégiant :
 
 - transparence ;
 - contrôle utilisateur ;

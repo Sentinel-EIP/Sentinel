@@ -11,7 +11,7 @@
 ## Aperçu des fichiers
 
 ### 1. EIP-documentation/deliverables/sentinel_beta_test_plan.md
-**Objectif** : plan de test bêta pour la présentation bêta de SENTINEL
+**Objectif** : plan de test bêta pour la présentation bêta de Sentinel
 
 | Section | Contenu |
 |---------|---------|
@@ -43,7 +43,7 @@
 
 ## Sélection du track : Solution
 
-SENTINEL suit le **Track Solution** qui se concentre sur :
+Sentinel suit le **Track Solution** qui se concentre sur :
 - Développer des solutions innovantes répondant à de véritables problèmes
 - Approche centrée utilisateur avec construction de communauté
 - Excellence UX/UI par la recherche et l'itération
