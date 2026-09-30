@@ -190,7 +190,7 @@ suivre, ou le depot revenir en arriere :
 ## E10 — Signal d'achat ou non : tranché, en attente de validation
 
 **Tranché le 2026-09-27 par Jules**, dans le positionnement du produit (page
-« Positionnement SENTINEL » de l'espace Outline de l'équipe) : **SENTINEL
+« Positionnement SENTINEL » de l'espace Outline de l'équipe) : **Sentinel
 prédit et sécurise à l'action.** La position B l'emporte : le produit analyse
 le marché et fournit une analyse directionnelle assortie d'un niveau de
 confiance (US3.1, US3.3), puis évalue l'action que le trader s'apprête à
@@ -210,9 +210,12 @@ le 2026-09-30, puis retirer cette entrée.
   est mesuré, pas décoré ; la distinction entre analyse et recommandation
   personnalisée reste lisible, avec un cadrage juridique avant l'ouverture de
   la bêta.
-- À trancher : le design system v1.2 (« aucun rouge/vert réflexe sur les
-  prix », règle 3 de CONTRIBUTING) et la maquette Figma, désormais référence
-  visuelle (vert et rouge pour la hausse et la baisse), divergent.
+- Couleurs, tranché le 2026-09-30 par Jules : la charte de marque (page
+  « Identité de marque » de l'espace Outline) fait foi. Le rouge est réservé
+  au risque, et une variation négative en relève directement : la baisse
+  s'affiche en rouge, la hausse en vert ; les graphiques en bougies restent
+  monochromes. Reste à aligner la règle 3 de CONTRIBUTING et le design system
+  v1.2, qui disent encore « aucun rouge ni vert réflexe sur les prix ».
 
 ### Positions qui étaient en présence
 
