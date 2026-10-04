@@ -8,8 +8,6 @@ class Settings(BaseSettings):
 
     LOG_LEVEL: str = "INFO"
     ML_MODEL_CACHE: str = "/models"
-    # Charge les modeles au demarrage. Mettre a false en dev pour demarrer vite.
-    ML_PRELOAD: bool = False
 
 
 @lru_cache

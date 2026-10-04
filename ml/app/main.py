@@ -19,7 +19,7 @@ import tempfile
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field
 
@@ -91,6 +91,10 @@ def volatility_cone(req: VolatilityConeRequest) -> VolatilityConeResponse:
     """Stub. A remplacer par un GARCH ou une volatilite realisee glissante.
 
     Le contrat de sortie est fige des maintenant pour que le frontend puisse
-    etre developpe en parallele du modele.
+    etre developpe en parallele du modele. 501 (et non 500) : l'appelant sait
+    que la route existe mais n'est pas encore servie.
     """
-    raise NotImplementedError("Modele de volatilite non encore implemente")
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Modele de volatilite non encore implemente",
+    )
