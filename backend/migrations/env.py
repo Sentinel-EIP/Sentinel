@@ -27,6 +27,9 @@ def refuse_superuser(connection: Connection) -> None:
     is_super = connection.execute(
         text("SELECT rolsuper FROM pg_roles WHERE rolname = current_user")
     ).scalar()
+    # Termine la transaction ouverte par cette requete : sinon celle des
+    # migrations s'y imbrique et n'est jamais validee (rollback a la fermeture).
+    connection.commit()
     if is_super:
         raise SystemExit(
             "Migrations refusees en superutilisateur : utiliser le role applicatif "

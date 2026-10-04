@@ -308,8 +308,11 @@ jobs:
       - name: Demarrer et attendre les healthchecks
         run: docker compose up -d --build --wait --wait-timeout 300
       # Role applicatif (env.py refuse le superutilisateur), image prod.
+      # alembic check : les modeles SQLModel et les migrations concordent.
       - name: Migrations Alembic
-        run: docker compose exec -T api alembic upgrade head
+        run: |
+          docker compose exec -T api alembic upgrade head
+          docker compose exec -T api alembic check
       - name: API prete (base et ML joignables)
         run: |
           docker compose exec -T api python -c "
