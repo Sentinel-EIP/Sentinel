@@ -7,6 +7,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.api.routes import health
 from app.core.config import get_settings
+from app.core.errors import install_error_handlers
 from app.core.logging import configure_logging, log
 
 configure_logging()
@@ -34,6 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+install_error_handlers(app)
 app.include_router(health.router)
 
 # /metrics : scrape interne par Prometheus (api:8000/metrics), jamais expose par
