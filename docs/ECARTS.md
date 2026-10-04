@@ -144,7 +144,10 @@ telle quelle. A reprendre avant son premier deploiement. Constats du
 - Aucun lockfile Python (`>=` partout, torch non declare dans
   `ml/pyproject.toml`) : builds non reproductibles, versions vulnerables
   admissibles.
-- L'etape `pip-audit` de la CI n'audite rien (`|| true`).
+- `pip-audit` (CI, job securite) audite et bloque sur les dependances runtime
+  declarees du backend et du ML, resolues a la derniere version admise. Il ne
+  voit ni torch (non declare), ni la version reellement installee dans une
+  image construite plus tot : seul un lockfile fermera cet ecart.
 - Frontend : vitest 2 installe un vite 5 a cote de vite 6 ; `npm audit` releve
   2 CRITICAL et 1 HIGH, uniquement en dependances de dev. ESLint 9 est en fin de
   vie.

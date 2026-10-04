@@ -78,8 +78,12 @@ jobs:
         with: { python-version: "3.11", cache: pip }
       - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
       - run: pip install -e ".[dev]"
-      - run: ruff check .
-      - run: pytest
+      - name: Ruff
+        run: ruff check . && ruff format --check .
+      - name: Mypy
+        run: mypy app
+      - name: Tests + couverture (seuil dans pyproject.toml)
+        run: pytest
 
   frontend:
     name: Frontend — lint et tests
@@ -166,8 +170,20 @@ jobs:
             echo "$outside"
             exit 1
           fi
-      - name: pip-audit
-        run: pip-audit -r <(pip install -q pip-tools && echo) || true
+      # Dependances runtime declarees (celles des images prod), resolues a la
+      # derniere version admise. Bloquant. pip et setuptools n'y figurent pas :
+      # ils sont retires des images prod. torch (non declare) : voir ECARTS, E6.
+      - name: pip-audit (dependances runtime)
+        run: |
+          status=0
+          for svc in backend ml; do
+            req="$RUNNER_TEMP/requirements-$svc.txt"
+            python -c "import sys, tomllib; print('\\n'.join(tomllib.load(open(sys.argv[1], 'rb'))['project']['dependencies']))" \
+              "$svc/pyproject.toml" > "$req"
+            echo "== $svc"
+            pip-audit -r "$req" || status=1
+          done
+          exit "$status"
 
   # ------------------------------ inventaire derive de la configuration
   # Les images a construire, les images tierces et les ports publies viennent
