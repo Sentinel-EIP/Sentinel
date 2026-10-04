@@ -1,0 +1,60 @@
+/* Grille du tableau de bord : graphique a gauche, panneaux a droite ;
+   une seule colonne sous --bp-tablet (900px). */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+}
+.panel {
+  padding: var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+.panel + .panel { margin-top: var(--space-4); }
+.panel-title {
+  margin: 0 0 var(--space-3);
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.metric {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) 0;
+  color: var(--text-secondary);
+}
+.metric strong {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.control {
+  min-height: var(--touch-target-min);
+  padding: 0 var(--space-3);
+  background: var(--field-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+.button-primary {
+  min-height: var(--touch-target-min);
+  padding: 0 var(--space-4);
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.button-primary:disabled { opacity: .6; cursor: wait; }
