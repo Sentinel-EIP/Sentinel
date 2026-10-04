@@ -22,3 +22,6 @@ data/raw/
 
 # Configurations locales nommees <outil>.env (ex. backup-cloud.env)
 *.env
+
+# pip install -e (CI, verifier.sh, poste local)
+*.egg-info/

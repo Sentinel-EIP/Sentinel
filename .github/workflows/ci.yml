@@ -291,6 +291,9 @@ jobs:
       # Aucune sonde ne part avant. Ce sont les images PROD qui demarrent ici.
       - name: Demarrer et attendre les healthchecks
         run: docker compose up -d --build --wait --wait-timeout 300
+      # Role applicatif (env.py refuse le superutilisateur), image prod.
+      - name: Migrations Alembic
+        run: docker compose exec -T api alembic upgrade head
       - name: API prete (base et ML joignables)
         run: |
           docker compose exec -T api python -c "
