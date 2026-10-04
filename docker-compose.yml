@@ -87,6 +87,8 @@ services:
     environment:
       <<: [*common-env, *db-env, *redis-env]
       API_SECRET_KEY: ${API_SECRET_KEY:?API_SECRET_KEY manquant (openssl rand -hex 32)}
+      ACCESS_TOKEN_MINUTES: ${ACCESS_TOKEN_MINUTES:-60}
+      AUTH_ALLOW_REGISTRATION: ${AUTH_ALLOW_REGISTRATION:-true}
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:5173}
       ML_SERVICE_URL: http://ml:8100
     depends_on:
