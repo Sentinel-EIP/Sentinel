@@ -210,7 +210,39 @@ tranche pas : les deux positions sont exposees telles quelles.
 
 - CONTRIBUTING, regle 1, et la docstring du service ML renvoient ici, sans
   prendre parti.
-- Aucun module ne produit encore de direction ni de signal.
+- Aucun module ne produit de direction ni de signal. Le seul modele, le cone
+  de volatilite (`ml/app/volatility.py`), donne une amplitude symetrique.
+- Les resultats IA sont stockes dans un format generique (`ai_results` :
+  type, valeur, confiance, fiabilite mesuree, explication), compatible avec
+  les deux positions : ajouter une direction = une colonne et un champ de plus.
 - Regle commune aux deux positions, appliquee des maintenant : toute sortie
   affichee porte son niveau de confiance et son explication (US3.4).
 
+
+## E11 — Securite basique : limites connues de l'authentification
+
+Authentification par jeton JWT (HS256, `API_SECRET_KEY`, 60 min) et mots de
+passe argon2. Suffisant pour un usage local a quatre ; a reprendre avant tout
+environnement partage :
+
+- **Pas de limitation des tentatives de connexion** : un mot de passe faible se
+  devine par force brute. Les echecs sont journalises (`login_failed`).
+- **Jeton en `sessionStorage`** : une faille XSS dans le frontend permettrait de
+  le voler. Alternative : cookie `HttpOnly` + protection CSRF.
+- **Pas de revocation** : un jeton reste valide jusqu'a son expiration, meme
+  apres deconnexion. Pas de jeton de rafraichissement : reconnexion toutes les
+  heures.
+- **Inscription libre par defaut** (`AUTH_ALLOW_REGISTRATION=true`) : a passer
+  a `false` hors poste local.
+- `/docs` et `/openapi.json` restent publics via le proxy (`/api/docs`).
+
+## E12 — Donnees de marche : une seule source
+
+- Bougies collectees sur l'API publique de Binance, via
+  `data-api.binance.vision` (`api.binance.com` repond 451 selon le pays). Une
+  seule source : pas de recoupement entre exchanges.
+- Un passage tous les quarts d'heure (et au demarrage du worker), au plus
+  20 000 bougies par symbole et par passage. Un trou au milieu de l'historique
+  n'est pas comble : seule la fin est reprise.
+- Collecte en echec : journalisee (`market.collect_failed`) ; visible dans
+  l'interface par l'alerte « donnees perimees », pas par une notification.
