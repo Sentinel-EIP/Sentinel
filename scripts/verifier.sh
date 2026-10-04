@@ -62,7 +62,7 @@ python_checks() {
     ruff format --check . || status=1
     mypy app || status=1
     # shellcheck disable=SC2086 # arguments pytest volontairement decoupes
-    POSTGRES_HOST=localhost POSTGRES_DB=sentinel_test POSTGRES_PASSWORD=sentinel \
+    POSTGRES_HOST=localhost POSTGRES_USER=sentinel POSTGRES_DB=sentinel_test POSTGRES_PASSWORD=sentinel \
       REDIS_HOST=localhost pytest -p no:cacheprovider ${VERIFIER_PYTEST_ARGS:-} || status=1
     python ../scripts/ci/critical_coverage.py || status=1
     ruff check --config pyproject.toml ../scripts || status=1

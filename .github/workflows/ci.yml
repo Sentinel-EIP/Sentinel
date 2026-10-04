@@ -47,6 +47,7 @@ jobs:
       - name: Tests + couverture (seuil 70 %)
         env:
           POSTGRES_HOST: localhost
+          POSTGRES_USER: sentinel
           POSTGRES_DB: sentinel_test
           POSTGRES_PASSWORD: sentinel
           REDIS_HOST: localhost

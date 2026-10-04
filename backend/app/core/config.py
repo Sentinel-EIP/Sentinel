@@ -13,7 +13,8 @@ class Settings(BaseSettings):
     ENVIRONMENT: Literal["local", "shared-dev", "staging", "production"] = "local"
     LOG_LEVEL: str = "INFO"
 
-    POSTGRES_USER: str = "sentinel"
+    # Role APPLICATIF (la compose y met APP_DB_USER), jamais le superutilisateur.
+    POSTGRES_USER: str = "sentinel_app"
     POSTGRES_PASSWORD: str = ""  # role applicatif : APP_DB_PASSWORD, exige par la compose
     POSTGRES_DB: str = "sentinel"
     POSTGRES_HOST: str = "db"
