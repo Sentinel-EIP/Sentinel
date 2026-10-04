@@ -118,7 +118,11 @@ services:
     command: ["celery", "-A", "app.worker.celery_app", "worker", "-l", "info"]
     environment:
       <<: [*common-env, *db-env, *redis-env]
-      # Collecteurs de donnees de marche : seuls consommateurs des cles d'exchange.
+      # Collecte des bougies (API publique, sans cle) : sortie Internet par app.
+      MARKET_SYMBOLS: ${MARKET_SYMBOLS:-BTCEUR,ETHEUR}
+      MARKET_TIMEFRAMES: ${MARKET_TIMEFRAMES:-1h,1d}
+      MARKET_BACKFILL_DAYS: ${MARKET_BACKFILL_DAYS:-90}
+      # Seul consommateur futur des cles d'exchange (ordres) ; inutilisees.
       BINANCE_API_KEY: ${BINANCE_API_KEY:-}
       BINANCE_API_SECRET: ${BINANCE_API_SECRET:-}
     depends_on:
@@ -138,6 +142,25 @@ services:
       start_period: 60s
       start_interval: 2s
     networks: [data, app]
+    logging: *logging
+
+  # ------------------------------ Planificateur des jobs (celery beat)
+  # Declenche les taches periodiques (collecte des bougies) ; le worker les
+  # execute. Un seul planificateur : deux en parallele doubleraient les taches.
+  # Ni base, ni Internet : il ne parle qu'a Redis.
+  scheduler:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: sentinel-scheduler
+    restart: unless-stopped
+    command: ["celery", "-A", "app.worker.celery_app", "beat", "-l", "info",
+              "--schedule", "/tmp/celerybeat-schedule"]
+    environment:
+      <<: [*common-env, *redis-env]
+    depends_on:
+      redis: { condition: service_healthy }
+    networks: [data]
     logging: *logging
 
   # ----------------------------------- Couche 2 : modeles IA, image separee

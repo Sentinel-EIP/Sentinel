@@ -25,6 +25,15 @@ services:
     volumes:
       - ./backend:/app
 
+  scheduler:
+    build:
+      target: dev
+    command: ["watchmedo", "auto-restart", "--directory=/app", "--pattern=*.py",
+              "--recursive", "--", "celery", "-A", "app.worker.celery_app", "beat",
+              "-l", "info", "--schedule", "/tmp/celerybeat-schedule"]
+    volumes:
+      - ./backend:/app
+
   ml:
     build:
       target: dev
