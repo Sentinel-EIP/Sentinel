@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const API = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+import { API_URL } from "../api/client";
 
 interface HealthState {
   status: string | null;
@@ -13,7 +13,8 @@ export const useHealth = create<HealthState>((set) => ({
   checks: null,
   refresh: async () => {
     try {
-      const res = await fetch(`${API}/health/ready`);
+      // 503 quand une dependance manque : le corps porte quand meme le detail.
+      const res = await fetch(`${API_URL}/health/ready`);
       const body = await res.json();
       set({ status: body.status, checks: body.checks });
     } catch {
