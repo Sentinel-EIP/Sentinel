@@ -5,9 +5,11 @@ service `worker` les execute.
 """
 
 from datetime import UTC, datetime
+from typing import Any
 
 import httpx
 from celery import Celery
+from celery.signals import worker_ready
 
 from app.core.config import get_settings
 from app.core.logging import configure_logging, log
@@ -28,6 +30,12 @@ celery_app.conf.update(
         "collect-candles": {"task": "sentinel.collect_candles", "schedule": 15 * 60.0},
     },
 )
+
+
+@worker_ready.connect
+def collect_on_start(**_: Any) -> None:
+    """Premiere collecte des le demarrage du worker, sans attendre le planificateur."""
+    celery_app.send_task("sentinel.collect_candles")
 
 
 @celery_app.task(name="sentinel.ping")
