@@ -4,7 +4,7 @@ Limites et dettes connues, acceptees en connaissance de cause ou en attente
 d'une decision. Chaque entree dit comment l'ecart se manifeste, pour qu'on le
 reconnaisse le jour ou il se produit. Retirer une entree quand elle est traitee.
 
-Derniere revue : 2026-09-25.
+Derniere revue : 2026-10-04.
 
 ## E1 — Volume de modeles cree par une autre image (droits root)
 
@@ -69,64 +69,42 @@ Derniere revue : 2026-09-25.
   5. Critere de sortie : 0 HIGH/CRITICAL corrigeable sur l'image derivee.
      `redis:7-alpine` y est deja et pourra suivre le meme chemin.
 
-## E4 — Stack cloud (`infra/stacks/cloud`) : inutilisable en l'etat
+## E4 — Stack cloud (`infra/stacks/cloud`) : jamais deployee
 
-Jamais deployee : rien a corriger en urgence, mais elle ne peut pas l'etre
-telle quelle. A reprendre avant son premier deploiement. Constats du
-2026-09-25 (Trivy v0.70.0, registres interroges directement).
+Mise a jour le 2026-10-04 : Nextcloud 35 et Garage remplacent Nextcloud 30 (fin
+de vie, ~1 180 vulnerabilites HIGH/CRITICAL) et MinIO (plus aucune image
+publique depuis septembre 2026). Reste a la deployer pour de vrai.
 
-### Nextcloud
+### Verifie localement (Docker 25, 2026-10-04)
 
-- `nextcloud:30-apache` est en fin de vie : 1 180 vulnerabilites HIGH/CRITICAL
-  corrigeables.
-- Versions maintenues : 33 (fin de vie 2027-02), 34 (2027-06), 35 (sortie le
-  2026-09-16, fin de vie 2027-09). Une majeure tous les quatre mois, un an de
-  support chacune.
-- **Choix retenu (2026-09-25) : Nextcloud 35**, sur le dernier tag de
-  correctif (`35.0.1-apache` au 2026-09-25), epingle par digest. Premiere
-  installation, donc aucune montee de version a enchainer ; c'est la fenetre
-  de support la plus longue. Alternative ecartee : 34 (`34.0.4`), plus
-  eprouvee mais supportee trois mois de moins.
-- Ensuite, monter d'une majeure a la fois (Nextcloud n'en saute pas), au
-  rythme des sorties.
-- A verifier au deploiement : prerequis de la 35 (versions de PostgreSQL et de
-  Redis supportees) face a `postgres:16-alpine` et `redis:7-alpine`.
+- `nextcloud:35.0.1-apache` (epingle par digest) s'installe avec
+  `postgres:16-alpine` et `redis:7-alpine` ; tous les healthchecks passent.
+- `trusted_proxies` limite au sous-reseau de `sentinel-edge` (`EDGE_SUBNET`).
+- Garage v2.4.1 (epingle par digest) : `garage-init.sh` cree le role du noeud,
+  les trois buckets et deux cles ; la cle `sentinel-backup` lit sans pouvoir
+  ecrire (403), la cle `sentinel-app` ecrit ; acces anonyme refuse (403).
 
-### MinIO : plus d'images publiques
+### Reste a verifier au premier deploiement
 
-- MinIO a cesse de publier ses images communautaires en octobre 2025, puis a
-  archive son depot en 2026. Docker Hub a supprime l'espace `minio` en
-  septembre 2026 (`hub.docker.com/v2/repositories/minio/minio` : 404). Sur
-  quay.io, les images communautaires sont gelees depuis le 2025-09-07, sans
-  correctif, et un pull anonyme de `quay.io/minio/minio:latest` est refuse (401).
-- `minio/minio:latest` et `minio/mc:latest` ne se telechargent donc plus : la
-  stack ne demarre pas.
-- **Choix retenu (2026-09-25) : Garage** (Deuxfleurs, AGPL-3.0, compatible
-  S3 ; v2.4.1 du 2026-09-08, images publiees en continu). Suffisant pour un
-  stockage interne a quatre, sans recompiler un service expose. **Sous reserve
-  des verifications ci-dessous, a faire au deploiement de la stack cloud.**
-- Alternatives ecartees :
-  - SeaweedFS (Apache-2.0, 4.47 du 2026-09-14) : repli possible si une
-    verification echoue, a rediscuter le cas echeant ;
-  - recompiler MinIO depuis ses sources archivees, ou une reconstruction
-    tierce : plus aucun correctif amont, pour un service expose ;
-  - se passer de stockage objet.
-- **A verifier au deploiement, avec Garage** :
-  - versionnement des objets, aujourd'hui active par `minio-init` sur
-    `sentinel-models` : pris en charge, ou a remplacer (par exemple par un
-    bucket d'historique) ;
-  - creation des buckets et des cles d'acces, qui remplace `minio-init` et
-    `mc` ;
-  - compatibilite S3 des clients prevus : rclone (`scripts/backup-cloud.sh`,
-    remote `minio:` a renommer) et les futurs clients applicatifs ;
-  - administration sans la console MinIO (CLI `garage`, ou interface
-    d'administration) ;
-  - relais VPS et DNS `s3.*` : port et en-tetes attendus par Garage.
+- Relais VPS et DNS `s3.*` : Traefik -> socat -> tunnel -> `garage:3900`, avec
+  des clients S3 en region `garage` et en adressage par chemin.
+- Clients applicatifs S3 futurs (aucun aujourd'hui).
+- Nextcloud 35 : fin de support 2027-09 ; monter d'une majeure a la fois.
+
+### Differences assumees avec MinIO
+
+- **Pas de versionnement d'objets** (Garage ne le gere pas ; `minio-init`
+  l'activait sur `sentinel-models`). L'historique vient des sauvegardes :
+  chaque objet modifie ou supprime est conserve dans B2 (docs/SAUVEGARDES.md).
+- **Pas de console web** : administration par la CLI `garage`
+  (`docker compose exec garage /garage ...`).
+- Image sans shell, lancee en root (les volumes nommes sont crees root) : pas
+  de port publie hors 127.0.0.1, RPC jamais publie.
 
 ### Le reste de la stack
 
 - `postgres:16-alpine` : 22 vulnerabilites, toutes dans `gosu` (meme cas que
-  E3). `redis:7-alpine` et `alpine/socat` (relais) : 0.
+  E3). `redis:7-alpine` et `alpine/socat` (relais) : 0 au 2026-09-25.
 - **Exposition, une fois deployee** : forte. Nextcloud et l'API S3 sont
   publies sur Internet par les relais du VPS.
 - **Controle actuel** : ports verifies (127.0.0.1 uniquement, derives de la

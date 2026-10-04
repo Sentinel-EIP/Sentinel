@@ -1,9 +1,14 @@
 # Services d'equipe Sentinel — partage de fichiers et stockage objet.
 # Tourne sur le poste fixe (WSL2), expose via la gateway WireGuard
 # (voir infra/stacks/gateway/README.md), elle-meme relayee par le Traefik du VPS.
-# Seuls Nextcloud et l'API S3 sont relayes ; la console MinIO reste locale.
+# Seuls Nextcloud et l'API S3 (Garage) sont relayes.
 #
+#   docker network create --subnet "$EDGE_SUBNET" sentinel-edge   # une fois
 #   docker compose --env-file .env up -d
+#   ./garage-init.sh                                              # une fois
+#
+# Nextcloud et Garage epingles par digest : une montee de version est un
+# changement explicite de ce fichier. Nextcloud : une majeure a la fois (E4).
 
 x-logging: &logging
   driver: json-file
@@ -13,7 +18,7 @@ services:
 
   # =============================================================== Nextcloud
   nextcloud:
-    image: nextcloud:30-apache
+    image: nextcloud:35.0.1-apache@sha256:b1ae671e9815401b0e837b19b9c778e89887721d67f0c8f9d34aa1d27a9a208f
     container_name: cloud-nextcloud
     restart: unless-stopped
     depends_on:
@@ -32,8 +37,9 @@ services:
       # Traefik (VPS) termine le TLS ; la gateway relaie en HTTP.
       OVERWRITEPROTOCOL: https
       OVERWRITECLIURL: https://${NC_DOMAIN:?NC_DOMAIN manquant}
-      # Le conteneur ne voit que l'IP du relais : on lui dit de lui faire confiance.
-      TRUSTED_PROXIES: 172.16.0.0/12
+      # Le conteneur ne voit que l'IP de la gateway, sur sentinel-edge : seul
+      # ce sous-reseau est digne de confiance pour X-Forwarded-For.
+      TRUSTED_PROXIES: ${EDGE_SUBNET:?EDGE_SUBNET manquant}
       PHP_MEMORY_LIMIT: 1G
       PHP_UPLOAD_LIMIT: 4G
     volumes:
@@ -74,8 +80,11 @@ services:
     container_name: cloud-nextcloud-redis
     restart: unless-stopped
     command: ["redis-server", "--requirepass", "${NC_REDIS_PASSWORD:?NC_REDIS_PASSWORD manquant}"]
+    environment:
+      REDISCLI_AUTH: ${NC_REDIS_PASSWORD:?NC_REDIS_PASSWORD manquant}
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${NC_REDIS_PASSWORD:?NC_REDIS_PASSWORD manquant}", "ping"]
+      # redis-cli sort en 0 meme sur une erreur NOAUTH : on exige PONG.
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -86,7 +95,7 @@ services:
   # Taches planifiees Nextcloud. Sans lui, l'interface affiche un avertissement
   # et les jobs de fond (purge corbeille, previews, notifications) ne tournent pas.
   nextcloud-cron:
-    image: nextcloud:30-apache
+    image: nextcloud:35.0.1-apache@sha256:b1ae671e9815401b0e837b19b9c778e89887721d67f0c8f9d34aa1d27a9a208f
     container_name: cloud-nextcloud-cron
     restart: unless-stopped
     entrypoint: /cron.sh
@@ -99,53 +108,34 @@ services:
     mem_limit: 512m
     logging: *logging
 
-  # =================================================================== MinIO
-  # Stockage objet S3 pour les applications : pieces jointes, modeles
-  # entraines, snapshots de donnees de marche.
-  minio:
-    image: minio/minio:latest
-    container_name: cloud-minio
+  # ================================================================== Garage
+  # Stockage objet S3 pour les applications : modeles entraines, jeux de
+  # donnees, pieces jointes. Remplace MinIO, qui ne publie plus d'images
+  # (ECARTS, E4). Image sans shell : administration par `garage` (CLI) via
+  # `docker compose exec garage /garage ...`, initialisation par garage-init.sh.
+  garage:
+    image: dxflrs/garage:v2.4.1@sha256:9c96caa2612d3411acc5b0e6701fb238dbfba33e533a6d7d3d811a4b12d0d020
+    container_name: cloud-garage
     restart: unless-stopped
-    command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?MINIO_ROOT_USER manquant}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD manquant}
-      MINIO_SERVER_URL: https://${MINIO_DOMAIN:?MINIO_DOMAIN manquant}
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?GARAGE_RPC_SECRET manquant (openssl rand -hex 32)}
     volumes:
-      - minio-data:/data
-    # Console d'administration : poste fixe uniquement, jamais relayee sur le VPS.
-    ports: ["127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001"]
+      - ./garage.toml:/etc/garage.toml:ro
+      - garage-meta:/var/lib/garage/meta
+      - garage-data:/var/lib/garage/data
+    # API S3 sur le poste fixe (rclone des sauvegardes) ; Internet passe par le
+    # relais. RPC (3901) jamais publie : noeud unique.
+    ports: ["127.0.0.1:${GARAGE_S3_PORT:-3900}:3900"]
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "/garage", "status"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 30s
-    networks: [cloud, edge]
+      start_period: 10s
+    networks: [edge]
     mem_limit: 1g
     cpus: 1.0
     logging: *logging
-
-  # Cree les buckets au premier demarrage, puis s'arrete.
-  minio-init:
-    image: minio/mc:latest
-    container_name: cloud-minio-init
-    depends_on:
-      minio: { condition: service_healthy }
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?MINIO_ROOT_USER manquant}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD manquant}
-    entrypoint: >
-      /bin/sh -c "
-      mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
-      for b in sentinel-models sentinel-datasets sentinel-artifacts; do
-        mc mb --ignore-existing local/$$b;
-        mc anonymous set none local/$$b;
-      done &&
-      mc version enable local/sentinel-models &&
-      echo 'buckets prets'
-      "
-    networks: [cloud]
 
 networks:
   cloud:
@@ -158,4 +148,5 @@ volumes:
   nextcloud-html:
   nextcloud-data:
   nextcloud-db:
-  minio-data:
+  garage-meta:
+  garage-data:

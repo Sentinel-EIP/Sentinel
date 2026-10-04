@@ -43,7 +43,7 @@ de demarrer.
       GATEWAY_RELAYS: >-
         ${GATEWAY_RELAYS:-3000:frontend:3000
         3002:nextcloud:80
-        3003:minio:9000}
+        3003:garage:3900}
     cap_drop: [ALL]
     cap_add: [NET_ADMIN, SETUID, SETGID]
     sysctls:
@@ -68,8 +68,8 @@ networks:
     external: true      # cree par la stack cloud
 ```
 
-Le port 3001 reste libre. La console MinIO (port 9001) n'est **pas** relayee :
-elle n'est joignable que depuis le poste fixe, sur 127.0.0.1.
+Le port 3001 reste libre. Seule l'API S3 de Garage (3900) est relayee : son
+RPC (3901) ne l'est jamais, et Garage n'a pas de console web.
 
 ## 3. Assouplir check-isolation.sh
 
@@ -81,7 +81,7 @@ supprimer le controle.
 ## Verification
 
 ```bash
-docker network create sentinel-edge     # avant tout, si absent
+docker network create --subnet "$EDGE_SUBNET" sentinel-edge   # avant tout, si absent
 cd "$SENTINEL_REPO/infra/stacks/cloud" && docker compose up -d
 cd "$GATEWAY_REPO" && docker compose --profile gateway up -d --build gateway
 docker compose logs gateway | tail -20
@@ -92,7 +92,7 @@ Attendu (`<adresse>` = `GATEWAY_ADDRESS`) :
 ```
 gateway: relais <adresse>:3000 -> frontend:3000
 gateway: relais <adresse>:3002 -> nextcloud:80
-gateway: relais <adresse>:3003 -> minio:9000
+gateway: relais <adresse>:3003 -> garage:3900
 ```
 
 Puis le test de la gateway de son depot doit rester vert.

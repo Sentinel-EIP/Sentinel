@@ -1,23 +1,20 @@
-# Relais minio — MinIO (API S3). A deployer sur le VPS dans ~/docker/minio-relay/.
+# Relais s3 — Garage (API S3). A deployer sur le VPS dans ~/docker/s3-relay/.
 # Variables : infra/vps/relays/.env.example, a copier en ~/docker/relays.env.
 #   docker compose --env-file ~/docker/relays.env up -d
 services:
-  minio-relay:
+  s3-relay:
     image: alpine/socat:1.8.1.3
-    container_name: minio-relay
+    container_name: s3-relay
     restart: unless-stopped
     command: TCP-LISTEN:3003,fork,reuseaddr TCP:${GATEWAY_TUNNEL_ADDRESS:?GATEWAY_TUNNEL_ADDRESS manquant}:3003
     networks: [web]
     labels:
       traefik.enable: "true"
       traefik.docker.network: "${TRAEFIK_NETWORK:?TRAEFIK_NETWORK manquant}"
-      traefik.http.routers.s3.rule: "Host(`${MINIO_DOMAIN:?MINIO_DOMAIN manquant}`)"
+      traefik.http.routers.s3.rule: "Host(`${S3_DOMAIN:?S3_DOMAIN manquant}`)"
       traefik.http.routers.s3.entrypoints: "websecure"
       traefik.http.routers.s3.tls.certresolver: "${TRAEFIK_CERTRESOLVER:?TRAEFIK_CERTRESOLVER manquant}"
       traefik.http.services.s3.loadbalancer.server.port: "3003"
-      # En-tetes indispensables derriere un reverse proxy
-      traefik.http.middlewares.s3-headers.headers.customrequestheaders.X-Forwarded-Proto: "https"
-      traefik.http.routers.s3.middlewares: "s3-headers"
     mem_limit: 64m
     cpus: 0.25
 

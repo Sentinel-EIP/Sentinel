@@ -7,7 +7,7 @@
 #   sous un utilisateur non root.
 #
 # GATEWAY_RELAYS : liste "port:hote:port_amont" separee par des espaces.
-#   ex. "3000:frontend:3000 3002:nextcloud:80 3003:minio:9000"
+#   ex. "3000:frontend:3000 3002:nextcloud:80 3003:garage:3900"
 # GATEWAY_UPSTREAM reste supporte (equivaut a "3000:$GATEWAY_UPSTREAM").
 set -eu
 
@@ -26,8 +26,14 @@ case "$ADDRESS$PEER" in *[!0-9.]*) fail "adresses de tunnel invalides" ;; esac
 for r in $RELAYS; do
   port="${r%%:*}"
   upstream="${r#*:}"
+  host="${upstream%:*}"
+  upstream_port="${upstream##*:}"
   case "$port" in ''|*[!0-9]*) fail "port de relais invalide : $r" ;; esac
+  # Caracteres stricts : une virgule ou un deux-points de plus passerait des
+  # options a socat (adresse TCP:hote:port,option=...).
   case "$upstream" in *:*) : ;; *) fail "amont invalide (attendu hote:port) : $r" ;; esac
+  case "$host" in ''|*[!a-zA-Z0-9.-]*) fail "hote amont invalide : $r" ;; esac
+  case "$upstream_port" in ''|*[!0-9]*) fail "port amont invalide : $r" ;; esac
 done
 
 # --- tunnel -------------------------------------------------------------------
