@@ -36,7 +36,7 @@ Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour les commandes et conventions.
 | ------------- | --------------------------------------------------- |
 | Backend       | Python 3.11, FastAPI, SQLModel, Alembic, Celery      |
 | Donnees       | PostgreSQL 16 + TimescaleDB, Redis                   |
-| IA / ML       | PyTorch, scikit-learn, pandas-ta, transformers       |
+| IA / ML       | PyTorch, scikit-learn, ta, transformers              |
 | Frontend      | React 19, Vite, Zustand, TradingView Lightweight Charts |
 | Infra         | Docker, Docker Compose, Nginx                        |
 | Observabilite | Prometheus, Grafana, Loki (phase ulterieure)         |

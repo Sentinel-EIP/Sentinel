@@ -4,7 +4,7 @@ Isole du backend : les dependances lourdes (PyTorch, transformers) ne doivent
 pas ralentir les rebuilds de l'API.
 
 Modules prevus, conformes au dossier technique :
-  - indicateurs techniques (pandas-ta)
+  - indicateurs techniques (ta)
   - volatilite : modele de cone de volatilite
   - sentiment : scoring du flux de news
   - anomalies : detection de regimes de stress
