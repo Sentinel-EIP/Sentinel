@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.api.routes import analysis, auth, health, market, users
+from app.api.routes import analysis, auth, health, market, risk, users
 from app.core.config import get_settings
 from app.core.errors import install_error_handlers
 from app.core.logging import configure_logging, log
@@ -43,6 +43,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(market.router)
 app.include_router(analysis.router)
+app.include_router(risk.router)
 
 # /metrics : scrape interne par Prometheus (api:8000/metrics), jamais expose par
 # le proxy (infra/nginx/nginx.conf). Sous gunicorn, les compteurs des workers
