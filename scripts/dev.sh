@@ -25,8 +25,10 @@ case "${1:-help}" in
     # node_modules du frontend vit dans un volume anonyme, qui masquerait les
     # dependances de la nouvelle image (npm ci) : on le jette a chaque up.
     $COMPOSE rm -fsv frontend >/dev/null 2>&1 || true
+    # Role applicatif AVANT l'api, qui applique les migrations a son demarrage
+    # avec ce role (volume cree avant le role : il est cree ici).
+    db_roles >/dev/null
     $COMPOSE up -d --build
-    db_roles >/dev/null      # migre un volume cree avant le role applicatif
     echo
     echo "  API      http://localhost:8000/docs"
     echo "  ML       http://localhost:8100/docs"
@@ -35,7 +37,7 @@ case "${1:-help}" in
   down)    $COMPOSE down ;;
   logs)    $COMPOSE logs -f "${2:-}" ;;
   ps)      $COMPOSE ps ;;
-  migrate) $COMPOSE exec api alembic upgrade head ;;
+  migrate) $COMPOSE exec api alembic upgrade head ;;   # aussi fait au demarrage de l'api
   revision)
     [ -n "${2:-}" ] || { echo "Usage : ./scripts/dev.sh revision \"message\""; exit 1; }
     $COMPOSE exec api alembic revision --autogenerate -m "$2"

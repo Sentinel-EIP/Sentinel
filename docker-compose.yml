@@ -84,6 +84,10 @@ services:
       dockerfile: infra/docker/Dockerfile.backend
     container_name: sentinel-api
     restart: unless-stopped
+    # Migrations d'abord (role applicatif, idempotent), puis le serveur : l'API
+    # ne passe healthy qu'avec un schema a jour. Une migration en echec fait
+    # sortir le conteneur, journal a l'appui.
+    command: ["sh", "-c", "alembic upgrade head && exec gunicorn -c gunicorn.conf.py app.main:app"]
     environment:
       <<: [*common-env, *db-env, *redis-env]
       API_SECRET_KEY: ${API_SECRET_KEY:?API_SECRET_KEY manquant (openssl rand -hex 32)}
@@ -123,6 +127,9 @@ services:
     depends_on:
       db: { condition: service_healthy }
       redis: { condition: service_healthy }
+      # Tables creees par les migrations de l'api : la collecte lancee au
+      # demarrage du worker les trouve.
+      api: { condition: service_healthy }
     healthcheck:
       # Pret quand Celery repond via le broker, pas quand le processus demarre.
       # -d cible le seul noeud de ce conteneur (celery@<hostname>).
