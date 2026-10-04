@@ -134,3 +134,10 @@ def test_reglages_marche() -> None:
     assert worker.settings.market_symbols == [
         s.strip().upper() for s in worker.settings.MARKET_SYMBOLS.split(",")
     ]
+
+
+def test_collecte_au_demarrage_du_worker(monkeypatch: pytest.MonkeyPatch) -> None:
+    sent: list[str] = []
+    monkeypatch.setattr(worker.celery_app, "send_task", lambda name, **_: sent.append(name))
+    worker.collect_on_start(sender=None)
+    assert sent == ["sentinel.collect_candles"]
