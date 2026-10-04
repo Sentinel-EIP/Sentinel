@@ -31,6 +31,14 @@ class Settings(BaseSettings):
     API_CORS_ORIGINS: str = "http://localhost:5173"
     ML_SERVICE_URL: str = "http://ml:8100"
 
+    # Donnees de marche : API publique de Binance, sans cle. data-api.binance.vision
+    # ne sert que les donnees de marche, sans le blocage geographique (HTTP 451)
+    # d'api.binance.com.
+    BINANCE_BASE_URL: str = "https://data-api.binance.vision"
+    MARKET_SYMBOLS: str = "BTCEUR,ETHEUR"
+    MARKET_TIMEFRAMES: str = "1h,1d"
+    MARKET_BACKFILL_DAYS: int = 90  # historique charge au premier passage
+
     @property
     def database_url(self) -> str:
         return (
@@ -46,7 +54,19 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins(self) -> list[str]:
-        return [o.strip() for o in self.API_CORS_ORIGINS.split(",") if o.strip()]
+        return _split(self.API_CORS_ORIGINS)
+
+    @property
+    def market_symbols(self) -> list[str]:
+        return [s.upper() for s in _split(self.MARKET_SYMBOLS)]
+
+    @property
+    def market_timeframes(self) -> list[str]:
+        return _split(self.MARKET_TIMEFRAMES)
+
+
+def _split(value: str) -> list[str]:
+    return [v.strip() for v in value.split(",") if v.strip()]
 
 
 @lru_cache
