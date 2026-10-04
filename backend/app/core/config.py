@@ -24,7 +24,10 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
     REDIS_PASSWORD: str = ""
 
-    API_SECRET_KEY: str = ""
+    API_SECRET_KEY: str = ""  # signe les jetons JWT ; 32 caracteres minimum
+    ACCESS_TOKEN_MINUTES: int = 60
+    # Inscription libre : pratique en local ; a fermer sur un environnement partage.
+    AUTH_ALLOW_REGISTRATION: bool = True
     API_CORS_ORIGINS: str = "http://localhost:5173"
     ML_SERVICE_URL: str = "http://ml:8100"
 
