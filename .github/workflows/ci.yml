@@ -339,6 +339,22 @@ jobs:
           print(r)
           raise SystemExit(r['status'] != 'ok')
           "
+      # Inscription, connexion, routes protegees : via le proxy, base reelle
+      # (TimescaleDB, role applicatif, migrations appliquees ci-dessus). Sans
+      # appel a Binance : la CI ne depend d'aucun service externe.
+      - name: Parcours authentifie via le proxy
+        run: |
+          api=http://127.0.0.1:8080/api
+          creds='{"username":"smoke","password":"mot-de-passe-smoke"}'
+          test "$(curl -s -o /dev/null -w '%{http_code}' $api/users/me)" = 401
+          curl -fsS -H 'Content-Type: application/json' -d "$creds" $api/auth/register > /dev/null
+          token=$(curl -fsS -H 'Content-Type: application/json' -d "$creds" $api/auth/login \
+            | python3 -c 'import json, sys; print(json.load(sys.stdin)["access_token"])')
+          for path in /users/me /users/me/activity /market/symbols /alerts /analysis/results; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $token" "$api$path")
+            echo "$path -> $code"
+            test "$code" = 200
+          done
       # Regle : metriques scrapees en interne, jamais publiees par le proxy.
       - name: Metriques internes, invisibles depuis le proxy
         run: |
