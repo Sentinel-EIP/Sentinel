@@ -11,7 +11,6 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    setupFiles: ["src/test/setup.ts"],
     coverage: {
       reporter: ["text", "lcov"],
       // Politique de tests : 60 % minimum sur le frontend. `lines: 60` au premier

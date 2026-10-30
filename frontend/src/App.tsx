@@ -1,4 +1,3 @@
-import Dashboard from "./components/Dashboard";
 import HealthBadge from "./components/HealthBadge";
 import LoginForm from "./components/LoginForm";
 import { useAuth } from "./store/useAuth";
@@ -45,7 +44,7 @@ export default function App() {
       </header>
       <main style={{ padding: "var(--space-5)" }}>
         {token ? (
-          <Dashboard />
+          <p style={{ color: "var(--text-secondary)" }}>Connecte en tant que {username}.</p>
         ) : (
           <LoginForm />
         )}
