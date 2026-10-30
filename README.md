@@ -1,6 +1,7 @@
-# Sentinel
+# SENTINEL
 
-**Plateforme d'aide a la decision d'investissement, locale-first et orientee risque**
+**Plateforme d'aide à la décision d'investissement, locale-first et orientée risque**
+
 
 Sentinel est un projet EIP centre sur la robustesse, la transparence et le
 controle utilisateur. Le projet combine :
@@ -8,14 +9,14 @@ controle utilisateur. Le projet combine :
 - analyse de marche (indicateurs techniques + modeles IA),
 - synthese de signaux comprehensibles,
 - gouvernance stricte du risque (drawdown, exposition, mode cash),
-- execution progressive (analyse seule -> paper trading -> execution reelle encadree).
+- exécution progressive (analyse seule -> paper trading -> exécution réelle encadrée).
 
-## Fonctionnalites cles
+## Fonctionnalités clés
 
-- **Architecture modulaire** : ingestion donnees, analyse IA, synthese, risk governor, execution, interface.
-- **Approche local-first** : limitation de la dependance cloud et meilleure maitrise des donnees.
-- **IA explicable** : recommandations tracables et auditables.
-- **Resilience** : mode degrade et continuite de service en cas de panne d'un module.
+- **Architecture modulaire** : ingestion données, analyse IA, synthèse, risk governor, exécution, interface.
+- **Approche local-first** : limitation de la dépendance cloud et meilleure maîtrise des données.
+- **IA explicable** : recommandations traçables et auditables.
+- **Résilience** : mode dégradé et continuité de service en cas de panne d'un module.
 
 ## Demarrage rapide
 
@@ -88,3 +89,10 @@ environ 2 Go, et les melanger imposerait ce poids a chaque rebuild de l'API.
 | Shared Dev    | equipe, deploiement auto depuis `dev`       |
 | Staging       | miroir de production, validation des RC     |
 | Production    | execution stable, sauvegardes et alerting   |
+
+
+La documentation est centralisée dans `EIP-documentation/` :
+- `EIP-documentation/deliverables/` : livrables rédigés du projet
+- `EIP-documentation/workshops/guides/` : supports atelier en markdown
+- `EIP-documentation/workshops/pdfs/` : PDFs de référence et supports officiels
+- `EIP-documentation/context/` : contexte projet

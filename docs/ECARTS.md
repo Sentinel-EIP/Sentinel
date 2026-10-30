@@ -4,7 +4,7 @@ Limites et dettes connues, acceptees en connaissance de cause ou en attente
 d'une decision. Chaque entree dit comment l'ecart se manifeste, pour qu'on le
 reconnaisse le jour ou il se produit. Retirer une entree quand elle est traitee.
 
-Derniere revue : 2026-10-04.
+Dernière revue : 2026-10-04.
 
 ## E1 — Volume de modeles cree par une autre image (droits root)
 
@@ -168,56 +168,50 @@ suivre, ou le depot revenir en arriere :
   est construite deux fois (build puis smoke). Piste : le smoke reutilise les
   images du build (cache gha), ou le build repasse au merge.
 
-## E10 — Signal d'achat ou non : contradiction sur la nature du produit
+## E10 — Signal d'achat ou non : tranché, en attente de validation
 
-**A trancher en equipe** (ordre du jour de la reunion mentor). Le depot ne
-tranche pas : les deux positions sont exposees telles quelles.
+**Tranché le 2026-09-27 par Jules**, dans le positionnement du produit (page
+« Positionnement SENTINEL » de l'espace Outline de l'équipe) : **Sentinel
+prédit et sécurise à l'action.** La position B l'emporte : le produit analyse
+le marché et fournit une analyse directionnelle assortie d'un niveau de
+confiance (US3.1, US3.3), puis évalue l'action que le trader s'apprête à
+prendre et ajuste la protection.
 
-### Position A : aucune direction, aucun signal d'achat
+**Reste à faire** : valider la décision avec Aurel et la présenter au mentor
+le 2026-09-30, puis retirer cette entrée.
 
-- **Sources** : l'ancienne regle 1 de CONTRIBUTING (« aucune prediction de
-  direction [...] jamais une fleche haussiere ni un signal d'achat ») ;
-  l'ancienne docstring du service ML (« ne predit JAMAIS la direction du
-  prix ») ; le contrat de `/volatility/cone` (« Amplitude probable. Aucune
-  direction implicite. ») ; le design system v1.2 (« aucun rouge/vert reflexe
-  sur les prix »).
-- **Ce qu'elle implique** : le ML produit des amplitudes, des regimes et des
-  scores, chacun avec sa fiabilite historique mesuree. Le produit aide a
-  decider sans recommander : il n'y a pas de synthese achat / vente. Reste a
-  definir qui decide d'un ordre en paper trading et en reel (US1.4).
+### Ce qui en découle pour le dépôt
 
-### Position B : signal synthetise achat / vente / attente
+- Le service ML peut produire une direction, toujours avec sa fiabilité
+  historique mesurée et son explication (US3.4) ; le signal-synthesizer du
+  dossier technique a sa place.
+- La vue Signal du framework est cohérente avec la décision, et le plan de
+  test bêta (F6, F8) reste valable.
+- Deux garde-fous viennent avec la décision : le niveau de confiance affiché
+  est mesuré, pas décoré ; la distinction entre analyse et recommandation
+  personnalisée reste lisible, avec un cadrage juridique avant l'ouverture de
+  la bêta.
+- Couleurs, tranché le 2026-09-30 par Jules : la charte de marque (page
+  « Identité de marque » de l'espace Outline) fait foi. Le rouge est réservé
+  au risque, et une variation négative en relève directement : la baisse
+  s'affiche en rouge, la hausse en vert ; les graphiques en bougies restent
+  monochromes. Reste à aligner la règle 3 de CONTRIBUTING et le design system
+  v1.2, qui disent encore « aucun rouge ni vert réflexe sur les prix ».
 
-- **Sources** : le dossier technique. `sentinel_solution_track_action_plan.md`,
-  US3.1 (tendance haussiere / baissiere / neutre, avec niveau de confiance),
-  US3.3 (signal achat / vente / attente, avec explication) et US3.4 ;
-  `sentinel_beta_test_plan.md`, F6 et F8 ; `sentinel_deployment_cicd_plan.md`,
-  section 3 (signal-synthesizer, execution-gateway).
-- **Ce qu'elle implique** : un module de synthese produit le signal, qualifie
-  et explique, et l'execution peut le suivre (paper, puis reel) sous le
-  controle du risk-governor.
+- État du dépôt : aucun module ne produit encore de direction. Le seul
+  modèle, le cône de volatilité (`ml/app/volatility.py`), donne une
+  amplitude symétrique. Les résultats IA sont stockés dans un format
+  générique (`ai_results` : type, valeur, confiance, fiabilité mesurée,
+  explication) : ajouter une direction = une colonne et un champ de plus.
 
-### Ce qui depend de la decision
+### Positions qui étaient en présence
 
-- Le contrat de sortie du service ML (direction ou non) et l'existence du
-  signal-synthesizer.
-- L'interface : vue Signal du framework, et couleurs du design system.
-- Le plan de test beta (F6, F8) et les criteres de reussite associes.
-- Le cadrage du produit vis-a-vis du conseil en investissement, a verifier
-  quelle que soit la position retenue.
-
-### Etat du depot en attendant
-
-- CONTRIBUTING, regle 1, et la docstring du service ML renvoient ici, sans
-  prendre parti.
-- Aucun module ne produit de direction ni de signal. Le seul modele, le cone
-  de volatilite (`ml/app/volatility.py`), donne une amplitude symetrique.
-- Les resultats IA sont stockes dans un format generique (`ai_results` :
-  type, valeur, confiance, fiabilite mesuree, explication), compatible avec
-  les deux positions : ajouter une direction = une colonne et un champ de plus.
-- Regle commune aux deux positions, appliquee des maintenant : toute sortie
-  affichee porte son niveau de confiance et son explication (US3.4).
-
+- **Position A**, aucune direction ni signal d'achat : ancienne règle 1 de
+  CONTRIBUTING, ancienne docstring du service ML, contrat de
+  `/volatility/cone`, design system v1.2.
+- **Position B**, signal synthétisé achat / vente / attente : dossier
+  technique (US3.1, US3.3, US3.4 ; plan de test bêta, F6 et F8 ; plan CI/CD,
+  section 3).
 
 ## E11 — Securite basique : limites connues de l'authentification
 
