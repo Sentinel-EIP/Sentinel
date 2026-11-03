@@ -225,7 +225,7 @@ Deux règles : toute approche de Station X passe par Manu, et l'équipe ne paie 
 
 ## Objectif C — Construire la crédibilité et la reconnaissance du projet
 
-Complémentaire, retenu. Responsables : Jules et Aurel. Jules participe à au moins deux événements et fait au moins une prise de parole publique ; Aurel porte le reste.
+Complémentaire, retenu. Responsables : Jules et Aurel. Jules participe à au moins deux événements, dont au moins une prise de parole publique, et mène les échanges avec au moins deux experts reconnus du domaine, pour obtenir un avis citable ; Aurel porte le reste.
 
 Le guide demande d'amener d'autres personnes à parler du projet et à se porter garantes de sa valeur. Ce qui est évalué d'abord, c'est la démarche — le nombre de démarches, leur qualité, la persévérance face au silence —, ensuite ce qu'elle a produit.
 
