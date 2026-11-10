@@ -1,0 +1,152 @@
+# Services d'equipe Sentinel — partage de fichiers et stockage objet.
+# Tourne sur le poste fixe (WSL2), expose via la gateway WireGuard
+# (voir infra/stacks/gateway/README.md), elle-meme relayee par le Traefik du VPS.
+# Seuls Nextcloud et l'API S3 (Garage) sont relayes.
+#
+#   docker network create --subnet "$EDGE_SUBNET" sentinel-edge   # une fois
+#   docker compose --env-file .env up -d
+#   ./garage-init.sh                                              # une fois
+#
+# Nextcloud et Garage epingles par digest : une montee de version est un
+# changement explicite de ce fichier. Nextcloud : une majeure a la fois (E4).
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+services:
+
+  # =============================================================== Nextcloud
+  nextcloud:
+    image: nextcloud:35.0.1-apache@sha256:b1ae671e9815401b0e837b19b9c778e89887721d67f0c8f9d34aa1d27a9a208f
+    container_name: cloud-nextcloud
+    restart: unless-stopped
+    depends_on:
+      nextcloud-db:   { condition: service_healthy }
+      nextcloud-redis: { condition: service_healthy }
+    environment:
+      POSTGRES_HOST: nextcloud-db
+      POSTGRES_DB: ${NC_DB_NAME:?NC_DB_NAME manquant}
+      POSTGRES_USER: ${NC_DB_USER:?NC_DB_USER manquant}
+      POSTGRES_PASSWORD: ${NC_DB_PASSWORD:?NC_DB_PASSWORD manquant}
+      REDIS_HOST: nextcloud-redis
+      REDIS_HOST_PASSWORD: ${NC_REDIS_PASSWORD:?NC_REDIS_PASSWORD manquant}
+      NEXTCLOUD_ADMIN_USER: ${NC_ADMIN_USER:?NC_ADMIN_USER manquant}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NC_ADMIN_PASSWORD:?NC_ADMIN_PASSWORD manquant}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NC_DOMAIN:?NC_DOMAIN manquant}
+      # Traefik (VPS) termine le TLS ; la gateway relaie en HTTP.
+      OVERWRITEPROTOCOL: https
+      OVERWRITECLIURL: https://${NC_DOMAIN:?NC_DOMAIN manquant}
+      # Le conteneur ne voit que l'IP de la gateway, sur sentinel-edge : seul
+      # ce sous-reseau est digne de confiance pour X-Forwarded-For.
+      TRUSTED_PROXIES: ${EDGE_SUBNET:?EDGE_SUBNET manquant}
+      PHP_MEMORY_LIMIT: 1G
+      PHP_UPLOAD_LIMIT: 4G
+    volumes:
+      - nextcloud-html:/var/www/html          # code + config + apps
+      - nextcloud-data:/var/www/html/data     # fichiers des utilisateurs
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost/status.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks: [cloud, edge]
+    mem_limit: 3g
+    cpus: 2.0
+    logging: *logging
+
+  nextcloud-db:
+    image: postgres:16-alpine
+    container_name: cloud-nextcloud-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${NC_DB_NAME:?NC_DB_NAME manquant}
+      POSTGRES_USER: ${NC_DB_USER:?NC_DB_USER manquant}
+      POSTGRES_PASSWORD: ${NC_DB_PASSWORD:?NC_DB_PASSWORD manquant}
+    volumes:
+      - nextcloud-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [cloud]          # jamais sur edge : inaccessible depuis le relais
+    mem_limit: 1g
+    logging: *logging
+
+  nextcloud-redis:
+    image: redis:7-alpine
+    container_name: cloud-nextcloud-redis
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${NC_REDIS_PASSWORD:?NC_REDIS_PASSWORD manquant}"]
+    environment:
+      REDISCLI_AUTH: ${NC_REDIS_PASSWORD:?NC_REDIS_PASSWORD manquant}
+    healthcheck:
+      # redis-cli sort en 0 meme sur une erreur NOAUTH : on exige PONG.
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [cloud]
+    mem_limit: 256m
+    logging: *logging
+
+  # Taches planifiees Nextcloud. Sans lui, l'interface affiche un avertissement
+  # et les jobs de fond (purge corbeille, previews, notifications) ne tournent pas.
+  nextcloud-cron:
+    image: nextcloud:35.0.1-apache@sha256:b1ae671e9815401b0e837b19b9c778e89887721d67f0c8f9d34aa1d27a9a208f
+    container_name: cloud-nextcloud-cron
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    depends_on:
+      nextcloud: { condition: service_healthy }
+    volumes:
+      - nextcloud-html:/var/www/html
+      - nextcloud-data:/var/www/html/data
+    networks: [cloud]
+    mem_limit: 512m
+    logging: *logging
+
+  # ================================================================== Garage
+  # Stockage objet S3 pour les applications : modeles entraines, jeux de
+  # donnees, pieces jointes. Remplace MinIO, qui ne publie plus d'images
+  # (ECARTS, E4). Image sans shell : administration par `garage` (CLI) via
+  # `docker compose exec garage /garage ...`, initialisation par garage-init.sh.
+  garage:
+    image: dxflrs/garage:v2.4.1@sha256:9c96caa2612d3411acc5b0e6701fb238dbfba33e533a6d7d3d811a4b12d0d020
+    container_name: cloud-garage
+    restart: unless-stopped
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?GARAGE_RPC_SECRET manquant (openssl rand -hex 32)}
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - garage-meta:/var/lib/garage/meta
+      - garage-data:/var/lib/garage/data
+    # API S3 sur le poste fixe (rclone des sauvegardes) ; Internet passe par le
+    # relais. RPC (3901) jamais publie : noeud unique.
+    ports: ["127.0.0.1:${GARAGE_S3_PORT:-3900}:3900"]
+    healthcheck:
+      test: ["CMD", "/garage", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks: [edge]
+    mem_limit: 1g
+    cpus: 1.0
+    logging: *logging
+
+networks:
+  cloud:
+    name: cloud-internal       # bases et caches, jamais joignables du relais
+  edge:
+    name: sentinel-edge        # partage avec la gateway WireGuard
+    external: true
+
+volumes:
+  nextcloud-html:
+  nextcloud-data:
+  nextcloud-db:
+  garage-meta:
+  garage-data:

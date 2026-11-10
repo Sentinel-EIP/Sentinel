@@ -9,18 +9,24 @@ jobs:
   check-commit-convention:
     if: github.repository == 'Sentinel-EIP/Sentinel'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
+      # configFile explicite : par defaut l'action cherche commitlint.config.mjs,
+      # et c'est la decouverte automatique dans le depot qui retrouvait le .cjs.
       - name: Lint commit message
-        uses: wagoid/commitlint-github-action@v6
+        uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
+        with:
+          configFile: commitlint.config.cjs
 
   mirror:
     if: github.repository == 'Sentinel-EIP/Sentinel'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: check-commit-convention
     steps:
       - name: Mirror repository

@@ -1,0 +1,45 @@
+# Image backend : API (gunicorn/uvicorn), worker Celery.
+#   builder : venv /opt/venv avec les SEULES dependances runtime
+#   dev     : builder + extras [dev] (pytest, ruff, mypy, watchdog...), hot-reload
+#   prod    : python slim + venv runtime + code ; ni outil de dev, ni compilateur,
+#             ni pip ; utilisateur non-root
+# psycopg[binary] embarque sa libpq : ni build-essential, ni libpq-dev, ni libpq5.
+
+# ---------------------------------------------------------------- builder
+FROM python:3.11-slim AS builder
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    VIRTUAL_ENV=/opt/venv PATH=/opt/venv/bin:$PATH
+RUN python -m venv /opt/venv
+# Le projet lui-meme n'est pas installe : le code vit dans /app et PYTHONPATH le
+# rend importable, en image comme sous le bind mount du dev.
+COPY backend/pyproject.toml /tmp/pyproject.toml
+RUN python -c "import tomllib; p = tomllib.load(open('/tmp/pyproject.toml', 'rb'))['project']; print('\n'.join(p['dependencies']))" > /tmp/requirements.txt \
+ && pip install -r /tmp/requirements.txt
+
+# -------------------------------------------------------------------- dev
+# Utilisee par api ET worker en dev (watchmedo vient de watchdog, extra dev).
+FROM builder AS dev
+RUN python -c "import tomllib; p = tomllib.load(open('/tmp/pyproject.toml', 'rb'))['project']; print('\n'.join(p['optional-dependencies']['dev']))" > /tmp/requirements-dev.txt \
+ && pip install -r /tmp/requirements-dev.txt
+ENV PYTHONPATH=/app
+WORKDIR /app
+COPY backend/ ./
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+# ------------------------------------------------------------------- prod
+FROM python:3.11-slim AS prod
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
+    VIRTUAL_ENV=/opt/venv PATH=/opt/venv/bin:$PATH PYTHONPATH=/app
+COPY --from=builder /opt/venv /opt/venv
+# pip, setuptools et wheel ne servent pas a l'execution, et les bibliotheques
+# qu'ils embarquent portent des CVE HIGH (Trivy) : retires du venv comme du
+# Python systeme.
+RUN /opt/venv/bin/python -m pip uninstall -y -q pip setuptools wheel \
+ && /usr/local/bin/python -m pip uninstall -y -q pip setuptools wheel \
+ && useradd -m -u 10001 sentinel
+WORKDIR /app
+COPY backend/ ./
+USER 10001:10001
+EXPOSE 8000
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "app.main:app"]

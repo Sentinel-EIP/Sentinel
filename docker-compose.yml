@@ -1,0 +1,234 @@
+# Stack de base Sentinel. En local, utiliser docker-compose.dev.yml en surcharge :
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# ou simplement ./scripts/dev.sh up
+#
+# Cloisonnement :
+#   data (internal) : db, redis <- api, worker   aucune route sortante, aucun port
+#   app             : api, worker, ml, frontend, proxy
+# Chaque service ne recoit que les variables dont il a besoin (pas d'env_file
+# global) ; les valeurs viennent du .env par interpolation.
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+x-common-env: &common-env
+  ENVIRONMENT: ${ENVIRONMENT:-local}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  TZ: ${TZ:-Europe/Paris}
+
+# api et worker se connectent avec le role APPLICATIF, non superutilisateur,
+# cree par infra/db/init/10-app-role.sh. Le superutilisateur reste dans db.
+x-db-env: &db-env
+  POSTGRES_USER: ${APP_DB_USER:-sentinel_app}
+  POSTGRES_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manquant (openssl rand -hex 32)}
+  POSTGRES_DB: ${POSTGRES_DB:-sentinel}
+  POSTGRES_HOST: db
+  POSTGRES_PORT: "5432"
+
+x-redis-env: &redis-env
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD manquant (openssl rand -hex 32)}
+
+services:
+
+  # ------------------------------------------------ Couche 1-2 : donnees
+  db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: sentinel-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant (openssl rand -hex 32)}
+      POSTGRES_DB: ${POSTGRES_DB:-sentinel}
+      # Lus par 10-app-role.sh uniquement
+      APP_DB_USER: ${APP_DB_USER:-sentinel_app}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manquant (openssl rand -hex 32)}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./infra/db/init/10-app-role.sh:/docker-entrypoint-initdb.d/10-app-role.sh:ro
+    healthcheck:
+      # -h 127.0.0.1 : pendant l'initdb, le serveur temporaire n'ecoute que sur le
+      # socket ; sans -h, db passe "healthy" avant la creation du role applicatif.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [data]
+    logging: *logging
+
+  redis:
+    image: redis:7-alpine
+    container_name: sentinel-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes",
+              "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD manquant (openssl rand -hex 32)}"]
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD:?REDIS_PASSWORD manquant (openssl rand -hex 32)}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      # redis-cli sort en 0 meme sur une erreur NOAUTH : on exige PONG.
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [data]
+    logging: *logging
+
+  # --------------------------------------------- Couche 6 : API / presentation
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: sentinel-api
+    restart: unless-stopped
+    # Migrations d'abord (role applicatif, idempotent), puis le serveur : l'API
+    # ne passe healthy qu'avec un schema a jour. Une migration en echec fait
+    # sortir le conteneur, journal a l'appui.
+    command: ["sh", "-c", "alembic upgrade head && exec gunicorn -c gunicorn.conf.py app.main:app"]
+    environment:
+      <<: [*common-env, *db-env, *redis-env]
+      API_SECRET_KEY: ${API_SECRET_KEY:?API_SECRET_KEY manquant (openssl rand -hex 32)}
+      ACCESS_TOKEN_MINUTES: ${ACCESS_TOKEN_MINUTES:-60}
+      AUTH_ALLOW_REGISTRATION: ${AUTH_ALLOW_REGISTRATION:-true}
+      API_CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:5173}
+      ML_SERVICE_URL: http://ml:8100
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks: [data, app]
+    logging: *logging
+
+  # ------------------------------------- Jobs asynchrones (ingestion, batchs)
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: sentinel-worker
+    restart: unless-stopped
+    command: ["celery", "-A", "app.worker.celery_app", "worker", "-l", "info"]
+    environment:
+      <<: [*common-env, *db-env, *redis-env]
+      # Collecte des bougies (API publique, sans cle) : sortie Internet par app.
+      MARKET_SYMBOLS: ${MARKET_SYMBOLS:-BTCEUR,ETHEUR}
+      MARKET_TIMEFRAMES: ${MARKET_TIMEFRAMES:-1h,1d}
+      MARKET_BACKFILL_DAYS: ${MARKET_BACKFILL_DAYS:-90}
+      # Seul consommateur futur des cles d'exchange (ordres) ; inutilisees.
+      BINANCE_API_KEY: ${BINANCE_API_KEY:-}
+      BINANCE_API_SECRET: ${BINANCE_API_SECRET:-}
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      # Tables creees par les migrations de l'api : la collecte lancee au
+      # demarrage du worker les trouve.
+      api: { condition: service_healthy }
+    healthcheck:
+      # Pret quand Celery repond via le broker, pas quand le processus demarre.
+      # -d cible le seul noeud de ce conteneur (celery@<hostname>).
+      # C'est cette sonde qui fait attendre `docker compose up --wait` (smoke CI).
+      test: ["CMD-SHELL", "celery -A app.worker.celery_app inspect ping -d celery@$$HOSTNAME --timeout 5 > /dev/null"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 60s
+      start_interval: 2s
+    networks: [data, app]
+    logging: *logging
+
+  # ------------------------------ Planificateur des jobs (celery beat)
+  # Declenche les taches periodiques (collecte des bougies) ; le worker les
+  # execute. Un seul planificateur : deux en parallele doubleraient les taches.
+  # Ni base, ni Internet : il ne parle qu'a Redis.
+  scheduler:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: sentinel-scheduler
+    restart: unless-stopped
+    command: ["celery", "-A", "app.worker.celery_app", "beat", "-l", "info",
+              "--schedule", "/tmp/celerybeat-schedule"]
+    environment:
+      <<: [*common-env, *redis-env]
+    depends_on:
+      redis: { condition: service_healthy }
+    networks: [data]
+    logging: *logging
+
+  # ----------------------------------- Couche 2 : modeles IA, image separee
+  # Isole pour que PyTorch (~2 Go) ne soit pas rebuild a chaque modif d'une route.
+  # Aucun secret, aucun acces a data.
+  ml:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.ml
+    container_name: sentinel-ml
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      ML_MODEL_CACHE: ${ML_MODEL_CACHE:-/models}
+    volumes:
+      - ml-models:/models
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8100/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks: [app]
+    logging: *logging
+
+  # --------------------------------------------- Couche 6 : interface web
+  frontend:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.frontend
+    container_name: sentinel-frontend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
+    networks: [app]
+    logging: *logging
+
+  # ------------------------------------------------ Reverse proxy local
+  proxy:
+    build:                          # nginx non-root (uid 101), config dans l'image
+      context: .
+      dockerfile: infra/docker/Dockerfile.proxy
+    container_name: sentinel-proxy
+    restart: unless-stopped
+    ports: ["127.0.0.1:8080:8080"]  # locale-first : jamais sur le reseau local
+    depends_on:
+      api: { condition: service_healthy }
+      frontend: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
+    networks: [app]
+    logging: *logging
+
+networks:
+  data:      # db + redis + services qui y accedent : ni port publiable, ni Internet
+    internal: true
+  app:       # services applicatifs + proxy
+
+volumes:
+  db-data:
+  redis-data:
+  ml-models:

@@ -1,0 +1,19 @@
+# Garage (stockage objet S3), noeud unique sur le poste fixe.
+# Secret RPC : variable GARAGE_RPC_SECRET (.env), jamais dans ce fichier.
+# Initialisation (une fois) : ./garage-init.sh
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "lmdb"
+metadata_auto_snapshot_interval = "6h"
+
+# Un seul noeud : aucune replication possible. La redondance vient des
+# sauvegardes B2 (docs/SAUVEGARDES.md).
+replication_factor = 1
+
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "127.0.0.1:3901"
+
+[s3_api]
+# Region a declarer cote client (rclone, SDK) : sinon les signatures echouent.
+s3_region = "garage"
+api_bind_addr = "0.0.0.0:3900"
