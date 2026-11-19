@@ -43,10 +43,14 @@
 /commitlint.config.cjs    @jeremyarmijo @JulesDRS
 /.pre-commit-config.yaml  @jeremyarmijo @JulesDRS
 # Configuration et exceptions des scans de securite : une exception peut
-# masquer une fuite ou une faille.
+# masquer une fuite ou une faille. Trivy lit d'office trivy.yaml et
+# trivy-secret.yaml a la racine, et le premier peut designer un fichier
+# d'exceptions de n'importe quel nom.
 /.gitleaks.toml           @jeremyarmijo @JulesDRS
 /.gitleaksignore          @jeremyarmijo @JulesDRS
 /.trivyignore*            @jeremyarmijo @JulesDRS
+/trivy.yaml               @jeremyarmijo @JulesDRS
+/trivy-secret.yaml        @jeremyarmijo @JulesDRS
 /docs/DEPLOIEMENT.md      @jeremyarmijo @JulesDRS
 /docs/SAUVEGARDES.md      @jeremyarmijo @JulesDRS
 
