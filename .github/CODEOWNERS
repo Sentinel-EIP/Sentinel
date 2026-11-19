@@ -1,0 +1,56 @@
+# CODEOWNERS — Sentinel
+#
+# Demande automatiquement la relecture des proprietaires des fichiers touches
+# par une PR. GitHub lit le fichier de la branche CIBLE de la PR : il doit
+# etre identique sur `main` et sur `dev`.
+#
+# Regles GitHub a connaitre avant de modifier ce fichier :
+# - La derniere ligne qui correspond l'emporte : du general au specifique.
+# - Une ligne a plusieurs proprietaires exige l'approbation d'UN seul d'entre
+#   eux, pas de tous.
+# - L'auteur d'une PR ne peut pas l'approuver. Chaque zone a donc DEUX
+#   proprietaires : si l'un est l'auteur, l'autre approuve. Une ligne a un
+#   seul proprietaire bloquerait toutes les PR de ce proprietaire.
+# - Une PR qui touche plusieurs zones attend une approbation par zone.
+# - Les PR en brouillon ne declenchent aucune demande de relecture.
+#
+# Roles :
+#   @jeremyarmijo    backend et API, DevOps, IA
+#   @paulverpilleux  base de donnees, backend hors API
+#   @Peres-Aurelien  frontend
+#   @JulesDRS        frontend et UX
+
+# ------------------------------------------------------------ par defaut
+# README, CONTRIBUTING, docs/ (ADR, ECARTS...), EIP-documentation/ et tout ce
+# qui n'est pas couvert plus bas : n'importe quel membre de l'equipe.
+*                         @jeremyarmijo @paulverpilleux @Peres-Aurelien @JulesDRS
+
+# ---------------------------------------------------------------- DevOps
+/infra/                   @jeremyarmijo @JulesDRS
+/.github/                 @jeremyarmijo @JulesDRS
+/scripts/                 @jeremyarmijo @JulesDRS
+docker-compose*.yml       @jeremyarmijo @JulesDRS
+Dockerfile*               @jeremyarmijo @JulesDRS
+/.dockerignore            @jeremyarmijo @JulesDRS
+/.env.example             @jeremyarmijo @JulesDRS
+/commitlint.config.cjs    @jeremyarmijo @JulesDRS
+/docs/DEPLOIEMENT.md      @jeremyarmijo @JulesDRS
+/docs/SAUVEGARDES.md      @jeremyarmijo @JulesDRS
+
+# Qui relit quoi : decision d'equipe, n'importe quel membre l'approuve.
+/.github/CODEOWNERS       @jeremyarmijo @paulverpilleux @Peres-Aurelien @JulesDRS
+
+# -------------------------------------------------------------------- IA
+/ml/                      @jeremyarmijo @paulverpilleux
+
+# ------------------------------------------------- backend et base de donnees
+# API (backend/app/api/) : Jerem en premier. Reste du backend, modeles,
+# sessions et migrations (backend/app/models/, backend/app/db/,
+# backend/migrations/) : Paulo en premier. Meme binome partout, une ligne
+# suffit.
+/backend/                 @paulverpilleux @jeremyarmijo
+# Initialisation de la base (roles, schema) : base de donnees, pas DevOps.
+/infra/db/                @paulverpilleux @jeremyarmijo
+
+# ------------------------------------------------------- frontend et UX
+/frontend/                @Peres-Aurelien @JulesDRS
