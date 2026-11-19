@@ -1,0 +1,82 @@
+# CODEOWNERS — Sentinel
+#
+# Demande automatiquement la relecture des proprietaires des fichiers touches
+# par une PR. GitHub lit le fichier de la branche CIBLE de la PR : il doit
+# etre identique sur `main` et sur `dev`.
+#
+# Regles GitHub a connaitre avant de modifier ce fichier :
+# - La derniere ligne qui correspond l'emporte : du general au specifique.
+# - Une ligne a plusieurs proprietaires exige l'approbation d'UN seul d'entre
+#   eux, pas de tous.
+# - L'ordre des noms sur une ligne n'a aucun effet : tous sont demandes en
+#   meme temps.
+# - L'auteur d'une PR ne peut pas l'approuver. Chaque zone a donc DEUX
+#   proprietaires : si l'un est l'auteur, l'autre approuve. Une ligne a un
+#   seul proprietaire bloquerait toutes les PR de ce proprietaire.
+# - Une PR qui touche plusieurs zones attend une approbation par zone.
+# - Les PR en brouillon ne declenchent aucune demande de relecture.
+#
+# Trois attributions dependent de l'ordre des lignes. Ne pas les deplacer :
+# - /.github/CODEOWNERS apres /.github/ ;
+# - /infra/db/ apres /infra/ ;
+# - les motifs Dockerfile et compose en toute fin de fichier.
+#
+# Roles. Un suppleant est proprietaire au meme titre : c'est le second nom
+# de la zone. Retirer un suppleant laisse la zone a un seul proprietaire.
+#   @jeremyarmijo    backend et API, DevOps, IA ; suppleant base de donnees
+#   @paulverpilleux  base de donnees, backend hors API ; suppleant IA
+#   @Peres-Aurelien  frontend
+#   @JulesDRS        frontend et UX ; suppleant DevOps
+
+# ------------------------------------------------------------ par defaut
+# README, CONTRIBUTING, docs/ (ADR, ECARTS...), EIP-documentation/ et tout ce
+# qui n'est pas couvert plus bas : n'importe quel membre de l'equipe.
+*                         @jeremyarmijo @paulverpilleux @Peres-Aurelien @JulesDRS
+
+# ---------------------------------------------------------------- DevOps
+# Dockerfile et compose : en fin de fichier, pour rester DevOps partout.
+/infra/                   @jeremyarmijo @JulesDRS
+/.github/                 @jeremyarmijo @JulesDRS
+/scripts/                 @jeremyarmijo @JulesDRS
+/.dockerignore            @jeremyarmijo @JulesDRS
+/.env.example             @jeremyarmijo @JulesDRS
+/commitlint.config.cjs    @jeremyarmijo @JulesDRS
+/.pre-commit-config.yaml  @jeremyarmijo @JulesDRS
+# Configuration et exceptions des scans de securite : une exception peut
+# masquer une fuite ou une faille. Trivy lit d'office trivy.yaml et
+# trivy-secret.yaml a la racine, et le premier peut designer un fichier
+# d'exceptions de n'importe quel nom.
+/.gitleaks.toml           @jeremyarmijo @JulesDRS
+/.gitleaksignore          @jeremyarmijo @JulesDRS
+/.trivyignore*            @jeremyarmijo @JulesDRS
+/trivy.yaml               @jeremyarmijo @JulesDRS
+/trivy-secret.yaml        @jeremyarmijo @JulesDRS
+/docs/DEPLOIEMENT.md      @jeremyarmijo @JulesDRS
+/docs/SAUVEGARDES.md      @jeremyarmijo @JulesDRS
+
+# Qui relit quoi : decision d'equipe, n'importe quel membre l'approuve.
+/.github/CODEOWNERS       @jeremyarmijo @paulverpilleux @Peres-Aurelien @JulesDRS
+
+# -------------------------------------------------------------------- IA
+/ml/                      @jeremyarmijo @paulverpilleux
+
+# ------------------------------------------------- backend et base de donnees
+# API (backend/app/api/) : role de Jerem. Reste du backend, modeles,
+# sessions et migrations (backend/app/models/, backend/app/db/,
+# backend/migrations/) : role de Paulo. Les deux relisent tout le backend :
+# une ligne suffit.
+/backend/                 @paulverpilleux @jeremyarmijo
+# Initialisation de la base (roles, schema) : base de donnees, pas DevOps.
+/infra/db/                @paulverpilleux @jeremyarmijo
+
+# ------------------------------------------------------- frontend et UX
+/frontend/                @Peres-Aurelien @JulesDRS
+
+# ------------------------------------------- conteneurs, ou qu'ils soient
+# En dernier : un Dockerfile ou un fichier compose reste DevOps, meme dans
+# backend/, frontend/, ml/ ou infra/db/. Memes motifs que l'inventaire de la
+# CI (scripts/ci/compose_inventory.py) : compose.yaml, compose.yml,
+# docker-compose.yaml, docker-compose.yml et leurs variantes.
+*compose*.yml             @jeremyarmijo @JulesDRS
+*compose*.yaml            @jeremyarmijo @JulesDRS
+Dockerfile*               @jeremyarmijo @JulesDRS
