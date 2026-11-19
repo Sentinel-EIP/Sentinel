@@ -8,17 +8,20 @@
 # - La derniere ligne qui correspond l'emporte : du general au specifique.
 # - Une ligne a plusieurs proprietaires exige l'approbation d'UN seul d'entre
 #   eux, pas de tous.
+# - L'ordre des noms sur une ligne n'a aucun effet : tous sont demandes en
+#   meme temps.
 # - L'auteur d'une PR ne peut pas l'approuver. Chaque zone a donc DEUX
 #   proprietaires : si l'un est l'auteur, l'autre approuve. Une ligne a un
 #   seul proprietaire bloquerait toutes les PR de ce proprietaire.
 # - Une PR qui touche plusieurs zones attend une approbation par zone.
 # - Les PR en brouillon ne declenchent aucune demande de relecture.
 #
-# Roles :
-#   @jeremyarmijo    backend et API, DevOps, IA
-#   @paulverpilleux  base de donnees, backend hors API
+# Roles. Un suppleant est proprietaire au meme titre : c'est le second nom
+# de la zone. Retirer un suppleant laisse la zone a un seul proprietaire.
+#   @jeremyarmijo    backend et API, DevOps, IA ; suppleant base de donnees
+#   @paulverpilleux  base de donnees, backend hors API ; suppleant IA
 #   @Peres-Aurelien  frontend
-#   @JulesDRS        frontend et UX
+#   @JulesDRS        frontend et UX ; suppleant DevOps
 
 # ------------------------------------------------------------ par defaut
 # README, CONTRIBUTING, docs/ (ADR, ECARTS...), EIP-documentation/ et tout ce
@@ -26,11 +29,10 @@
 *                         @jeremyarmijo @paulverpilleux @Peres-Aurelien @JulesDRS
 
 # ---------------------------------------------------------------- DevOps
+# Dockerfile et compose : en fin de fichier, pour rester DevOps partout.
 /infra/                   @jeremyarmijo @JulesDRS
 /.github/                 @jeremyarmijo @JulesDRS
 /scripts/                 @jeremyarmijo @JulesDRS
-docker-compose*.yml       @jeremyarmijo @JulesDRS
-Dockerfile*               @jeremyarmijo @JulesDRS
 /.dockerignore            @jeremyarmijo @JulesDRS
 /.env.example             @jeremyarmijo @JulesDRS
 /commitlint.config.cjs    @jeremyarmijo @JulesDRS
@@ -44,13 +46,19 @@ Dockerfile*               @jeremyarmijo @JulesDRS
 /ml/                      @jeremyarmijo @paulverpilleux
 
 # ------------------------------------------------- backend et base de donnees
-# API (backend/app/api/) : Jerem en premier. Reste du backend, modeles,
+# API (backend/app/api/) : role de Jerem. Reste du backend, modeles,
 # sessions et migrations (backend/app/models/, backend/app/db/,
-# backend/migrations/) : Paulo en premier. Meme binome partout, une ligne
-# suffit.
+# backend/migrations/) : role de Paulo. Les deux relisent tout le backend :
+# une ligne suffit.
 /backend/                 @paulverpilleux @jeremyarmijo
 # Initialisation de la base (roles, schema) : base de donnees, pas DevOps.
 /infra/db/                @paulverpilleux @jeremyarmijo
 
 # ------------------------------------------------------- frontend et UX
 /frontend/                @Peres-Aurelien @JulesDRS
+
+# ------------------------------------------- conteneurs, ou qu'ils soient
+# En dernier : un Dockerfile ou un compose reste DevOps, meme dans backend/,
+# frontend/, ml/ ou infra/db/.
+docker-compose*.yml       @jeremyarmijo @JulesDRS
+Dockerfile*               @jeremyarmijo @JulesDRS
