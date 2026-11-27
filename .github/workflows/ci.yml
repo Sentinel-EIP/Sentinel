@@ -38,8 +38,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with: { python-version: "3.11", cache: pip }
-      - run: pip install -e ".[dev]"
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements-dev.txt
+      # Versions verrouillees (scripts/lock-deps.sh), les memes que l'image.
+      - run: pip install -c requirements-dev.txt -e ".[dev]" && pip check
       - name: Ruff
         run: ruff check . && ruff format --check .
       - name: Mypy
@@ -75,9 +79,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with: { python-version: "3.11", cache: pip }
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ml/requirements-dev.txt
       - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
-      - run: pip install -e ".[dev]"
+      # Versions verrouillees (scripts/lock-deps.sh), les memes que l'image.
+      - run: pip install -c requirements-dev.txt -e ".[dev]" && pip check
       - name: Ruff
         run: ruff check . && ruff format --check .
       - name: Mypy
@@ -155,7 +163,10 @@ jobs:
           "$RUNNER_TEMP/gitleaks" git --redact --no-banner --verbose --exit-code 1 .
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with: { python-version: "3.11" }
-      - run: pip install bandit pip-audit
+      # Outils aux versions verrouillees du backend ; pip-tools a celle du script.
+      - run: pip install -c backend/requirements-dev.txt bandit pip-audit "pip-tools==7.7.0"
+      - name: Verrous Python a jour avec pyproject.toml
+        run: scripts/lock-deps.sh --check
       # Tout le Python suivi par git, hors tests : un nouveau service est
       # analyse sans qu'il faille l'ajouter a une liste.
       - name: Bandit
@@ -170,18 +181,15 @@ jobs:
             echo "$outside"
             exit 1
           fi
-      # Dependances runtime declarees (celles des images prod), resolues a la
-      # derniere version admise. Bloquant. pip et setuptools n'y figurent pas :
-      # ils sont retires des images prod. torch (non declare) : voir ECARTS, E6.
+      # Dependances runtime verrouillees : exactement celles des images prod.
+      # Bloquant. pip et setuptools n'y figurent pas : ils sont retires des
+      # images prod. torch (non declare) : voir ECARTS, E6.
       - name: pip-audit (dependances runtime)
         run: |
           status=0
           for svc in backend ml; do
-            req="$RUNNER_TEMP/requirements-$svc.txt"
-            python -c "import sys, tomllib; print('\\n'.join(tomllib.load(open(sys.argv[1], 'rb'))['project']['dependencies']))" \
-              "$svc/pyproject.toml" > "$req"
             echo "== $svc"
-            pip-audit -r "$req" || status=1
+            pip-audit --no-deps --disable-pip -r "$svc/requirements.txt" || status=1
           done
           exit "$status"
 
@@ -339,6 +347,22 @@ jobs:
           print(r)
           raise SystemExit(r['status'] != 'ok')
           "
+      # Inscription, connexion, routes protegees : via le proxy, base reelle
+      # (TimescaleDB, role applicatif, migrations appliquees ci-dessus). Sans
+      # appel a Binance : la CI ne depend d'aucun service externe.
+      - name: Parcours authentifie via le proxy
+        run: |
+          api=http://127.0.0.1:8080/api
+          creds='{"username":"smoke","password":"mot-de-passe-smoke"}'
+          test "$(curl -s -o /dev/null -w '%{http_code}' $api/users/me)" = 401
+          curl -fsS -H 'Content-Type: application/json' -d "$creds" $api/auth/register > /dev/null
+          token=$(curl -fsS -H 'Content-Type: application/json' -d "$creds" $api/auth/login \
+            | python3 -c 'import json, sys; print(json.load(sys.stdin)["access_token"])')
+          for path in /users/me /users/me/activity /market/symbols /alerts /analysis/results; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $token" "$api$path")
+            echo "$path -> $code"
+            test "$code" = 200
+          done
       # Regle : metriques scrapees en interne, jamais publiees par le proxy.
       - name: Metriques internes, invisibles depuis le proxy
         run: |

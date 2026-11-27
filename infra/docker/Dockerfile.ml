@@ -17,14 +17,16 @@ RUN python -m venv /opt/venv
 # CPU-only : evite ~2 Go de CUDA tant qu'on ne branche pas le GPU du poste fixe.
 # Couche separee : elle ne change pas quand pyproject.toml change.
 RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
-COPY ml/pyproject.toml /tmp/pyproject.toml
-RUN python -c "import tomllib; p = tomllib.load(open('/tmp/pyproject.toml', 'rb'))['project']; print('\n'.join(p['dependencies']))" > /tmp/requirements.txt \
- && pip install -r /tmp/requirements.txt
+# Versions verrouillees (scripts/lock-deps.sh) : le meme commit installe les
+# memes versions partout. Le verrou runtime contient deja toutes les dependances
+# transitives : --no-deps garantit qu'aucune version non verrouillee n'entre,
+# pip check que l'ensemble reste coherent (torch compris cote ml).
+COPY ml/requirements.txt ml/requirements-dev.txt /tmp/
+RUN pip install --no-deps -r /tmp/requirements.txt && pip check
 
 # -------------------------------------------------------------------- dev
 FROM builder AS dev
-RUN python -c "import tomllib; p = tomllib.load(open('/tmp/pyproject.toml', 'rb'))['project']; print('\n'.join(p['optional-dependencies']['dev']))" > /tmp/requirements-dev.txt \
- && pip install -r /tmp/requirements-dev.txt
+RUN pip install --no-deps -r /tmp/requirements-dev.txt && pip check
 ENV PYTHONPATH=/app HF_HOME=/models/hf
 WORKDIR /app
 COPY ml/ ./

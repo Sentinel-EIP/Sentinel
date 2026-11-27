@@ -1,50 +1,54 @@
-import { useEffect } from "react";
-
-import { useHealth } from "./store/useHealth";
+import HealthBadge from "./components/HealthBadge";
+import LoginForm from "./components/LoginForm";
+import { useAuth } from "./store/useAuth";
 
 export default function App() {
-  const { status, checks, refresh } = useHealth();
-
-  useEffect(() => {
-    refresh();
-    const id = setInterval(refresh, 10_000);
-    return () => clearInterval(id);
-  }, [refresh]);
+  const { token, username, logout } = useAuth();
 
   return (
-    <main style={{ padding: "var(--space-5)", fontFamily: "var(--font-ui)" }}>
-      <h1 style={{ color: "var(--text-primary)" }}>Sentinel</h1>
-      <p style={{ color: "var(--text-secondary)" }}>
-        Squelette applicatif. Le dashboard suit le design system v1.2.
-      </p>
-      <section
+    <div style={{ minHeight: "100vh", fontFamily: "var(--font-ui)" }}>
+      <header
         style={{
-          marginTop: "var(--space-4)",
-          padding: "var(--space-3)",
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--space-4)",
+          padding: "var(--space-3) var(--space-5)",
+          borderBottom: "1px solid var(--border-subtle)",
           background: "var(--surface-raised)",
-          border: "1px solid var(--border-subtle)",
-          borderRadius: "var(--radius-md)",
         }}
       >
-        <div style={{ color: "var(--text-tertiary)", fontSize: 11, letterSpacing: ".13em" }}>
-          ETAT DE L'API
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-numeric)",
-            fontVariantNumeric: "tabular-nums",
-            fontSize: 22,
-            color: status === "ok" ? "var(--value-positive)" : "var(--state-stale)",
-          }}
-        >
-          {status ?? "..."}
-        </div>
-        {checks && (
-          <pre style={{ color: "var(--text-secondary)", fontSize: 11 }}>
-            {JSON.stringify(checks, null, 2)}
-          </pre>
+        <strong style={{ letterSpacing: ".04em" }}>Sentinel</strong>
+        <span style={{ flex: 1 }} />
+        <HealthBadge />
+        {token && (
+          <>
+            <span style={{ color: "var(--text-secondary)" }}>{username}</span>
+            <button
+              type="button"
+              onClick={logout}
+              style={{
+                minHeight: "var(--touch-target-min)",
+                background: "transparent",
+                color: "var(--text-secondary)",
+                border: "1px solid var(--border-strong)",
+                borderRadius: "var(--radius-sm)",
+                padding: "0 var(--space-3)",
+                font: "inherit",
+                cursor: "pointer",
+              }}
+            >
+              Deconnexion
+            </button>
+          </>
         )}
-      </section>
-    </main>
+      </header>
+      <main style={{ padding: "var(--space-5)" }}>
+        {token ? (
+          <p style={{ color: "var(--text-secondary)" }}>Connecte en tant que {username}.</p>
+        ) : (
+          <LoginForm />
+        )}
+      </main>
+    </div>
   );
 }

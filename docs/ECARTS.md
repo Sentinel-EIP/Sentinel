@@ -132,9 +132,12 @@ publique depuis septembre 2026). Reste a la deployer pour de vrai.
 
 ## E7 — Images de base par tag mobile
 
-- `python:3.11-slim`, `node:22-alpine`, `nginxinc/nginx-unprivileged:mainline-alpine`,
-  `timescale/timescaledb:latest-pg16`, `redis:7-alpine` : pas de digest, pas de
-  Dependabot. Deux builds du meme commit peuvent differer.
+- `python:3.11-slim`, `node:22-alpine`, `timescale/timescaledb:latest-pg16`,
+  `redis:7-alpine` : tags mobiles, pas de digest. Deux builds du meme commit
+  peuvent differer. nginx est epingle par version (`1.31.7-alpine`).
+- Dependabot (`.github/dependabot.yml`) propose chaque semaine une PR groupee
+  par ecosysteme : images, pip (verrous), npm, GitHub Actions. Les dependances
+  Python sont verrouillees (`scripts/lock-deps.sh`).
 - L'`apk upgrade` des images nginx et l'`apt-get upgrade` des images Python sont
   non reproductibles par construction
   (compromis assume : ils appliquent les correctifs publies depuis l'image de base).
@@ -199,6 +202,12 @@ le 2026-09-30, puis retirer cette entrée.
   monochromes. Reste à aligner la règle 3 de CONTRIBUTING et le design system
   v1.2, qui disent encore « aucun rouge ni vert réflexe sur les prix ».
 
+- État du dépôt : aucun module ne produit encore de direction. Le seul
+  modèle, le cône de volatilité (`ml/app/volatility.py`), donne une
+  amplitude symétrique. Les résultats IA sont stockés dans un format
+  générique (`ai_results` : type, valeur, confiance, fiabilité mesurée,
+  explication) : ajouter une direction = une colonne et un champ de plus.
+
 ### Positions qui étaient en présence
 
 - **Position A**, aucune direction ni signal d'achat : ancienne règle 1 de
@@ -207,3 +216,33 @@ le 2026-09-30, puis retirer cette entrée.
 - **Position B**, signal synthétisé achat / vente / attente : dossier
   technique (US3.1, US3.3, US3.4 ; plan de test bêta, F6 et F8 ; plan CI/CD,
   section 3).
+
+## E11 — Securite basique : limites connues de l'authentification
+
+Authentification par jeton JWT (HS256, `API_SECRET_KEY`, 60 min) et mots de
+passe argon2. Suffisant pour un usage local a quatre ; a reprendre avant tout
+environnement partage :
+
+- **Pas de limitation des tentatives de connexion** : un mot de passe faible se
+  devine par force brute. Les echecs sont journalises (`login_failed`).
+- **Jeton en `sessionStorage`** : une faille XSS dans le frontend permettrait de
+  le voler. Alternative : cookie `HttpOnly` + protection CSRF.
+- **Pas de revocation** : un jeton reste valide jusqu'a son expiration, meme
+  apres deconnexion. Pas de jeton de rafraichissement : reconnexion toutes les
+  heures.
+- **Inscription** : sans `AUTH_ALLOW_REGISTRATION`, elle n'est ouverte qu'avec
+  `ENVIRONMENT=local`, et fermee sur tout environnement partage. Ouvrir une
+  beta demande `AUTH_ALLOW_REGISTRATION=true`, a combiner avec une limitation
+  des tentatives (ci-dessus) avant toute exposition.
+- `/docs` et `/openapi.json` restent publics via le proxy (`/api/docs`).
+
+## E12 — Donnees de marche : une seule source
+
+- Bougies collectees sur l'API publique de Binance, via
+  `data-api.binance.vision` (`api.binance.com` repond 451 selon le pays). Une
+  seule source : pas de recoupement entre exchanges.
+- Un passage tous les quarts d'heure (et au demarrage du worker), au plus
+  20 000 bougies par symbole et par passage. Un trou au milieu de l'historique
+  n'est pas comble : seule la fin est reprise.
+- Collecte en echec : journalisee (`market.collect_failed`) ; visible dans
+  l'interface par l'alerte « donnees perimees », pas par une notification.

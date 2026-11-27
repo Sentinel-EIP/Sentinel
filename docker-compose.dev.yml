@@ -13,7 +13,7 @@ services:
       target: dev
     command: ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
     volumes:
-      - ./backend:/app        # hot-reload : le code local prime sur l'image
+      - ./backend:/app:z        # hot-reload : le code local prime sur l'image
     ports: ["127.0.0.1:8000:8000"]
 
   worker:
@@ -23,7 +23,7 @@ services:
     command: ["watchmedo", "auto-restart", "--directory=/app", "--pattern=*.py",
               "--recursive", "--", "celery", "-A", "app.worker.celery_app", "worker", "-l", "info"]
     volumes:
-      - ./backend:/app
+      - ./backend:/app:z
 
   scheduler:
     build:
@@ -32,14 +32,14 @@ services:
               "--recursive", "--", "celery", "-A", "app.worker.celery_app", "beat",
               "-l", "info", "--schedule", "/tmp/celerybeat-schedule"]
     volumes:
-      - ./backend:/app
+      - ./backend:/app:z
 
   ml:
     build:
       target: dev
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8100", "--reload"]
     volumes:
-      - ./ml:/app
+      - ./ml:/app:z
       # Volume de modeles DEDIE au dev (conteneur root) : partage avec la prod
       # (uid 10002), il y laissait des fichiers root illisibles. Voir ECARTS.
       - ml-models-dev:/models
@@ -50,7 +50,7 @@ services:
       target: dev
     command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app:z
       - /app/node_modules     # garde les deps de l'image, pas celles de l'hote
     ports: ["127.0.0.1:5173:5173"]
     healthcheck:              # en dev, c'est Vite (5173) qui repond, pas nginx (8080)

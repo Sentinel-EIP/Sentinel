@@ -8,10 +8,12 @@ cp .env.example .env
 for v in POSTGRES_PASSWORD APP_DB_PASSWORD REDIS_PASSWORD API_SECRET_KEY; do
   sed -i "s/^$v=$/$v=$(openssl rand -hex 32)/" .env
 done
-./scripts/dev.sh up
+./scripts/dev.sh up            # l'api applique les migrations a son demarrage
 ```
 
 Un secret vide fait echouer `docker compose` avec un message explicite.
+Ensuite, creer un compte depuis le frontend ; dans `/docs`, le bouton
+**Authorize** prend le jeton renvoye par `POST /auth/login`.
 
 | Service  | URL                          |
 | -------- | ---------------------------- |
@@ -28,7 +30,10 @@ IP des conteneurs : un tunnel SSH vers db n'a rien a viser.
 
 Le schema Postgres porte le nom du role applicatif, et c'est une contrainte de
 securite : ne pas le renommer, voir
-[ADR 0001](docs/adr/0001-schema-applicatif-postgres.md).
+[ADR 0001](docs/adr/0001-schema-applicatif-postgres.md). Les migrations
+tournent avec ce role (`env.py` refuse le superutilisateur) ; un modele
+SQLModel modifie s'accompagne d'une migration (`./scripts/dev.sh revision
+"..."`), sinon `alembic check` fait echouer le smoke test de la CI.
 
 **`.env` existant** (cree avant le role applicatif) : `docker compose` refuse de
 demarrer tant que `APP_DB_PASSWORD` et `REDIS_PASSWORD` manquent. Les ajouter a
@@ -39,6 +44,23 @@ existant (`./scripts/dev.sh db-roles` le fait a la demande).
 
 Commandes : `up`, `down`, `logs [service]`, `ps`, `migrate`, `revision "msg"`,
 `test`, `lint`, `shell [service]`, `psql`, `db-roles`, `reset`.
+
+## Dependances Python
+
+Les versions sont verrouillees, par service, dans `requirements.txt` (runtime :
+images prod et pip-audit) et `requirements-dev.txt` (runtime + outils de dev,
+memes versions). Images, CI et `verifier.sh` installent ces versions exactes.
+
+- **Ajouter ou modifier une dependance** : editer `pyproject.toml`, puis lancer
+  `scripts/lock-deps.sh` avec Python 3.11 et `pip-tools==7.7.0`, et committer
+  les verrous avec le `pyproject.toml`. La CI echoue si les verrous ne
+  correspondent plus.
+- **Monter les versions** : Dependabot propose une PR groupee chaque semaine.
+  A la main : `scripts/lock-deps.sh --upgrade`.
+- **Installer sur un poste** : `pip install -c requirements-dev.txt -e ".[dev]"`.
+
+Sur un hote SELinux (Fedora), les montages du depot portent l'option `:z` dans
+les fichiers compose : sans elle, les conteneurs ne peuvent pas les lire.
 
 ## Branches et pull requests
 
@@ -142,6 +164,9 @@ dossier) :
 5. **Tout score affiche porte sa fiabilite historique mesuree**, au-dela du
    simple niveau de confiance demande par le dossier.
 6. **Durcir une regle de risque est immediat ; l'assouplir attend 24 h.**
+   Les seuils d'alerte sont aujourd'hui fixes dans le code
+   (`backend/app/risk/alerts.py`) : la regle s'appliquera quand ils deviendront
+   reglables.
 
 ## Ecarts connus
 
