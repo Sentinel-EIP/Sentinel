@@ -38,7 +38,11 @@ ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=builder /opt/venv /opt/venv
 # Meme raison que Dockerfile.backend : pip/setuptools/wheel inutiles a
 # l'execution et porteurs de CVE HIGH dans leurs bibliotheques embarquees.
-RUN /opt/venv/bin/python -m pip uninstall -y -q pip setuptools wheel \
+# Correctifs de securite Debian publies depuis la derniere image de base
+# (ex. libzstd1, HIGH) : sans eux, le scan Trivy de la CI echoue.
+RUN apt-get update && apt-get upgrade -y --no-install-recommends \
+ && rm -rf /var/lib/apt/lists/* \
+ && /opt/venv/bin/python -m pip uninstall -y -q pip setuptools wheel \
  && /usr/local/bin/python -m pip uninstall -y -q pip setuptools wheel \
  && useradd -m -u 10002 sentinelml \
  && mkdir -p /models && chown -R sentinelml /models
