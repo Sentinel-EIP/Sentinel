@@ -13,6 +13,9 @@ dependencies = [
   "alembic>=1.14",
   "redis>=5.2",
   "celery>=5.4",
+  # kombu 5.7 (transport Redis de Celery) importe packaging sans le declarer :
+  # sans cette ligne, le worker de l'image de prod ne demarre pas.
+  "packaging>=24.0",
   "httpx>=0.28",
   "structlog>=24.4",
   "prometheus-fastapi-instrumentator>=8.1",
