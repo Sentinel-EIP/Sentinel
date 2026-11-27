@@ -13,15 +13,17 @@ ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
 RUN python -m venv /opt/venv
 # Le projet lui-meme n'est pas installe : le code vit dans /app et PYTHONPATH le
 # rend importable, en image comme sous le bind mount du dev.
-COPY backend/pyproject.toml /tmp/pyproject.toml
-RUN python -c "import tomllib; p = tomllib.load(open('/tmp/pyproject.toml', 'rb'))['project']; print('\n'.join(p['dependencies']))" > /tmp/requirements.txt \
- && pip install -r /tmp/requirements.txt
+# Versions verrouillees (scripts/lock-deps.sh) : le meme commit installe les
+# memes versions partout. Le verrou runtime contient deja toutes les dependances
+# transitives : --no-deps garantit qu'aucune version non verrouillee n'entre,
+# pip check que l'ensemble reste coherent (torch compris cote ml).
+COPY backend/requirements.txt backend/requirements-dev.txt /tmp/
+RUN pip install --no-deps -r /tmp/requirements.txt && pip check
 
 # -------------------------------------------------------------------- dev
 # Utilisee par api ET worker en dev (watchmedo vient de watchdog, extra dev).
 FROM builder AS dev
-RUN python -c "import tomllib; p = tomllib.load(open('/tmp/pyproject.toml', 'rb'))['project']; print('\n'.join(p['optional-dependencies']['dev']))" > /tmp/requirements-dev.txt \
- && pip install -r /tmp/requirements-dev.txt
+RUN pip install --no-deps -r /tmp/requirements-dev.txt && pip check
 ENV PYTHONPATH=/app
 WORKDIR /app
 COPY backend/ ./

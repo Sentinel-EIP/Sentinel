@@ -45,6 +45,20 @@ existant (`./scripts/dev.sh db-roles` le fait a la demande).
 Commandes : `up`, `down`, `logs [service]`, `ps`, `migrate`, `revision "msg"`,
 `test`, `lint`, `shell [service]`, `psql`, `db-roles`, `reset`.
 
+## Dependances Python
+
+Les versions sont verrouillees, par service, dans `requirements.txt` (runtime :
+images prod et pip-audit) et `requirements-dev.txt` (runtime + outils de dev,
+memes versions). Images, CI et `verifier.sh` installent ces versions exactes.
+
+- **Ajouter ou modifier une dependance** : editer `pyproject.toml`, puis lancer
+  `scripts/lock-deps.sh` avec Python 3.11 et `pip-tools==7.7.0`, et committer
+  les verrous avec le `pyproject.toml`. La CI echoue si les verrous ne
+  correspondent plus.
+- **Monter les versions** : Dependabot propose une PR groupee chaque semaine.
+  A la main : `scripts/lock-deps.sh --upgrade`.
+- **Installer sur un poste** : `pip install -c requirements-dev.txt -e ".[dev]"`.
+
 ## Branches et pull requests
 
 Modele du dossier technique (`sentinel_deployment_cicd_plan.md`, section 4),

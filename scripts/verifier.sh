@@ -101,7 +101,7 @@ python_part() {
       mkdir -p /w && cp -r /src/$part /src/scripts /w/
       cd /w/$part
       $torch
-      pip install -q -e '.[dev]'
+      pip install -q -c requirements-dev.txt -e '.[dev]'
       VERIFIER_NATIVE=1 bash /w/scripts/verifier.sh --inside $part
     "
 }
