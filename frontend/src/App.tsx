@@ -44,7 +44,7 @@ export default function App() {
       </header>
       <main style={{ padding: "var(--space-5)" }}>
         {token ? (
-          <p style={{ color: "var(--text-secondary)" }}>Connecte. Le tableau de bord arrive ici.</p>
+          <p style={{ color: "var(--text-secondary)" }}>Connecte en tant que {username}.</p>
         ) : (
           <LoginForm />
         )}
