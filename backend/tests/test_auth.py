@@ -1,13 +1,14 @@
 """Inscription, connexion, jetons et journal d'actions."""
 
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import jwt
 import pytest
 from fastapi.testclient import TestClient
 
 from app.core import security
-from app.core.config import get_settings
+from app.core.config import Settings, get_settings
 
 CREDS = {"username": "alice", "password": "mot-de-passe-solide"}
 
@@ -36,6 +37,52 @@ def test_mot_de_passe_trop_court(client: TestClient) -> None:
 def test_inscription_fermee(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(get_settings(), "AUTH_ALLOW_REGISTRATION", False)
     assert client.post("/auth/register", json=CREDS).status_code == 403
+
+
+@pytest.mark.parametrize(
+    ("environment", "reglage", "attendu"),
+    [
+        ("local", None, 201),
+        ("shared-dev", None, 403),
+        ("staging", None, 403),
+        ("production", None, 403),
+        ("production", True, 201),
+        ("local", False, 403),
+    ],
+)
+def test_inscription_selon_environnement(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+    environment: str,
+    reglage: bool | None,
+    attendu: int,
+) -> None:
+    # Non renseignee, l'inscription n'est ouverte qu'en local : un oubli de
+    # configuration ne doit pas ouvrir la production.
+    monkeypatch.setattr(get_settings(), "ENVIRONMENT", environment)
+    monkeypatch.setattr(get_settings(), "AUTH_ALLOW_REGISTRATION", reglage)
+    assert client.post("/auth/register", json=CREDS).status_code == attendu
+
+
+@pytest.mark.parametrize(("brut", "attendu"), [("", None), ("true", True), ("false", False)])
+def test_reglage_inscription_lu_depuis_l_environnement(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, brut: str, attendu: bool | None
+) -> None:
+    # La compose transmet une chaine vide quand la variable n'est pas definie.
+    monkeypatch.chdir(tmp_path)  # aucun .env local ne doit fausser le test
+    monkeypatch.setenv("AUTH_ALLOW_REGISTRATION", brut)
+    assert Settings().AUTH_ALLOW_REGISTRATION is attendu
+
+
+@pytest.mark.parametrize("environment", ["shared-dev", "staging", "production"])
+def test_environnement_partage_ferme_sans_reglage(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, environment: str
+) -> None:
+    # Le cas du bug : ENVIRONMENT=production et AUTH_ALLOW_REGISTRATION jamais defini.
+    monkeypatch.chdir(tmp_path)  # aucun .env local ne doit fausser le test
+    monkeypatch.setenv("ENVIRONMENT", environment)
+    monkeypatch.delenv("AUTH_ALLOW_REGISTRATION", raising=False)
+    assert Settings().registration_open is False
 
 
 @pytest.mark.parametrize("username", ["alice", "inconnu"])

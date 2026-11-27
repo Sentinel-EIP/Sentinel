@@ -34,7 +34,7 @@ class Token(BaseModel):
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserPublic)
 def register(body: Credentials, session: SessionDep) -> User:
-    if not get_settings().AUTH_ALLOW_REGISTRATION:
+    if not get_settings().registration_open:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Inscription fermee")
     if session.exec(select(User).where(User.username == body.username)).first():
         raise HTTPException(status.HTTP_409_CONFLICT, "Nom d'utilisateur deja pris")
