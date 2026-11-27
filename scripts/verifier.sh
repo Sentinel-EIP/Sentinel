@@ -91,7 +91,7 @@ python_part() {
   [[ "$part" == ml ]] && torch="pip install -q torch --index-url https://download.pytorch.org/whl/cpu"
   # Copie de travail dans le conteneur : le depot est en lecture seule.
   docker run --rm \
-    -v "$ROOT":/src:ro \
+    -v "$ROOT":/src:ro,z \
     -v sentineleip-verifier-pip:/root/.cache/pip \
     -e VERIFIER_PYTEST_ARGS="${VERIFIER_PYTEST_ARGS:-}" \
     ${extra[@]+"${extra[@]}"} \
@@ -122,7 +122,7 @@ frontend_part() {
     return
   fi
   docker run --rm \
-    -v "$ROOT":/src:ro \
+    -v "$ROOT":/src:ro,z \
     -v sentineleip-verifier-npm:/root/.npm \
     node:22 bash -c "
       set -euo pipefail

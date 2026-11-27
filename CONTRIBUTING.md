@@ -59,6 +59,9 @@ memes versions). Images, CI et `verifier.sh` installent ces versions exactes.
   A la main : `scripts/lock-deps.sh --upgrade`.
 - **Installer sur un poste** : `pip install -c requirements-dev.txt -e ".[dev]"`.
 
+Sur un hote SELinux (Fedora), les montages du depot portent l'option `:z` dans
+les fichiers compose : sans elle, les conteneurs ne peuvent pas les lire.
+
 ## Branches et pull requests
 
 Modele du dossier technique (`sentinel_deployment_cicd_plan.md`, section 4),
