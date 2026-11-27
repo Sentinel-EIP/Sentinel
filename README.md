@@ -44,7 +44,7 @@ Toutes les routes, sauf `/health*` et `/auth/*`, exigent un jeton
 | `GET /users/me`, `/users/me/activity` | compte et journal d'actions               |
 | `GET /market/symbols`, `/market/candles` | historique de marche (TimescaleDB)     |
 | `POST /analysis/volatility`   | cone de volatilite (service ML), enregistre       |
-| `GET /analysis/results`       | historique des resultats IA                       |
+| `GET /analysis/results`       | historique des resultats IA de l'utilisateur      |
 | `GET /risk/summary`, `/alerts` | volatilite, drawdowns, alertes de seuil          |
 
 Services : `api`, `worker` (collecte, jobs), `scheduler` (planification),

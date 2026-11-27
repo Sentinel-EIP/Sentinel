@@ -226,8 +226,10 @@ environnement partage :
 - **Pas de revocation** : un jeton reste valide jusqu'a son expiration, meme
   apres deconnexion. Pas de jeton de rafraichissement : reconnexion toutes les
   heures.
-- **Inscription libre par defaut** (`AUTH_ALLOW_REGISTRATION=true`) : a passer
-  a `false` hors poste local.
+- **Inscription** : sans `AUTH_ALLOW_REGISTRATION`, elle n'est ouverte qu'avec
+  `ENVIRONMENT=local`, et fermee sur tout environnement partage. Ouvrir une
+  beta demande `AUTH_ALLOW_REGISTRATION=true`, a combiner avec une limitation
+  des tentatives (ci-dessus) avant toute exposition.
 - `/docs` et `/openapi.json` restent publics via le proxy (`/api/docs`).
 
 ## E12 — Donnees de marche : une seule source
