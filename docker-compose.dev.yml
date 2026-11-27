@@ -1,0 +1,54 @@
+# Surcharge developpement : hot-reload, ports exposes, pas de proxy.
+# Tous les ports sont publies sur 127.0.0.1 : jamais sur le reseau local.
+# Depuis Docker 28, un port publie reste joignable par IP depuis les autres
+# conteneurs de l'hote, quel que soit le reseau : pas de donnees reelles en dev.
+services:
+
+  # db et redis : volontairement non publies, meme en dev. Le reseau data reste
+  # internal (aucune sortie Internet). Acces : ./scripts/dev.sh psql
+  # (role applicatif) et docker compose exec redis redis-cli.
+
+  api:
+    build:
+      target: dev
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    volumes:
+      - ./backend:/app        # hot-reload : le code local prime sur l'image
+    ports: ["127.0.0.1:8000:8000"]
+
+  worker:
+    # Cible dev obligatoire : watchmedo (extra dev) n'existe pas dans l'image prod.
+    build:
+      target: dev
+    command: ["watchmedo", "auto-restart", "--directory=/app", "--pattern=*.py",
+              "--recursive", "--", "celery", "-A", "app.worker.celery_app", "worker", "-l", "info"]
+    volumes:
+      - ./backend:/app
+
+  ml:
+    build:
+      target: dev
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8100", "--reload"]
+    volumes:
+      - ./ml:/app
+      # Volume de modeles DEDIE au dev (conteneur root) : partage avec la prod
+      # (uid 10002), il y laissait des fichiers root illisibles. Voir ECARTS.
+      - ml-models-dev:/models
+    ports: ["127.0.0.1:8100:8100"]
+
+  frontend:
+    build:
+      target: dev
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules     # garde les deps de l'image, pas celles de l'hote
+    ports: ["127.0.0.1:5173:5173"]
+    healthcheck:              # en dev, c'est Vite (5173) qui repond, pas nginx (8080)
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5173/"]
+
+  proxy:
+    profiles: ["proxy"]       # non demarre en dev : on tape les ports directement
+
+volumes:
+  ml-models-dev:
