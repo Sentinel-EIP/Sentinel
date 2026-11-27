@@ -4,6 +4,7 @@ from functools import lru_cache
 from typing import Literal
 from urllib.parse import quote
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,9 +25,26 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
     REDIS_PASSWORD: str = ""
 
-    API_SECRET_KEY: str = ""
+    API_SECRET_KEY: str = ""  # signe les jetons JWT ; 32 caracteres minimum
+    ACCESS_TOKEN_MINUTES: int = 60
+    # Inscription libre. Non renseignee : ouverte en local seulement, fermee sur
+    # tout environnement partage (shared-dev, staging, production). true ou false
+    # force le choix, par exemple pour ouvrir une beta. Lire `registration_open`.
+    AUTH_ALLOW_REGISTRATION: bool | None = None
     API_CORS_ORIGINS: str = "http://localhost:5173"
     ML_SERVICE_URL: str = "http://ml:8100"
+
+    @field_validator("AUTH_ALLOW_REGISTRATION", mode="before")
+    @classmethod
+    def _vide_vaut_non_renseigne(cls, value: object) -> object:
+        # La compose transmet une chaine vide quand la variable n'est pas definie.
+        return None if value == "" else value
+
+    @property
+    def registration_open(self) -> bool:
+        if self.AUTH_ALLOW_REGISTRATION is not None:
+            return self.AUTH_ALLOW_REGISTRATION
+        return self.ENVIRONMENT == "local"
 
     @property
     def database_url(self) -> str:
