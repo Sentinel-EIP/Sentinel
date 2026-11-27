@@ -2,7 +2,7 @@
 
 ## 1) Objectif
 
-Garantir que chaque évolution de SENTINEL préserve :
+Garantir que chaque évolution de Sentinel préserve :
 - la fiabilité technique,
 - la robustesse des signaux,
 - la sécurité,
