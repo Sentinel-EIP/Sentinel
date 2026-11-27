@@ -20,7 +20,10 @@ ENV VITE_API_URL=${VITE_API_URL}
 COPY frontend/ ./
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:stable-alpine AS prod
+# mainline et non stable : la branche stable (1.30.x) n'a pas d'image corrigee
+# des CVE critiques de nginx 1.30.6 (Trivy, novembre 2026). nginx recommande
+# mainline en production ; le scan de la CI dit quand revenir a stable.
+FROM nginxinc/nginx-unprivileged:mainline-alpine AS prod
 # Correctifs de securite Alpine publies depuis la derniere image de base
 # (ex. libexpat, HIGH) : sans eux, le scan Trivy de la CI echoue. Non
 # reproductible par nature : la CI reconstruit cette etape sans cache.
