@@ -1,0 +1,60 @@
+# Mises a jour proposees par PR, une fois par semaine et groupees par
+# ecosysteme : au plus une PR par ecosysteme et par semaine, et aucune quand
+# rien n'a bouge. Les correctifs de securite arrivent, eux, des qu'ils sont
+# publies (alertes Dependabot).
+#
+# Titres et commits : « chore(deps): Bump ... ». Le sujet commence par une
+# majuscule que commitlint refuse : commitlint.config.cjs ignore ces messages.
+version: 2
+
+updates:
+  # Verrous pip-tools (scripts/lock-deps.sh) : Dependabot reconnait l'en-tete
+  # de pip-compile et met a jour requirements.txt et requirements-dev.txt.
+  - package-ecosystem: pip
+    directories: ["/backend", "/ml"]
+    schedule: { interval: weekly, day: monday }
+    commit-message: { prefix: "chore(deps)" }
+    groups:
+      python:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule: { interval: weekly, day: monday }
+    commit-message: { prefix: "chore(deps)" }
+    groups:
+      npm:
+        patterns: ["*"]
+
+  # Images de base des Dockerfiles (python, node, nginx). Les versions de
+  # Python et de Node se changent a la main : elles touchent aussi la CI.
+  - package-ecosystem: docker
+    directory: /infra/docker
+    schedule: { interval: weekly, day: monday }
+    commit-message: { prefix: "chore(deps)" }
+    groups:
+      images:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: python
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+
+  # Images tierces de la compose (timescale, redis).
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule: { interval: weekly, day: monday }
+    commit-message: { prefix: "chore(deps)" }
+    groups:
+      compose:
+        patterns: ["*"]
+
+  # Actions epinglees par SHA : Dependabot met a jour le SHA et le commentaire.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly, day: monday }
+    commit-message: { prefix: "chore(deps)" }
+    groups:
+      actions:
+        patterns: ["*"]

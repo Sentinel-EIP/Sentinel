@@ -1,9 +1,10 @@
 # Reverse proxy local : nginx NON-ROOT (uid 101), port 8080. Configuration figee
 # dans l'image, qui est donc construite et scannee (Trivy) comme les autres.
-# mainline et non stable : la branche stable (1.30.x) n'a pas d'image corrigee
-# des CVE critiques de nginx 1.30.6 (Trivy, novembre 2026). nginx recommande
-# mainline en production ; le scan de la CI dit quand revenir a stable.
-FROM nginxinc/nginx-unprivileged:mainline-alpine AS prod
+# Version explicite, montee par Dependabot (.github/dependabot.yml). Branche
+# mainline et non stable : la stable (1.30.x) n'avait pas d'image corrigee des
+# CVE critiques de nginx 1.30.6 (Trivy, novembre 2026). nginx recommande
+# mainline en production ; meme version pour frontend et proxy.
+FROM nginxinc/nginx-unprivileged:1.31.7-alpine AS prod
 # Correctifs de securite Alpine publies depuis la derniere image de base.
 # Non reproductible par nature : la CI reconstruit cette etape sans cache.
 USER root

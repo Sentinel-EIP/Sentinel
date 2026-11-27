@@ -47,7 +47,9 @@ services:
       APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manquant (openssl rand -hex 32)}
     volumes:
       - db-data:/var/lib/postgresql/data
-      - ./infra/db/init/10-app-role.sh:/docker-entrypoint-initdb.d/10-app-role.sh:ro
+      # :z : label SELinux partage, sinon un hote Fedora refuse la lecture du
+      # script (Permission denied). Sans effet sans SELinux.
+      - ./infra/db/init/10-app-role.sh:/docker-entrypoint-initdb.d/10-app-role.sh:ro,z
     healthcheck:
       # -h 127.0.0.1 : pendant l'initdb, le serveur temporaire n'ecoute que sur le
       # socket ; sans -h, db passe "healthy" avant la creation du role applicatif.
