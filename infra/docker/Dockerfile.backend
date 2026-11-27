@@ -35,7 +35,11 @@ COPY --from=builder /opt/venv /opt/venv
 # pip, setuptools et wheel ne servent pas a l'execution, et les bibliotheques
 # qu'ils embarquent portent des CVE HIGH (Trivy) : retires du venv comme du
 # Python systeme.
-RUN /opt/venv/bin/python -m pip uninstall -y -q pip setuptools wheel \
+# Correctifs de securite Debian publies depuis la derniere image de base
+# (ex. libzstd1, HIGH) : sans eux, le scan Trivy de la CI echoue.
+RUN apt-get update && apt-get upgrade -y --no-install-recommends \
+ && rm -rf /var/lib/apt/lists/* \
+ && /opt/venv/bin/python -m pip uninstall -y -q pip setuptools wheel \
  && /usr/local/bin/python -m pip uninstall -y -q pip setuptools wheel \
  && useradd -m -u 10001 sentinel
 WORKDIR /app

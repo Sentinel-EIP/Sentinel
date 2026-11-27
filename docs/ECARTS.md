@@ -132,11 +132,12 @@ publique depuis septembre 2026). Reste a la deployer pour de vrai.
 
 ## E7 — Images de base par tag mobile
 
-- `python:3.11-slim`, `node:22-alpine`, `nginxinc/nginx-unprivileged:stable-alpine`,
+- `python:3.11-slim`, `node:22-alpine`, `nginxinc/nginx-unprivileged:mainline-alpine`,
   `timescale/timescaledb:latest-pg16`, `redis:7-alpine` : pas de digest, pas de
   Dependabot. Deux builds du meme commit peuvent differer.
-- L'`apk upgrade` des images nginx est non reproductible par construction
-  (compromis assume : il applique les correctifs publies depuis l'image de base).
+- L'`apk upgrade` des images nginx et l'`apt-get upgrade` des images Python sont
+  non reproductibles par construction
+  (compromis assume : ils appliquent les correctifs publies depuis l'image de base).
 - `wagoid/commitlint-github-action`, encore utilisee par `mirror.yml`, est
   epinglee par SHA mais execute l'image Docker
   `wagoid/commitlint-github-action:6.2.1`, referencee par tag. La CI des PR n'en
