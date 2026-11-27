@@ -1,30 +1,87 @@
-name: Mirror private repository to school organization and commit convention check
+# Copie Sentinel vers le depot de l'ecole a chaque push sur main.
+#
+# Pousse toutes les branches et tous les tags, rien d'autre :
+# - pas de `git push --mirror` : il poussait aussi les refs/pull/* que GitHub
+#   refuse (« deny updating a hidden ref »), ce qui faisait echouer chaque run ;
+# - pas de suppression cote ecole (pas de --prune) : une branche supprimee ici
+#   reste dans la copie, aucun code n'y est perdu ;
+# - --force aligne chaque branche copiee sur Sentinel, qui fait reference.
+#
+# Le token (secret TOKEN, acces en ecriture au depot de l'ecole) passe par une
+# variable d'environnement et un en-tete HTTP : il n'apparait ni dans une URL,
+# ni dans la ligne de commande, ni dans la configuration git du runner.
+name: Copie vers le depot de l'ecole
 
 on:
   push:
     branches:
       - "main"
+  # Relance a la main (onglet Actions) si une copie a echoue.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Deux copies ne tournent jamais en meme temps ; aucune n'est annulee.
+concurrency:
+  group: mirror
+  cancel-in-progress: false
 
 jobs:
   check-commit-convention:
-    if: github.repository == 'Sentinel-EIP/Sentinel'
-    runs-on: ubuntu-latest
+    if: github.repository == 'Sentinel-EIP/Sentinel' && github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
+      # configFile explicite : par defaut l'action cherche commitlint.config.mjs.
       - name: Lint commit message
-        uses: wagoid/commitlint-github-action@v6
+        uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
+        with:
+          configFile: commitlint.config.cjs
 
   mirror:
-    if: github.repository == 'Sentinel-EIP/Sentinel'
-    runs-on: ubuntu-latest
+    # Sur un push, la copie attend un controle des commits reussi. En
+    # lancement manuel, le controle est saute et la copie part directement.
+    if: >-
+      github.repository == 'Sentinel-EIP/Sentinel'
+      && !cancelled()
+      && (needs.check-commit-convention.result == 'success'
+          || (github.event_name == 'workflow_dispatch'
+              && needs.check-commit-convention.result == 'skipped'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     needs: check-commit-convention
     steps:
-      - name: Mirror repository
+      # Toutes les branches (refs/remotes/origin/*) et tous les tags. Le depot
+      # est public : pas besoin de token pour le lire.
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Pousser les branches et les tags vers le depot de l'ecole
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
+          CIBLE: https://github.com/EpitechPGE3-2025/G-EIP-601-ALL-6-1-eip-91.git
         run: |
-          git clone --mirror https://${{ secrets.TOKEN }}@github.com/Sentinel-EIP/Sentinel.git
-          cd Sentinel.git
-          git push --mirror https://${{ secrets.TOKEN }}@github.com/EpitechPGE3-2025/G-EIP-601-ALL-6-1-eip-91.git
+          set -euo pipefail
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Le secret TOKEN est vide ou absent."
+            exit 1
+          fi
+          auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
+          echo "::add-mask::$auth"
+          # origin/HEAD n'est pas une branche : sans ce retrait, le motif
+          # ci-dessous creerait une branche nommee « HEAD » cote ecole.
+          git remote set-head origin --delete 2>/dev/null || true
+          git -c http.extraheader="AUTHORIZATION: basic $auth" \
+            push --force "$CIBLE" \
+            'refs/remotes/origin/*:refs/heads/*' \
+            'refs/tags/*:refs/tags/*'
