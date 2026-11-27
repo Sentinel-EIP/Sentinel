@@ -1,135 +1,127 @@
-# PLAN DE TEST BETA - SENTINEL
+# Plan de test bêta — SENTINEL
 
-## 1. Contexte du Projet
+## 1. Contexte du projet
 
 ### Contexte
 
-Les systemes automatises d'investissement se democratisent rapidement grace a l'IA et aux plateformes de trading accessibles au grand public. Cependant, ces solutions presentent plusieurs limites :
-- Fonctionnement souvent opaque ("boite noire")
-- Dependance a des infrastructures cloud
-- Optimisation centree sur la performance plutot que la gestion du risque
-- Perte de controle pour l'utilisateur
+Les systèmes automatisés d'investissement se démocratisent rapidement grâce à l'IA et aux plateformes de trading accessibles au grand public. Cependant, ces solutions présentent plusieurs limites :
+- Fonctionnement souvent opaque (« boîte noire »)
+- Dépendance à des infrastructures cloud
+- Optimisation centrée sur la performance plutôt que la gestion du risque
+- Perte de contrôle pour l'utilisateur
 
 ### Objectifs
 
-Sentinel est un systeme d'IA local d'aide et d'execution d'investissement concu pour :
-- Analyser les marches financiers via plusieurs modeles d'IA specialises
-- Synthetiser ces analyses en signaux comprehensibles
-- Proposer ou executer des decisions disciplinees
-- Maintenir un controle utilisateur permanent
+Sentinel est un système d'IA local d'aide et d'exécution d'investissement conçu pour :
+- Analyser les marchés financiers via plusieurs modèles d'IA spécialisés
+- Synthétiser ces analyses en signaux compréhensibles
+- Proposer ou exécuter des décisions disciplinées
+- Maintenir un contrôle utilisateur permanent
 
-**Philosophie** : Privilegier la survie du capital face aux differentes conditions de marche plutot que la recherche d'une performance maximale.
+**Philosophie** : privilégier la survie du capital face aux différentes conditions de marché plutôt que la recherche d'une performance maximale.
 
 ### Architecture
 
-Sentinel repose sur une architecture modulaire separant clairement :
-1. **Collecte de donnees** : Prix de marche (OHLCV), volumes, indicateurs techniques
-2. **Analyse IA** : Modeles specialises (tendances, volatilite, anomalies, stress)
-3. **Synthese des signaux** : Agregation des analyses en recommandations
-4. **Gouverneur de risque** : Supervision et limitation des risques
-5. **Execution** : Application des decisions selon les contraintes definies
-6. **Interface utilisateur** : Controle et suivi via navigateur web local
+Sentinel repose sur une architecture modulaire séparant clairement :
+1. **Collecte de données** : prix de marché (OHLCV), volumes, indicateurs techniques
+2. **Analyse IA** : modèles spécialisés (tendances, volatilité, anomalies, stress)
+3. **Synthèse des signaux** : agrégation des analyses en recommandations
+4. **Gouverneur de risque** : supervision et limitation des risques
+5. **Exécution** : application des décisions selon les contraintes définies
+6. **Interface utilisateur** : contrôle et suivi via navigateur web local
 
----
+## 2. Rôles utilisateurs
 
-## 2. Roles Utilisateurs
+Les rôles suivants seront impliqués dans les tests bêta.
 
-Les roles suivants seront impliques dans les tests beta.
-
-| Nom du Role | Description |
+| Nom du rôle | Description |
 |-------------|-------------|
-| Admin | Un administrateur gere la configuration systeme, les connexions API, la configuration des sources de donnees et les parametres techniques avances |
-| Utilisateur Standard | Un utilisateur regulier qui peut configurer les parametres de risque, consulter les analyses de marche, surveiller les positions, recevoir des alertes et controler les operations du systeme |
+| Admin | Un administrateur gère la configuration système, les connexions API, la configuration des sources de données et les paramètres techniques avancés |
+| Utilisateur Standard | Un utilisateur régulier qui peut configurer les paramètres de risque, consulter les analyses de marché, surveiller les positions, recevoir des alertes et contrôler les opérations du système |
 
----
+## 3. Tableau des fonctionnalités
 
-## 3. Tableau des Fonctionnalites
+Toutes les fonctionnalités listées seront démontrées lors de la présentation bêta.
 
-Toutes les fonctionnalites listees seront demonstrees lors de la presentation beta.
+### 3.1 Configuration et démarrage
 
-### 3.1 Configuration et Demarrage
-
-| ID | Role Utilisateur | Nom de la Fonctionnalite | Description Courte |
+| ID | Rôle utilisateur | Nom de la fonctionnalité | Description courte |
 |----|------------------|--------------------------|---------------------|
-| F1 | Admin | Configurer les connexions de donnees | Parametrer les sources de donnees de marche et les connexions API pour les flux de prix |
-| F2 | Utilisateur Standard | Definir les parametres de risque | Configurer le drawdown maximal, l'exposition maximale et les seuils d'alerte |
-| F3 | Utilisateur Standard | Selectionner le mode operatoire | Choisir entre mode analyse seule, paper trading ou trading reel supervise |
+| F1 | Admin | Configurer les connexions de données | Paramétrer les sources de données de marché et les connexions API pour les flux de prix |
+| F2 | Utilisateur Standard | Définir les paramètres de risque | Configurer le drawdown maximal, l'exposition maximale et les seuils d'alerte |
+| F3 | Utilisateur Standard | Sélectionner le mode opératoire | Choisir entre mode analyse seule, paper trading ou trading réel supervisé |
 
-### 3.2 Collecte et Visualisation des Donnees
+### 3.2 Collecte et visualisation des données
 
-| ID | Role Utilisateur | Nom de la Fonctionnalite | Description Courte |
+| ID | Rôle utilisateur | Nom de la fonctionnalité | Description courte |
 |----|------------------|--------------------------|---------------------|
-| F4 | Utilisateur Standard | Visualiser les donnees de marche | Afficher les prix OHLCV et volumes en temps reel pour les actifs surveilles |
-| F5 | Utilisateur Standard | Consulter les indicateurs techniques | Afficher les indicateurs techniques calcules localement sur l'interface |
+| F4 | Utilisateur Standard | Visualiser les données de marché | Afficher les prix OHLCV et volumes en temps réel pour les actifs surveillés |
+| F5 | Utilisateur Standard | Consulter les indicateurs techniques | Afficher les indicateurs techniques calculés localement sur l'interface |
 
 ### 3.3 Analyse IA
 
-| ID | Role Utilisateur | Nom de la Fonctionnalite | Description Courte |
+| ID | Rôle utilisateur | Nom de la fonctionnalité | Description courte |
 |----|------------------|--------------------------|---------------------|
-| F6 | Utilisateur Standard | Analyser les tendances de marche | Obtenir l'analyse de tendance generee par l'IA (haussiere/baissiere/neutre) |
-| F7 | Utilisateur Standard | Evaluer le regime de volatilite | Visualiser l'evaluation du niveau de volatilite actuel du marche |
-| F8 | Utilisateur Standard | Consulter le signal synthetise | Afficher le signal agrege (achat/vente/attente) issu des analyses combinees |
+| F6 | Utilisateur Standard | Analyser les tendances de marché | Obtenir l'analyse de tendance générée par l'IA (haussière/baissière/neutre) |
+| F7 | Utilisateur Standard | Évaluer le régime de volatilité | Visualiser l'évaluation du niveau de volatilité actuel du marché |
+| F8 | Utilisateur Standard | Consulter le signal synthétisé | Afficher le signal agrégé (achat/vente/attente) issu des analyses combinées |
 
-### 3.4 Gouvernance du Risque
+### 3.4 Gouvernance du risque
 
-| ID | Role Utilisateur | Nom de la Fonctionnalite | Description Courte |
+| ID | Rôle utilisateur | Nom de la fonctionnalité | Description courte |
 |----|------------------|--------------------------|---------------------|
-| F9 | Utilisateur Standard | Surveiller le drawdown en cours | Visualiser en temps reel le drawdown par rapport au seuil maximal defini |
-| F10 | Utilisateur Standard | Recevoir les alertes de risque | Etre notifie lorsqu'un seuil de risque est atteint ou depasse |
-| F11 | Utilisateur Standard | Forcer le passage en mode cash | Declencher manuellement la cloture de toutes les positions ouvertes |
+| F9 | Utilisateur Standard | Surveiller le drawdown en cours | Visualiser en temps réel le drawdown par rapport au seuil maximal défini |
+| F10 | Utilisateur Standard | Recevoir les alertes de risque | Être notifié lorsqu'un seuil de risque est atteint ou dépassé |
+| F11 | Utilisateur Standard | Forcer le passage en mode cash | Déclencher manuellement la clôture de toutes les positions ouvertes |
 
-### 3.5 Execution et Suivi
+### 3.5 Exécution et suivi
 
-| ID | Role Utilisateur | Nom de la Fonctionnalite | Description Courte |
+| ID | Rôle utilisateur | Nom de la fonctionnalité | Description courte |
 |----|------------------|--------------------------|---------------------|
-| F12 | Utilisateur Standard | Executer des operations paper trading | Realiser des operations virtuelles sans engager de capital reel |
-| F13 | Utilisateur Standard | Consulter les positions ouvertes | Afficher l'etat actuel des positions (actif, quantite, P&L) |
-| F14 | Utilisateur Standard | Acceder a l'historique des decisions | Consulter le journal des decisions passees avec leur justification |
+| F12 | Utilisateur Standard | Exécuter des opérations paper trading | Réaliser des opérations virtuelles sans engager de capital réel |
+| F13 | Utilisateur Standard | Consulter les positions ouvertes | Afficher l'état actuel des positions (actif, quantité, P&L) |
+| F14 | Utilisateur Standard | Accéder à l'historique des décisions | Consulter le journal des décisions passées avec leur justification |
 
-### 3.6 Controle Systeme
+### 3.6 Contrôle système
 
-| ID | Role Utilisateur | Nom de la Fonctionnalite | Description Courte |
+| ID | Rôle utilisateur | Nom de la fonctionnalité | Description courte |
 |----|------------------|--------------------------|---------------------|
-| F15 | Utilisateur Standard | Arreter le systeme en urgence | Stopper toute activite du systeme en un clic |
-| F16 | Utilisateur Standard | Verifier l'etat du systeme | Verifier que tous les modules (collecte, analyse, risque) fonctionnent correctement |
+| F15 | Utilisateur Standard | Arrêter le système en urgence | Stopper toute activité du système en un clic |
+| F16 | Utilisateur Standard | Vérifier l'état du système | Vérifier que tous les modules (collecte, analyse, risque) fonctionnent correctement |
 
----
+## 4. Critères de succès
 
-## 4. Criteres de Succes
-
-| ID | Critere de Succes Cle | Indicateur/Metrique | Resultat |
+| ID | Critère de succès clé | Indicateur/Métrique | Résultat |
 |----|----------------------|---------------------|----------|
-| F1 | Le systeme se connecte a la source de donnees et recoit les prix | Connexion etablie en < 5s, donnees recues chaque minute | Atteint |
-| F2 | Les parametres de risque sont sauvegardes et appliques correctement | 10 configurations testees, 0 echec de sauvegarde | Atteint |
-| F3 | Le changement de mode est effectif immediatement | Temps de basculement < 2s, 10 tests, 0 echec | Atteint |
-| F4 | Les donnees de marche s'affichent et se mettent a jour automatiquement | Rafraichissement auto, latence < 3s sur 20 tests | Atteint |
-| F5 | Les indicateurs techniques sont calcules et affiches correctement | Comparaison avec calcul manuel sur 5 periodes, ecart < 0.1% | Atteint |
-| F6 | L'analyse de tendance est generee et coherente avec les conditions du marche | Analyse disponible en < 10s apres demande, 15 tests | Atteint |
-| F7 | Le regime de volatilite est identifie correctement | Classification coherente sur 10 scenarios de test | Partiellement atteint (8/10) |
-| F8 | Le signal synthetise est disponible et comprehensible | Signal affiche avec niveau de confiance, 100% des cas testes | Atteint |
-| F9 | Le drawdown est calcule en temps reel et affiche | Mise a jour chaque seconde, precision 0.01% | Atteint |
-| F10 | Les alertes sont declenchees quand les seuils sont atteints | 5 simulations de depassement, 5 alertes recues | Atteint |
-| F11 | Le mode cash cloture toutes les positions ouvertes | Test avec 3 positions ouvertes, 100% cloturees en < 5s | Atteint |
-| F12 | Les operations paper trading sont enregistrees sans erreur | 20 operations simulees, 0 erreur d'enregistrement | Atteint |
-| F13 | Les positions ouvertes sont affichees avec P&L actualise | Mise a jour temps reel, ecart P&L < 0.01% vs calcul manuel | Atteint |
-| F14 | L'historique des decisions est complet et accessible | Toutes les decisions des 7 derniers jours accessibles | Atteint |
-| F15 | L'arret d'urgence stoppe toutes les activites | Temps d'arret < 1s, aucune operation executee apres arret | Atteint |
-| F16 | L'etat du systeme reflete correctement le statut de chaque module | Simulation de panne d'un module detectee en < 5s | Partiellement atteint (7s moy) |
+| F1 | Le système se connecte à la source de données et reçoit les prix | Connexion établie en < 5s, données reçues chaque minute | Atteint |
+| F2 | Les paramètres de risque sont sauvegardés et appliqués correctement | 10 configurations testées, 0 échec de sauvegarde | Atteint |
+| F3 | Le changement de mode est effectif immédiatement | Temps de basculement < 2s, 10 tests, 0 échec | Atteint |
+| F4 | Les données de marché s'affichent et se mettent à jour automatiquement | Rafraîchissement auto, latence < 3s sur 20 tests | Atteint |
+| F5 | Les indicateurs techniques sont calculés et affichés correctement | Comparaison avec calcul manuel sur 5 périodes, écart < 0.1% | Atteint |
+| F6 | L'analyse de tendance est générée et cohérente avec les conditions du marché | Analyse disponible en < 10s après demande, 15 tests | Atteint |
+| F7 | Le régime de volatilité est identifié correctement | Classification cohérente sur 10 scénarios de test | Partiellement atteint (8/10) |
+| F8 | Le signal synthétisé est disponible et compréhensible | Signal affiché avec niveau de confiance, 100% des cas testés | Atteint |
+| F9 | Le drawdown est calculé en temps réel et affiché | Mise à jour chaque seconde, précision 0.01% | Atteint |
+| F10 | Les alertes sont déclenchées quand les seuils sont atteints | 5 simulations de dépassement, 5 alertes reçues | Atteint |
+| F11 | Le mode cash clôture toutes les positions ouvertes | Test avec 3 positions ouvertes, 100% clôturées en < 5s | Atteint |
+| F12 | Les opérations paper trading sont enregistrées sans erreur | 20 opérations simulées, 0 erreur d'enregistrement | Atteint |
+| F13 | Les positions ouvertes sont affichées avec P&L actualisé | Mise à jour temps réel, écart P&L < 0.01% vs calcul manuel | Atteint |
+| F14 | L'historique des décisions est complet et accessible | Toutes les décisions des 7 derniers jours accessibles | Atteint |
+| F15 | L'arrêt d'urgence stoppe toutes les activités | Temps d'arrêt < 1s, aucune opération exécutée après arrêt | Atteint |
+| F16 | L'état du système reflète correctement le statut de chaque module | Simulation de panne d'un module détectée en < 5s | Partiellement atteint (7s moy) |
 
----
+## 5. Résumé
 
-## 5. Resume
+Ce plan de test bêta couvre les fonctionnalités essentielles de Sentinel pour la version bêta :
+- **16 fonctionnalités** couvrant l'ensemble du flux utilisateur
+- **2 rôles utilisateurs** (Utilisateur Standard et Admin)
+- **Critères de succès quantifiables** pour chaque fonctionnalité
 
-Ce Plan de Test Beta couvre les fonctionnalites essentielles de Sentinel pour la version beta :
-- **16 fonctionnalites** couvrant l'ensemble du flux utilisateur
-- **2 roles utilisateurs** (Utilisateur Standard et Admin)
-- **Criteres de succes quantifiables** pour chaque fonctionnalite
+Le scope bêta se concentre sur :
+1. Collecte et visualisation des données de marché
+2. Analyse IA avec détection de tendances et volatilité
+3. Gouvernance du risque avec alertes et contrôle du drawdown
+4. Paper trading pour la validation sans risque réel
+5. Contrôle total de l'utilisateur sur le système
 
-Le scope beta se concentre sur :
-1. Collecte et visualisation des donnees de marche
-2. Analyse IA avec detection de tendances et volatilite
-3. Gouvernance du risque avec alertes et controle du drawdown
-4. Paper trading pour la validation sans risque reel
-5. Controle total de l'utilisateur sur le systeme
-
-Les fonctionnalites avancees (trading reel, modeles IA supplementaires, backtesting automatise) sont exclues de ce scope beta et seront implementees dans les versions ulterieures.
+Les fonctionnalités avancées (trading réel, modèles IA supplémentaires, backtesting automatisé) sont exclues de ce scope bêta et seront implémentées dans les versions ultérieures.

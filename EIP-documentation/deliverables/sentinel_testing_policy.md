@@ -1,86 +1,80 @@
-# Politique de Tests - Sentinel
+# Politique de tests — SENTINEL
 
 ## 1) Objectif
 
-Garantir que chaque evolution de Sentinel preserve :
-- la fiabilite technique,
+Garantir que chaque évolution de Sentinel préserve :
+- la fiabilité technique,
 - la robustesse des signaux,
-- la securite,
+- la sécurité,
 - la gouvernance du risque.
 
----
-
-## 2) Portee des tests
+## 2) Portée des tests
 
 ### 2.1 Backend (Python/FastAPI)
 
-- Tests unitaires : logique metier, regles du risk-governor, calculs de signaux
-- Tests integration : API + PostgreSQL/Timescale + Redis + Celery
-- Tests contract : schema API (OpenAPI), codes erreur, validation payloads
+- Tests unitaires : logique métier, règles du risk-governor, calculs de signaux
+- Tests intégration : API + PostgreSQL/Timescale + Redis + Celery
+- Tests contract : schéma API (OpenAPI), codes erreur, validation payloads
 
 ### 2.2 IA/ML
 
-- Tests de validation de donnees (integrite, trous, outliers)
-- Tests de non-regression modeles sur datasets de reference
-- Tests de stabilite des scores de confiance
-- Tests de derive (drift) simples avec seuil d alerte
+- Tests de validation de données (intégrité, trous, outliers)
+- Tests de non-régression modèles sur datasets de référence
+- Tests de stabilité des scores de confiance
+- Tests de dérive (drift) simples avec seuil d'alerte
 
 ### 2.3 Frontend
 
-- Tests unitaires composants critiques (dashboard, alertes, controle risque)
-- Tests integration UI-API
-- Tests end-to-end parcours critiques (connexion, consultation signaux, arret urgence)
+- Tests unitaires composants critiques (dashboard, alertes, contrôle risque)
+- Tests intégration UI-API
+- Tests end-to-end parcours critiques (connexion, consultation signaux, arrêt urgence)
 
 ### 2.4 Infrastructure
 
-- Tests de demarrage compose (health checks)
-- Tests de resilience (redemarrage service, indisponibilite Redis/DB)
-- Tests de migration base de donnees
-
----
+- Tests de démarrage compose (health checks)
+- Tests de résilience (redémarrage service, indisponibilité Redis/DB)
+- Tests de migration base de données
 
 ## 3) Niveaux de tests et seuils cibles
 
 ### 3.1 Couverture
 
-- Backend global : >= 70% (objectif 80% a terme)
-- Modules critiques risque/execution : >= 90%
-- Frontend global : >= 60% (objectif 75% a terme)
+- Backend global : >= 70% (objectif 80% à terme)
+- Modules critiques risque/exécution : >= 90%
+- Frontend global : >= 60% (objectif 75% à terme)
 
-### 3.2 Qualite minimale avant merge
+### 3.2 Qualité minimale avant merge
 
 - 100% des tests critiques passent
-- 0 test flaky accepte sur pipeline principal
-- 0 regression sur scenarios de risque prioritaires
+- 0 test flaky accepté sur pipeline principal
+- 0 régression sur scénarios de risque prioritaires
 
-### 3.3 Securite
+### 3.3 Sécurité
 
-- 0 secret expose
-- 0 vulnerabilite critique ouverte sans derogation
-- CVE hautes corrigees sous 7 jours max
+- 0 secret exposé
+- 0 vulnérabilité critique ouverte sans dérogation
+- CVE hautes corrigées sous 7 jours max
 
----
+## 4) Test strategy par étape du cycle CI/CD
 
-## 4) Test Strategy par etape du cycle CI/CD
-
-### 4.1 Sur Pull Request
+### 4.1 Sur pull request
 
 - lint + format check
 - tests unitaires
-- tests integration minimaux
-- scan securite rapide
+- tests intégration minimaux
+- scan sécurité rapide
 
 ### 4.2 Sur merge develop
 
-- suite complete unit + integration
-- tests non-regression IA
+- suite complète unit + intégration
+- tests non-régression IA
 - build images + scan conteneurs
 
 ### 4.3 Sur release candidate
 
 - e2e complet
-- test charge leger (smoke perf)
-- tests resilience essentiels
+- test charge léger (smoke perf)
+- tests résilience essentiels
 
 ### 4.4 Avant production
 
@@ -88,42 +82,34 @@ Garantir que chaque evolution de Sentinel preserve :
 - test runbook incident critique
 - validation manuelle gouverneur de risque
 
----
+## 5) Jeux de données de test
 
-## 5) Jeux de donnees de test
+- Dataset historique stable et versionné pour non-régression
+- Dataset bruités/dégradés pour tester robustesse
+- Données synthétiques pour cas limites (flash crash, spread anormal)
 
-- Dataset historique stable et versionne pour non-regression
-- Dataset bruites/degrades pour tester robustesse
-- Donnees synthetiques pour cas limites (flash crash, spread anormal)
+Règles :
+- jamais de clé API réelle dans les jeux de tests
+- anonymisation obligatoire si données externes sensibles
 
-Regles :
-- jamais de cle API reelle dans les jeux de tests
-- anonymisation obligatoire si donnees externes sensibles
-
----
-
-## 6) Gouvernance des echecs
+## 6) Gouvernance des échecs
 
 - Build rouge sur branche principale interdit
 - En cas de test flaky : ticket obligatoire, correction prioritaire
-- En cas de regression risque : blocage release jusqu a correction
+- En cas de régression risque : blocage release jusqu'à correction
 
----
-
-## 7) Outils recommandes
+## 7) Outils recommandés
 
 - Backend : pytest, pytest-cov, hypothesis
 - Frontend : vitest/jest + playwright
 - API contract : schemathesis
-- Securite : bandit, semgrep, pip-audit, trivy, gitleaks
-
----
+- Sécurité : bandit, semgrep, pip-audit, trivy, gitleaks
 
 ## 8) Definition of Done tests
 
-Une fonctionnalite est consideree terminee quand :
+Une fonctionnalité est considérée terminée quand :
 - ses tests unitaires existent et passent,
-- ses cas d erreur sont verifies,
+- ses cas d'erreur sont vérifiés,
 - son impact risque est couvert,
-- son comportement est trace dans les dashboards de test,
+- son comportement est tracé dans les dashboards de test,
 - la CI est verte sans exception.
