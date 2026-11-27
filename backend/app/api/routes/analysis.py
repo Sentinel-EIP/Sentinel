@@ -103,14 +103,14 @@ def run_volatility(body: VolatilityRequest, user: CurrentUser, session: SessionD
 
 @router.get("/results", response_model=list[AiResultOut])
 def results(
-    _: CurrentUser,
+    user: CurrentUser,
     session: SessionDep,
     symbol: str | None = Query(None, pattern=r"^[A-Z0-9]{2,20}$"),
     kind: str | None = Query(None, max_length=32),
     limit: int = Query(20, ge=1, le=200),
 ) -> list[AiResult]:
-    """Derniers resultats, du plus recent au plus ancien."""
-    query = select(AiResult)
+    """Derniers resultats de l'utilisateur connecte, du plus recent au plus ancien."""
+    query = select(AiResult).where(AiResult.requested_by == user.id)
     if symbol:
         query = query.where(AiResult.symbol == symbol)
     if kind:

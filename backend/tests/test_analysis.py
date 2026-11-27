@@ -108,6 +108,27 @@ def test_analyse_stockee_et_journalisee(
     assert activity[0]["action"] == "analysis.volatility"
 
 
+def test_resultats_limites_a_l_utilisateur_connecte(
+    client: TestClient,
+    engine: Engine,
+    auth_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seed(engine, 600)
+    fake_ml(monkeypatch, ml_cone)
+    mine = client.post("/analysis/volatility", json=BODY, headers=auth_headers).json()
+
+    bob = {"username": "bob", "password": "autre-mot-de-passe"}
+    assert client.post("/auth/register", json=bob).status_code == 201
+    token = client.post("/auth/login", json=bob).json()["access_token"]
+    bob_headers = {"Authorization": f"Bearer {token}"}
+
+    # Bob ne voit pas l'analyse d'alice, alice la voit.
+    assert client.get("/analysis/results", headers=bob_headers).json() == []
+    alice_ids = [h["id"] for h in client.get("/analysis/results", headers=auth_headers).json()]
+    assert alice_ids == [mine["id"]]
+
+
 def test_historique_insuffisant(
     client: TestClient, engine: Engine, auth_headers: dict[str, str]
 ) -> None:
