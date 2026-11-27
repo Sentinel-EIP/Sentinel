@@ -46,6 +46,7 @@ def ml_cone(request: httpx.Request) -> httpx.Response:
         json={
             "symbol": body["symbol"],
             "horizon_hours": body["horizon_hours"],
+            "effective_horizon_hours": float(body["horizon_hours"]),
             "confidence": body["confidence"],
             "reference_price": last,
             "lower": last * 0.97,

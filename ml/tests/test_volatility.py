@@ -91,6 +91,40 @@ def test_route_horizon_en_bougies_journalieres() -> None:
     assert r.json()["reliability"] is not None
 
 
+def cone_via_route(horizon_hours: int, interval_hours: float) -> dict[str, object]:
+    r = client.post(
+        "/volatility/cone",
+        json={
+            "symbol": "BTCEUR",
+            "horizon_hours": horizon_hours,
+            "interval_hours": interval_hours,
+            "closes": random_walk(120),
+        },
+    )
+    assert r.status_code == 200
+    body: dict[str, object] = r.json()
+    return body
+
+
+def test_explication_cite_l_horizon_reel_quand_il_est_arrondi() -> None:
+    # 4 h en bougies journalieres : le cone porte sur une bougie, soit 24 h.
+    body = cone_via_route(4, 24)
+    assert body["horizon_hours"] == 4
+    assert body["effective_horizon_hours"] == 24
+    explanation = str(body["explanation"])
+    assert "dans 24 h (4 h demandees, arrondies a 1 bougie(s) de 24 h)" in explanation
+    # Memes bornes qu'une demande explicite a 24 h : c'est bien le meme calcul.
+    exact = cone_via_route(24, 24)
+    assert (body["lower"], body["upper"]) == (exact["lower"], exact["upper"])
+
+
+def test_explication_sans_arrondi_quand_l_horizon_tombe_juste() -> None:
+    body = cone_via_route(48, 24)
+    assert body["effective_horizon_hours"] == 48
+    assert "dans 48 h." in str(body["explanation"])
+    assert "arrondies" not in str(body["explanation"])
+
+
 def test_route_prix_invalides() -> None:
     closes = [100.0] * 40 + [-1.0]
     r = client.post("/volatility/cone", json={"symbol": "BTCEUR", "closes": closes})

@@ -76,7 +76,10 @@ class VolatilityConeRequest(BaseModel):
 
 class VolatilityConeResponse(BaseModel):
     symbol: str
-    horizon_hours: int
+    horizon_hours: int = Field(description="Horizon demande")
+    effective_horizon_hours: float = Field(
+        description="Horizon reellement couvert : un nombre entier de bougies, >= horizon demande"
+    )
     confidence: float = Field(description="Niveau de confiance de l'intervalle, 0-1")
     reference_price: float
     lower: float
@@ -106,7 +109,11 @@ def list_models() -> dict[str, list[str]]:
 @app.post("/volatility/cone", response_model=VolatilityConeResponse)
 def volatility_cone(req: VolatilityConeRequest) -> VolatilityConeResponse:
     """Amplitude probable du prix a l'horizon demande (volatilite realisee)."""
+    # Le cone couvre un nombre entier de bougies : l'horizon reel peut depasser
+    # l'horizon demande (4 h en bougies de 24 h = 1 bougie = 24 h). L'explication
+    # cite l'horizon reel, jamais l'horizon demande seul.
     steps = max(1, math.ceil(req.horizon_hours / req.interval_hours))
+    effective_hours = steps * req.interval_hours
     try:
         cone = compute_cone(req.closes, steps, req.confidence)
     except ValueError as exc:
@@ -117,15 +124,22 @@ def volatility_cone(req: VolatilityConeRequest) -> VolatilityConeResponse:
         if cone.reliability is not None
         else "Historique trop court pour mesurer la fiabilite."
     )
+    horizon = f"{effective_hours:g} h"
+    if not math.isclose(effective_hours, req.horizon_hours):
+        horizon += (
+            f" ({req.horizon_hours} h demandees, arrondies a {steps} bougie(s) "
+            f"de {req.interval_hours:g} h)"
+        )
     explanation = (
         f"Volatilite realisee sur {cone.sample_size} rendements : {cone.volatility:.2%} "
         f"par bougie de {req.interval_hours:g} h. Avec {req.confidence:.0%} de confiance, "
         f"le prix reste entre {cone.lower:,.2f} et {cone.upper:,.2f} dans "
-        f"{req.horizon_hours} h. {reliability}"
+        f"{horizon}. {reliability}"
     )
     return VolatilityConeResponse(
         symbol=req.symbol,
         horizon_hours=req.horizon_hours,
+        effective_horizon_hours=effective_hours,
         confidence=req.confidence,
         reference_price=cone.reference_price,
         lower=cone.lower,

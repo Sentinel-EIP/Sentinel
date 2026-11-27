@@ -83,6 +83,7 @@ def run_volatility(body: VolatilityRequest, user: CurrentUser, session: SessionD
                 "upper",
                 "volatility",
                 "horizon_hours",
+                "effective_horizon_hours",
                 "backtest_size",
                 "sample_size",
                 "note",
