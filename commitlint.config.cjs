@@ -1,5 +1,8 @@
 module.exports = {
   extends: ["@commitlint/config-conventional"],
+  // Titres et commits de Dependabot (« chore(deps): Bump ... ») : leur sujet
+  // commence par une majuscule, refusee par subject-case. Voir .github/dependabot.yml.
+  ignores: [(message) => /^chore\(deps\): Bump /.test(message)],
   rules: {
     "type-case": [2, "always", "lower-case"],
     "type-enum": [

@@ -132,9 +132,12 @@ publique depuis septembre 2026). Reste a la deployer pour de vrai.
 
 ## E7 — Images de base par tag mobile
 
-- `python:3.11-slim`, `node:22-alpine`, `nginxinc/nginx-unprivileged:mainline-alpine`,
-  `timescale/timescaledb:latest-pg16`, `redis:7-alpine` : pas de digest, pas de
-  Dependabot. Deux builds du meme commit peuvent differer.
+- `python:3.11-slim`, `node:22-alpine`, `timescale/timescaledb:latest-pg16`,
+  `redis:7-alpine` : tags mobiles, pas de digest. Deux builds du meme commit
+  peuvent differer. nginx est epingle par version (`1.31.7-alpine`).
+- Dependabot (`.github/dependabot.yml`) propose chaque semaine une PR groupee
+  par ecosysteme : images, pip (verrous), npm, GitHub Actions. Les dependances
+  Python sont verrouillees (`scripts/lock-deps.sh`).
 - L'`apk upgrade` des images nginx et l'`apt-get upgrade` des images Python sont
   non reproductibles par construction
   (compromis assume : ils appliquent les correctifs publies depuis l'image de base).
